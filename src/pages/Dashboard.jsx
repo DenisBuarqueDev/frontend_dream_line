@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { saveDream, getDreams, transcribeAudio } from "../services/api";
+import { saveDream, getDreams, transcribeAudio, interpretDreamWithAI } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import SecondaryButton from "../components/ui/SecondaryButton";
@@ -562,8 +562,8 @@ export default function Dashboard() {
       const detectedPatterns = detectPatterns(cleanedText);
       setPatterns(detectedPatterns);
 
-      const mockInterpretation = `Namorado inconsciente: Pode simbolizar a sensação de que ele está distante emocionalmente ou que você teme perdê-lo de alguma forma. Não necessariamente significa algo literal, mas reflete insegurança ou preocupação com a relação. Hospital e espera: Estar em um hospital nos sonhos costuma representar a necessidade de cura, cuidado ou atenção. Os três dias podem simbolizar um período de provação ou espera por mudanças. Cansaço e delegar cuidado: O fato de você pedir ajuda a outras pessoas mostra que talvez esteja se sentindo sobrecarregada na vida real, precisando dividir responsabilidades ou buscar apoio. Transferência de hospital: Mudança de cenário no sonho pode refletir transição ou incerteza sobre o futuro da relação ou de alguma situação importante na sua vida. Em resumo, esse sonho parece falar sobre medo de perder alguém importante, sensação de impotência, e necessidade de apoio. Ele não prevê o futuro, mas revela estados emocionais internos. Muitas vezes, sonhos assim surgem quando estamos preocupados com a saúde, a estabilidade ou o vínculo afetivo com quem amamos.`;
-      setInterpretation(mockInterpretation);
+      const result = await interpretDreamWithAI(cleanedText);
+      setInterpretation(result.interpretation || '');
       setShowInterpretation(true);
 
       setAiCurrentStep(AI_STEPS.COMPLETE);
