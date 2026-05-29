@@ -10,7 +10,7 @@ const getAuthHeaders = () => {
 
 const handleResponse = async (response) => {
   const contentType = response.headers.get('content-type');
-  
+
   if (contentType && contentType.includes('application/json')) {
     const data = await response.json();
     if (!response.ok) {
@@ -27,151 +27,151 @@ const handleResponse = async (response) => {
 };
 
 export async function login(email, password) {
-  const url = '/api/auth/login';
-  
+  const url = `${API_BASE_URL}/api/auth/login`;
+
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function register(email, password) {
-  const url = '/api/auth/register';
-  
+  const url = `${API_BASE_URL}/api/auth/register`;
+
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function saveDream(dreamData) {
-  const url = '/api/dreams';
-  
+  const url = `${API_BASE_URL}/api/dreams`;
+
   const response = await fetch(url, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify(dreamData),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function getDreams() {
-  const url = '/api/dreams';
-  
+  const url = `${API_BASE_URL}/api/dreams`;
+
   const response = await fetch(url, {
     method: 'GET',
     headers: getAuthHeaders(),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function deleteDream(dreamId) {
-  const url = `/api/dreams/${dreamId}`;
-  
+  const url = `${API_BASE_URL}/api/dreams/${dreamId}`;
+
   const response = await fetch(url, {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function searchDreamsByDate(startDate, endDate) {
-  const url = `/api/dreams/search?startDate=${startDate}&endDate=${endDate}`;
-  
+  const url = `${API_BASE_URL}/api/dreams/search?startDate=${startDate}&endDate=${endDate}`;
+
   const response = await fetch(url, {
     method: 'GET',
     headers: getAuthHeaders(),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function generateDreamImage(dreamId, imageUrl, imagePublicId) {
-  const url = `/api/dreams/${dreamId}/image`;
-  
+  const url = `${API_BASE_URL}/api/dreams/${dreamId}/image`;
+
   const response = await fetch(url, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({ imageUrl, imagePublicId }),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function upgradePlan(plan) {
-  const url = '/api/users/upgrade';
-  
+  const url = `${API_BASE_URL}/api/users/upgrade`;
+
   const response = await fetch(url, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({ plan }),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function getCurrentPlan() {
-  const url = '/api/users/plan';
-  
+  const url = `${API_BASE_URL}/api/users/plan`;
+
   const response = await fetch(url, {
     method: 'GET',
     headers: getAuthHeaders(),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function generateAstralChart(chartData) {
   const url = `${API_BASE_URL}/api/astral-charts/generate`;
-  
+
   const response = await fetch(url, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify(chartData),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function getAstralCharts() {
   const url = `${API_BASE_URL}/api/astral-charts`;
-  
+
   const response = await fetch(url, {
     method: 'GET',
     headers: getAuthHeaders(),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function getAstralChartById(chartId) {
   const url = `${API_BASE_URL}/api/astral-charts/${chartId}`;
-  
+
   const response = await fetch(url, {
     method: 'GET',
     headers: getAuthHeaders(),
   });
-  
+
   return await handleResponse(response);
 }
 
 export async function deleteAstralChart(chartId) {
   const url = `${API_BASE_URL}/api/astral-charts/${chartId}`;
-  
+
   const response = await fetch(url, {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
-  
+
   return await handleResponse(response);
 }
 

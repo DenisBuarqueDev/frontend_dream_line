@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getAIGatewayStatus } from '../services/api';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
 const PROVIDER_ICONS = {
   deepseek: '🧠', flux: '🎨', claude: '🤖',
   stability: '🖼️', whisper: '🎙️', gateway: '⚡',
@@ -25,7 +27,7 @@ export default function AIDebug() {
     try {
       setHealthError(null);
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/health/ai', {
+      const res = await fetch(`${API_BASE_URL}/api/health/ai`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       const data = await res.json();
@@ -41,7 +43,7 @@ export default function AIDebug() {
     setLogs([]);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('/api/test/all', {
+      const res = await fetch(`${API_BASE_URL}/api/test/all`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       const data = await res.json();
@@ -64,7 +66,7 @@ export default function AIDebug() {
     setTestingProvider(provider);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/test/${provider}`, {
+      const res = await fetch(`${API_BASE_URL}/api/test/${provider}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       const data = await res.json();

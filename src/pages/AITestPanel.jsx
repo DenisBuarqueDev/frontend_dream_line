@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
 const PROVIDER_ICONS = {
   deepseek: '🧠', flux: '🎨', claude: '🤖',
   stability: '🖼️', groq_whisper: '🎙️', web_speech_api: '🎤',
@@ -67,7 +69,7 @@ export default function AITestPanel() {
 
   const fetchStatus = useCallback(async () => {
     try {
-      const res = await fetch('/api/ai/diagnostics');
+      const res = await fetch(`${API_BASE_URL}/api/ai/diagnostics`);
       const data = await res.json();
       setStatus(data);
       addLog('success', 'Status das APIs atualizado');
@@ -84,13 +86,13 @@ export default function AITestPanel() {
     const start = Date.now();
 
     try {
-      const res = await fetch('/api/test/deepseek', { headers: authHeaders });
+      const res = await fetch(`${API_BASE_URL}/api/test/deepseek`, { headers: authHeaders });
       const data = await res.json();
       const elapsed = Date.now() - start;
 
       if (data.status === 'offline') {
         addLog('warning', 'DeepSeek offline, tentando fallback Claude...');
-        const claudeRes = await fetch('/api/test/claude', { headers: authHeaders });
+        const claudeRes = await fetch(`${API_BASE_URL}/api/test/claude`, { headers: authHeaders });
         const claudeData = await claudeRes.json();
         const claudeElapsed = Date.now() - start;
 
@@ -132,7 +134,7 @@ export default function AITestPanel() {
     const start = Date.now();
 
     try {
-      const res = await fetch('/api/test/flux', { headers: authHeaders });
+      const res = await fetch(`${API_BASE_URL}/api/test/flux`, { headers: authHeaders });
       const data = await res.json();
       const elapsed = Date.now() - start;
 
@@ -205,7 +207,7 @@ export default function AITestPanel() {
     formData.append('audio', audioBlob, 'test_recording.webm');
 
     try {
-      const res = await fetch('/api/test/whisper', {
+      const res = await fetch(`${API_BASE_URL}/api/test/whisper`, {
         method: 'POST',
         headers: authHeaders,
         body: formData,

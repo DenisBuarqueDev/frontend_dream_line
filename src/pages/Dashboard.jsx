@@ -396,7 +396,7 @@ export default function Dashboard() {
         );
       } else if (err.name === "SecurityError") {
         setError(
-          "Acesso ao microfone bloqueado por política de segurança. Use HTTPS ou localhost.",
+          "Acesso ao microfone bloqueado por política de segurança. Use HTTPS ou ambiente de desenvolvimento local.",
         );
       } else if (
         err.message?.includes("audio source") ||
