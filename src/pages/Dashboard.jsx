@@ -315,6 +315,25 @@ export default function Dashboard() {
     }
   };
 
+  const getSupportedMimeType = () => {
+    const types = [
+      "audio/webm; codecs=opus",
+      "audio/webm",
+      "audio/ogg; codecs=opus",
+      "audio/mp4; codecs=mp4a.40.2",
+      "audio/mp4",
+      "audio/aac",
+      "audio/mpeg",
+    ];
+    for (const t of types) {
+      if (MediaRecorder.isTypeSupported(t)) {
+        console.log("🎤 MIME type suportado:", t);
+        return t;
+      }
+    }
+    return "";
+  };
+
   const startRecording = async () => {
     try {
       stopMediaStream();
@@ -327,49 +346,84 @@ export default function Dashboard() {
         },
       };
 
+      console.log("🎤 Solicitando microfone...");
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
+      console.log("🎤 Microfone OK");
 
-      let mimeType = "audio/webm";
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = "audio/ogg; codecs=opus";
-      }
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = "audio/mp4";
+      const mimeType = getSupportedMimeType();
+      if (!mimeType) {
+        throw new Error("Nenhum formato de áudio suportado neste navegador");
       }
 
-      const mediaRecorder = new MediaRecorder(stream, { mimeType });
+      console.log("🎤 Criando MediaRecorder com:", mimeType);
+      let mediaRecorder;
+      try {
+        mediaRecorder = new MediaRecorder(stream, { mimeType });
+      } catch (mrErr) {
+        console.error("🎤 MediaRecorder falhou com", mimeType, mrErr);
+        throw new Error("Falha ao criar gravador de áudio");
+      }
+
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
+      const actualMimeType = mediaRecorder.mimeType || mimeType;
+      console.log("🎤 MediaRecorder mimeType real:", actualMimeType);
 
       mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
+        if (e.data.size > 0) {
+          console.log(`🎤 Chunk recebido: ${e.data.size} bytes`);
+          chunksRef.current.push(e.data);
+        }
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: mimeType });
+        const totalBytes = chunksRef.current.reduce((s, c) => s + c.size, 0);
+        console.log(`🎤 Gravação finalizada: ${totalBytes} bytes no total`);
+        console.log("📦 Criando blob...");
+
+        const blob = new Blob(chunksRef.current, { type: actualMimeType });
+        console.log("📦 Blob criado:", { size: blob.size, type: blob.type });
+
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
         stopMediaStream();
 
         if (!speechRecognitionStartedRef.current && blob.size > 0) {
+          console.log("📤 Enviando áudio para transcrição...");
           sendAudioForTranscription(blob);
+        } else if (blob.size === 0) {
+          console.warn("⚠️ Blob vazio, nada para transcrever");
+          setError("Gravação vazia. Tente novamente.");
+        } else {
+          console.log("🧠 Usando transcrição do Web Speech API");
         }
       };
 
-      mediaRecorder.start();
+      mediaRecorder.start(1000);
       setIsRecording(true);
+      console.log("🎤 Gravação iniciada");
 
       const isEdge = navigator.userAgent.includes("Edg");
+      const isSamsung = navigator.userAgent.includes("SamsungBrowser");
       const hasSpeechRecognition =
         ("SpeechRecognition" in window ||
           "webkitSpeechRecognition" in window) &&
-        !isEdge;
+        !isEdge &&
+        !isSamsung;
 
       if (hasSpeechRecognition) {
+        console.log("🧠 Web Speech API disponível, iniciando...");
         speechRecognitionStartedRef.current = true;
         startSpeechRecognition();
       } else {
+        console.log(
+          isEdge
+            ? "🧠 Web Speech API não suportado no Edge, usará Groq Whisper"
+            : isSamsung
+              ? "🧠 Web Speech API não suportado no Samsung Browser, usará Groq Whisper"
+              : "🧠 Web Speech API não disponível, usará Groq Whisper"
+        );
         speechRecognitionStartedRef.current = false;
       }
     } catch (err) {
@@ -415,53 +469,93 @@ export default function Dashboard() {
   const startSpeechRecognition = () => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = "pt-BR";
 
-    recognitionRef.current.onresult = (event) => {
-      let finalTranscript = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript + " ";
+    if (!SpeechRecognition) {
+      console.log("🧠 Web Speech API não disponível");
+      return;
+    }
+
+    try {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = "pt-BR";
+
+      recognitionRef.current.onresult = (event) => {
+        let finalTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + " ";
+          }
         }
-      }
-      if (finalTranscript) {
-        setAllTranscripts((prev) => [...prev, finalTranscript.trim()]);
-      }
-    };
+        if (finalTranscript) {
+          console.log("🧠 Texto capturado:", finalTranscript.trim().substring(0, 80));
+          setAllTranscripts((prev) => [...prev, finalTranscript.trim()]);
+        }
+      };
 
-    recognitionRef.current.onerror = (event) =>
-      console.error("Erro no reconhecimento de voz:", event.error);
+      recognitionRef.current.onerror = (event) => {
+        console.error("❌ Web Speech API error:", event.error);
+        if (event.error === "not-allowed") {
+          speechRecognitionStartedRef.current = false;
+        }
+      };
 
-    recognitionRef.current.onend = () => {
-      if (isRecording) recognitionRef.current.start();
-    };
+      recognitionRef.current.onend = () => {
+        if (isRecording) {
+          try {
+            recognitionRef.current.start();
+          } catch (_) {}
+        }
+      };
 
-    recognitionRef.current.start();
+      recognitionRef.current.start();
+      console.log("🧠 Web Speech API iniciado");
+    } catch (err) {
+      console.error("❌ Web Speech API falhou ao iniciar:", err);
+      speechRecognitionStartedRef.current = false;
+    }
   };
 
   const sendAudioForTranscription = async (blob) => {
     setIsTranscribing(true);
     setError("");
+    setShowInterpretation(false);
 
-    const timeoutMs = 30000;
+    console.log("📤 Enviando áudio para transcrição:", {
+      size: blob.size,
+      type: blob.type,
+    });
+
+    const timeoutMs = 60000;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
       const result = await transcribeAudio(blob, controller.signal);
+      console.log("🧠 Transcrição recebida:", result);
+
       if (result && result.text) {
-        setAllTranscripts([result.text]);
+        const text = result.text;
+        console.log("✅ Texto transcrito:", text.substring(0, 100));
+        setAllTranscripts([text]);
+        setError("");
       } else {
+        console.warn("⚠️ Transcrição vazia do servidor");
         setError("Transcrição vazia. Tente novamente.");
       }
     } catch (err) {
+      console.error("❌ Erro na transcrição:", err);
+
       if (err.name === "AbortError") {
-        setError("Transcrição excedeu o tempo limite. Tente novamente.");
+        setError("Transcrição excedeu o tempo limite (60s). Tente novamente ou use uma rede mais rápida.");
+      } else if (err.message?.includes("401") || err.message?.includes("Unauthorized")) {
+        setError("Sessão expirada. Faça login novamente.");
+      } else if (err.message?.includes("413") || err.message?.includes("too large")) {
+        setError("Áudio muito grande. Tente gravar um sonho mais curto.");
+      } else if (err.message?.includes("429") || err.message?.includes("too many")) {
+        setError("Muitas requisições. Aguarde alguns segundos e tente novamente.");
       } else {
-        console.error("Erro na transcrição por IA:", err);
         setError(err.message || "Erro ao transcrever áudio pelo servidor.");
       }
     } finally {
