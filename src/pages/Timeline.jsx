@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DreamInsights from "../components/DreamInsights";
-import { getDreams, deleteDream } from "../services/api";
+import { getDreams, deleteDream, generateDreamImageWithAI } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
 import logotipo from "../assets/logotipo.png";
@@ -21,6 +21,8 @@ function TimelineItem({
   dream,
   onDeleteClick,
   onImageClick,
+  onGenerateImage,
+  generatingIds,
   canGenerateImage,
   showUpgradePlanModal,
   userPlan,
@@ -172,24 +174,56 @@ function TimelineItem({
       <div className="flex-1 pb-8">
         <div className="bg-white/10 rounded-2xl border border-white/10 p-4 hover:bg-white/15 transition-all">
           {dream.imageUrl && userPlan === "pro" && (
-            <div className="mb-3 relative">
+            <div className="mb-3 relative group">
               <img
                 src={dream.imageUrl}
                 alt="Imagem do sonho"
-                className="w-full h-48 object-cover rounded-lg cursor-pointer"
+                className="w-full aspect-video object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => onImageClick(dream.imageUrl)}
+                loading="lazy"
               />
-              <button
-                onClick={() => onImageClick(dream.imageUrl)}
-                className="absolute top-2 right-2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = dream.imageUrl;
+                    link.download = `sonho-${dream._id || dream.id}.webp`;
+                    link.click();
+                  }}
+                  className="w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
+                  title="Baixar imagem"
                 >
-                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                </svg>
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => onImageClick(dream.imageUrl)}
+                  className="w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
+                  title="Ampliar imagem"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                  </svg>
+                </button>
+              </div>
+              <button
+                onClick={() => onGenerateImage(dream)}
+                disabled={generatingIds?.[dream._id || dream.id]}
+                className="absolute bottom-2 right-2 flex items-center gap-1 px-2.5 py-1 bg-black/50 hover:bg-black/70 text-white text-xs rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Regenerar imagem"
+              >
+                {generatingIds?.[dream._id || dream.id] ? (
+                  <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : (
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                )}
+                {generatingIds?.[dream._id || dream.id] ? "Regenerando..." : "Regenerar"}
               </button>
             </div>
           )}
@@ -218,15 +252,22 @@ function TimelineItem({
 
           {!dream.imageUrl && canGenerateImage && (
             <div className="flex justify-end mb-2">
-              <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 text-white text-xs font-medium rounded-full transition-all duration-200 shadow-sm hover:shadow-md">
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-                </svg>
-                Gerar Imagem
+              <button
+                onClick={() => onGenerateImage(dream)}
+                disabled={generatingIds?.[dream._id || dream.id]}
+                className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 text-white text-xs font-medium rounded-full transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {generatingIds?.[dream._id || dream.id] ? (
+                  <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                  </svg>
+                )}
+                {generatingIds?.[dream._id || dream.id] ? "Gerando..." : "Gerar Imagem"}
               </button>
             </div>
           )}
@@ -460,6 +501,7 @@ export default function Timeline() {
   const [currentImage, setCurrentImage] = useState("");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeMessage, setUpgradeMessage] = useState("");
+  const [generatingIds, setGeneratingIds] = useState({});
 
   useEffect(() => {
     const loadDreamsOnMount = async () => {
@@ -612,6 +654,27 @@ export default function Timeline() {
   const handleCloseImage = () => {
     setShowImage(false);
     setCurrentImage("");
+  };
+
+  const handleGenerateImage = async (dream) => {
+    const dreamId = dream._id || dream.id;
+    if (generatingIds[dreamId]) return;
+
+    setGeneratingIds((prev) => ({ ...prev, [dreamId]: true }));
+
+    try {
+      const data = await generateDreamImageWithAI(dreamId);
+      const updatedDream = data?.data?.dream || data?.dream;
+      if (updatedDream) {
+        setDreams((prev) =>
+          prev.map((d) => ((d._id || d.id) === dreamId ? { ...d, ...updatedDream } : d))
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao gerar imagem:", error);
+    } finally {
+      setGeneratingIds((prev) => ({ ...prev, [dreamId]: false }));
+    }
   };
 
   const filteredDreams = useMemo(() => {
@@ -826,6 +889,8 @@ export default function Timeline() {
                       dream={dream}
                       onDeleteClick={handleDeleteClick}
                       onImageClick={handleImageClick}
+                      onGenerateImage={handleGenerateImage}
+                      generatingIds={generatingIds}
                       canGenerateImage={canGenerateImage}
                       showUpgradePlanModal={showUpgradePlanModal}
                       userPlan={userPlan}
