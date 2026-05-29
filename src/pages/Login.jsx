@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { login as apiLogin, register as apiRegister } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
+import logotipo from "../assets/logotipo.png";
 import Input from "../components/ui/Input";
 import Label from "../components/ui/Label";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -93,7 +94,7 @@ export default function Login() {
         <GlassCard className="p-8 sm:p-10">
           <div className="text-center mb-8">
             <img
-              src="/src/assets/logotipo.png"
+              src={logotipo}
               alt="Dream Line Logo"
               className="w-24 h-24 object-contain mx-auto mb-4"
             />

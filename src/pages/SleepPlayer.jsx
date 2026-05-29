@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useHzPlayer } from "../hooks/useHzPlayer";
 
 const FREQUENCY_MAP = {
   calmo: { hz: "963Hz", file: "963hz.mp3", label: "Calmo" },
@@ -8,58 +8,49 @@ const FREQUENCY_MAP = {
   cansado: { hz: "111Hz", file: "111hz.mp3", label: "Cansado" },
   desmotivado: { hz: "528Hz", file: "528hz.mp3", label: "Desmotivado" },
   voltar_dormir: { hz: "528Hz", file: "528hz.mp3", label: "Voltar a dormir" },
-  
   preocupado: { hz: "852Hz", file: "852hz.mp3", label: "Preocupado" },
   sobrecarregado: { hz: "639Hz", file: "639hz.mp3", label: "Sobrecarregado" },
   triste: { hz: "111Hz", file: "111hz.mp3", label: "Triste" },
   irritado: { hz: "888Hz", file: "888hz.mp3", label: "Irritado" },
   inquieto: { hz: "888Hz", file: "8888hz.mp3", label: "Inquieto" },
   com_medo: { hz: "174Hz", file: "174hz.mp3", label: "Com medo" },
-
 };
-//, , , , Inquieto, Com medo,
+
 export default function SleepPlayer() {
   const location = useLocation();
   const navigate = useNavigate();
   const emotionalState = location.state?.emotionalState || "calmo";
-  
+
   const frequencyData = FREQUENCY_MAP[emotionalState] || FREQUENCY_MAP.calmo;
   const audioFile = frequencyData.file;
   const frequency = frequencyData.hz;
   const stateLabel = frequencyData.label;
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const audioRef = useRef(null);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.addEventListener("loadedmetadata", () => {
-        setDuration(audioRef.current.duration);
-      });
-      audioRef.current.addEventListener("timeupdate", () => {
-        setCurrentTime(audioRef.current.currentTime);
-      });
-      audioRef.current.addEventListener("ended", () => {
-        setIsPlaying(false);
-      });
-    }
-  }, []);
+  const {
+    audioRef,
+    audioSrc,
+    isPlaying,
+    isLoading,
+    error,
+    currentTime,
+    duration,
+    play,
+    pause,
+    stop,
+    seek,
+  } = useHzPlayer(audioFile);
 
   const togglePlay = () => {
     if (isPlaying) {
-      audioRef.current.pause();
+      pause();
     } else {
-      audioRef.current.play();
+      stop();
+      play();
     }
-    setIsPlaying(!isPlaying);
   };
 
   const handleSeek = (e) => {
-    const time = parseFloat(e.target.value);
-    audioRef.current.currentTime = time;
-    setCurrentTime(time);
+    seek(parseFloat(e.target.value));
   };
 
   const formatTime = (time) => {
@@ -69,9 +60,7 @@ export default function SleepPlayer() {
   };
 
   const handleEndSession = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
+    stop();
     navigate("/dashboard");
   };
 
@@ -100,14 +89,30 @@ export default function SleepPlayer() {
           </div>
 
           <div className="bg-purple-500/10 rounded-2xl p-6 mb-6 border border-purple-500/20">
-            <audio ref={audioRef} src={`/src/assets/sounds/${audioFile}`} />
+            <audio
+              ref={audioRef}
+              src={audioSrc}
+              preload="auto"
+            />
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300 text-sm text-center">
+                {error}
+              </div>
+            )}
 
             <div className="flex flex-col items-center gap-6">
               <button
                 onClick={togglePlay}
-                className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white flex items-center justify-center shadow-xl transition-all duration-200 hover:scale-[1.05]"
+                disabled={isLoading}
+                className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white flex items-center justify-center shadow-xl transition-all duration-200 hover:scale-[1.05] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isPlaying ? (
+                {isLoading ? (
+                  <svg className="w-8 h-8 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : isPlaying ? (
                   <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
                   </svg>

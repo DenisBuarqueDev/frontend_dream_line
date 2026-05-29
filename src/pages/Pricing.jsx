@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import PricingCard from "../components/PricingCard";
+import logotipo from "../assets/logotipo.png";
 
 const PLANS = [
   {
@@ -76,7 +77,7 @@ function Pricing() {
       <div className="w-full max-w-5xl">
         <div className="text-center mb-12">
           <img
-            src="/src/assets/logotipo.png"
+            src={logotipo}
             alt="Dream Line Logo"
             className="w-20 h-20 object-contain mx-auto"
           />

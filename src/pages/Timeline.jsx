@@ -4,6 +4,7 @@ import DreamInsights from "../components/DreamInsights";
 import { getDreams, deleteDream } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
+import logotipo from "../assets/logotipo.png";
 import LuckyNumbersCard from "../components/LuckyNumbersCard";
 
 const MOCK_DREAMS = [
@@ -755,7 +756,7 @@ export default function Timeline() {
 
           <div className="text-center flex-1 mb-5">
             <img
-              src="/src/assets/logotipo.png"
+              src={logotipo}
               alt="Dream Line Logo"
               className="w-24 h-24 object-contain mx-auto mb-4"
             />

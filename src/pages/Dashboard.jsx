@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { saveDream, getDreams, transcribeAudio, interpretDreamWithAI } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import logotipo from "../assets/logotipo.png";
 import SecondaryButton from "../components/ui/SecondaryButton";
 import Input from "../components/ui/Input";
 import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
@@ -726,7 +727,7 @@ export default function Dashboard() {
 
           <div className="text-center mb-8">
             <img
-              src="/src/assets/logotipo.png"
+              src={logotipo}
               alt="Dream Line Logo"
               className="w-24 h-24 object-contain mx-auto mb-4"
             />
