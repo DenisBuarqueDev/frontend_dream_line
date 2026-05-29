@@ -1,0 +1,80 @@
+export const theme = {
+  colors: {
+    primary: {
+      50: '#f5f3ff',
+      100: '#ede9fe',
+      200: '#ddd6fe',
+      300: '#c4b5fd',
+      400: '#a78bfa',
+      500: '#8b5cf6',
+      600: '#7c3aed',
+      700: '#6d28d9',
+      800: '#5b21b6',
+      900: '#4c1d95',
+    },
+    secondary: {
+      50: '#eef2ff',
+      100: '#e0e7ff',
+      200: '#c7d2fe',
+      300: '#a5b4fc',
+      400: '#818cf8',
+      500: '#6366f1',
+      600: '#4f46e5',
+      700: '#4338ca',
+      800: '#3730a3',
+      900: '#312e81',
+    },
+    background: {
+      primary: 'from-slate-950 via-purple-950 to-slate-900',
+      secondary: 'from-violet-950 via-purple-900 to-slate-900',
+    },
+    surface: {
+      glass: 'bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl p-6',
+      card: 'bg-white/10 border border-white/10 rounded-2xl',
+      modal: 'bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl',
+    },
+    text: {
+      primary: 'text-white',
+      secondary: 'text-purple-200',
+      muted: 'text-slate-300',
+      mutedLight: 'text-slate-400',
+    },
+  },
+  spacing: {
+    xs: 'gap-2',
+    sm: 'gap-3',
+    md: 'gap-4',
+    lg: 'gap-6',
+    xl: 'gap-8',
+    section: 'space-y-6',
+    padding: 'p-6',
+    paddingSm: 'p-4',
+    paddingLg: 'p-8',
+  },
+  borderRadius: {
+    sm: 'rounded-lg',
+    md: 'rounded-xl',
+    lg: 'rounded-2xl',
+    xl: 'rounded-3xl',
+    full: 'rounded-full',
+  },
+  typography: {
+    title: 'text-3xl font-bold text-white',
+    subtitle: 'text-xl font-semibold text-white',
+    body: 'text-sm text-slate-300',
+    caption: 'text-xs text-slate-400',
+  },
+  shadows: {
+    sm: 'shadow-sm',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
+    xl: 'shadow-xl',
+    glow: 'shadow-lg shadow-purple-500/20',
+  },
+  transitions: {
+    default: 'transition-all duration-200',
+    hover: 'hover:scale-[1.02] active:scale-[0.98]',
+  },
+};
+
+export default theme;

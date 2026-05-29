@@ -1,0 +1,362 @@
+:root {
+  --astral-primary: #8B5CF6;
+  --astral-secondary: #A78BFA;
+  --astral-accent: #F472B6;
+  --astral-gold: #FFD700;
+  --astral-dark: #0F0A1E;
+  --astral-surface: rgba(255, 255, 255, 0.08);
+  --astral-surface-hover: rgba(255, 255, 255, 0.12);
+  --astral-border: rgba(255, 255, 255, 0.1);
+  --astral-text: rgba(255, 255, 255, 0.95);
+  --astral-text-muted: rgba(255, 255, 255, 0.6);
+}
+
+* {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.font-display {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.astral-gradient-bg {
+  background: linear-gradient(135deg, #0F0A1E 0%, #1a0f2e 25%, #2D1B4E 50%, #1a0f2e 75%, #0F0A1E 100%);
+  background-attachment: fixed;
+}
+
+.astral-glass {
+  background: var(--astral-surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--astral-border);
+  border-radius: 24px;
+}
+
+.astral-glass-card {
+  background: var(--astral-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--astral-border);
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.astral-glass-card:hover {
+  background: var(--astral-surface-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.astral-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: var(--astral-text);
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.astral-input:focus {
+  outline: none;
+  border-color: var(--astral-primary);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.astral-input::placeholder {
+  color: var(--astral-text-muted);
+}
+
+.astral-btn-primary {
+  background: linear-gradient(135deg, var(--astral-primary) 0%, #9333EA 100%);
+  border: none;
+  border-radius: 14px;
+  padding: 16px 28px;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.astral-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+}
+
+.astral-btn-primary:active {
+  transform: translateY(0);
+}
+
+.astral-btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.astral-btn-primary:hover::after {
+  left: 100%;
+}
+
+.astral-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 10px 18px;
+  color: var(--astral-text);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.astral-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.astral-tab {
+  padding: 16px 24px;
+  color: var(--astral-text-muted);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.astral-tab:hover {
+  color: var(--astral-text);
+}
+
+.astral-tab.active {
+  color: var(--astral-text);
+}
+
+.astral-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--astral-primary), var(--astral-accent));
+  border-radius: 2px 2px 0 0;
+}
+
+.astral-sign-fire {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+  border-left: 3px solid #EF4444;
+}
+
+.astral-sign-earth {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+  border-left: 3px solid #22C55E;
+}
+
+.astral-sign-air {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+  border-left: 3px solid #3B82F6;
+}
+
+.astral-sign-water {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(14, 165, 233, 0.1));
+  border-left: 3px solid #0EA5E9;
+}
+
+.astral-insight-positive {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05));
+  border-left: 3px solid #22C55E;
+}
+
+.astral-insight-info {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05));
+  border-left: 3px solid #8B5CF6;
+}
+
+.astral-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--astral-border), transparent);
+}
+
+@keyframes astral-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes astral-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes astral-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.astral-animate-float {
+  animation: astral-float 4s ease-in-out infinite;
+}
+
+.astral-animate-glow {
+  animation: astral-glow 2s ease-in-out infinite;
+}
+
+.astral-animate-fade-in {
+  animation: astral-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.astral-stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.astral-stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.astral-stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.astral-stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.astral-stagger-5 { animation-delay: 0.5s; opacity: 0; }
+
+.astral-scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.astral-scroll-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.astral-planet-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-size: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.astral-premium-banner {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05));
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 20px;
+}
+
+.astral-hero-section {
+  position: relative;
+  padding: 60px 0;
+}
+
+.astral-hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.astral-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E0D4FF 50%, #FFFFFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.astral-subtitle {
+  color: var(--astral-text-muted);
+  font-size: 1.1rem;
+  font-weight: 300;
+}
+
+.astral-empty-state {
+  text-align: center;
+  padding: 80px 40px;
+}
+
+.astral-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  opacity: 0.8;
+}
+
+.astral-empty-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.astral-empty-text {
+  color: var(--astral-text-muted);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.astral-tabs-container {
+  background: var(--astral-surface);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--astral-border);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.astral-tooltip {
+  background: rgba(15, 10, 30, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--astral-border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.astral-modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+.astral-explanation-card {
+  background: var(--astral-surface);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--astral-border);
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.astral-explanation-item {
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.astral-explanation-item:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .astral-title {
+    font-size: 2rem;
+  }
+  
+  .astral-tab {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  
+  .astral-glass {
+    border-radius: 20px;
+  }
+}
