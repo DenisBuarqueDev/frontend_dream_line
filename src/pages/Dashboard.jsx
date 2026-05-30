@@ -555,6 +555,8 @@ export default function Dashboard() {
         setError("Áudio muito grande. Tente gravar um sonho mais curto.");
       } else if (err.message?.includes("429") || err.message?.includes("too many")) {
         setError("Muitas requisições. Aguarde alguns segundos e tente novamente.");
+      } else if (err.message?.includes("file must be one of the following types")) {
+        setError("Formato de áudio não suportado pelo servidor de transcrição. Tente usar um navegador diferente (Chrome ou Edge).");
       } else {
         setError(err.message || "Erro ao transcrever áudio pelo servidor.");
       }

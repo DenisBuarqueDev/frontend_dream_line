@@ -177,19 +177,20 @@ export async function deleteAstralChart(chartId) {
 
 const MIME_TO_EXT = {
   'audio/webm': 'webm',
-  'audio/webm;codecs=opus': 'webm',
   'audio/mp4': 'mp4',
   'audio/mpeg': 'mp3',
   'audio/ogg': 'ogg',
   'audio/wav': 'wav',
   'audio/aac': 'aac',
+  'audio/flac': 'flac',
 };
 
 export async function transcribeAudio(audioBlob, signal) {
   const token = localStorage.getItem('token');
   const formData = new FormData();
 
-  const ext = MIME_TO_EXT[audioBlob.type] || 'webm';
+  const baseType = audioBlob.type.split(';')[0].trim();
+  const ext = MIME_TO_EXT[baseType] || 'webm';
   formData.append('audio', audioBlob, `dream-recording.${ext}`);
 
   const response = await fetch(`${API_BASE_URL}/api/transcribe-audio`, {
