@@ -64,30 +64,26 @@ function TimelineItem({
         window.speechSynthesis.cancel();
         setIsSpeaking(false);
       } else {
+        const synth = window.speechSynthesis;
         const utterance = new SpeechSynthesisUtterance(dream.interpretacao);
-
-        // 🌎 Idioma
         utterance.lang = "pt-BR";
-
-        // 🐢 Velocidade (0.5 = mais lento | padrão = 1)
         utterance.rate = 0.85;
-
-        // 🎵 Tom (0 a 2 | padrão = 1)
         utterance.pitch = 0.9;
-
-        // 🔊 Volume (0 a 1)
         utterance.volume = 1;
 
-        // 🎤 Escolher voz mais natural (se disponível)
-        const voices = window.speechSynthesis.getVoices();
-        const ptVoice = voices.find((voice) => voice.lang === "pt-BR");
+        const voices = synth.getVoices();
+        const ptVoice =
+          voices.find((v) => v.lang === "pt-BR") ||
+          voices.find((v) => v.lang.startsWith("pt"));
         if (ptVoice) {
           utterance.voice = ptVoice;
         }
+        console.log("Voice selected:", ptVoice?.name || "default");
+        console.log("Language:", ptVoice?.lang || "pt-BR");
 
         utterance.onend = () => setIsSpeaking(false);
 
-        window.speechSynthesis.speak(utterance);
+        synth.speak(utterance);
         setIsSpeaking(true);
       }
     }
@@ -119,6 +115,8 @@ function TimelineItem({
       voices.find((v) => v.lang === "pt-BR") ||
       voices.find((v) => v.lang.startsWith("pt")) ||
       voices[0];
+    console.log("Voice selected:", voice?.name || "default");
+    console.log("Language:", voice?.lang || "pt-BR");
 
     setIsSpeakingText(true);
 

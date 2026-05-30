@@ -608,12 +608,24 @@ export default function Dashboard() {
         window.speechSynthesis.cancel();
         setIsSpeaking(false);
       } else {
+        const synth = window.speechSynthesis;
         const utterance = new SpeechSynthesisUtterance(interpretation);
         utterance.lang = "pt-BR";
         utterance.rate = 1;
+
+        const voices = synth.getVoices();
+        const ptVoice =
+          voices.find((v) => v.lang === "pt-BR") ||
+          voices.find((v) => v.lang.startsWith("pt"));
+        if (ptVoice) {
+          utterance.voice = ptVoice;
+        }
+        console.log("Voice selected:", ptVoice?.name || "default");
+        console.log("Language:", ptVoice?.lang || "pt-BR");
+
         utterance.onend = () => setIsSpeaking(false);
         utterance.onerror = () => setIsSpeaking(false);
-        window.speechSynthesis.speak(utterance);
+        synth.speak(utterance);
         setIsSpeaking(true);
       }
     }
