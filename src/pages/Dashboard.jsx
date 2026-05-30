@@ -166,7 +166,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const userPlan = user?.plan || "free";
-  const maxDreams = user?.maxDreams || 5;
+  const maxDreams = 3;
   const [dailyDreamCount, setDailyDreamCount] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -829,7 +829,7 @@ export default function Dashboard() {
             />
             <h1 className="text-3xl font-bold text-white">Dream Line</h1>
             <p className="text-purple-200 text-sm mt-2">
-              Registre e interprete seus sonhos
+              Fale sobre seus sonhos
             </p>
           </div>
 
@@ -856,9 +856,6 @@ export default function Dashboard() {
             </div>
 
             <div className="flex flex-col text-center">
-              <p className="text-white text-base sm:text-lg font-medium">
-                {isRecording ? "Ouvindo..." : "Fale sobre seu sonho"}
-              </p>
               {isLoaded && (
                 <p className="text-purple-300 text-md mt-1">
                   Você pode interpretar {remainingDreams} sonho(s) hoje.
