@@ -6,6 +6,8 @@ import { useAuth } from "../context/AuthContext";
 import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
 import logotipo from "../assets/logotipo.png";
 import LuckyNumbersCard from "../components/LuckyNumbersCard";
+import AppContainer from "../components/ui/AppContainer";
+import { AppHeader } from "../components/ui";
 
 const MOCK_DREAMS = [
   {
@@ -732,75 +734,51 @@ export default function Timeline() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-start justify-center p-2 sm:p-3">
-      <div className="w-full max-w-3xl">
-        <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl p-2 sm:p-3">
+    <AppContainer className="md:items-start md:justify-center md:p-3">
+      <AppHeader
+        title="Timeline"
+        onBack={() => navigate("/dashboard")}
+        onRightClick={logout}
+        leftExtra={
+          <>
+            <button
+              onClick={() =>
+                userPlan === "free"
+                  ? showUpgradePlanModal(
+                      "Disponível apenas para planos Premium ou Pro. Faça upgrade para desbloquear.",
+                    )
+                  : navigate("/astrology")
+              }
+              className={`w-10 h-10 rounded-2xl border border-white/10 flex items-center justify-center transition-all ${
+                userPlan === "free"
+                  ? "bg-white/5 text-slate-500"
+                  : "bg-white/10 hover:bg-white/20 text-white"
+              }`}
+              title={
+                userPlan === "free"
+                  ? "Disponível apenas para planos pagos"
+                  : "Mapa Astral"
+              }
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </button>
+            <button
+              onClick={() => navigate("/sleep")}
+              className="w-10 h-10 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white flex items-center justify-center transition-all shadow-md"
+              title="Soneca"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+              </svg>
+            </button>
+          </>
+        }
+      />
+      <div className="w-full max-w-3xl flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
+        <div className="">
           
-          <div className="flex justify-between items-center mb-2">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => navigate("/dashboard")}
-                className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() =>
-                  userPlan === "free"
-                    ? showUpgradePlanModal(
-                        "Disponível apenas para planos Premium ou Pro. Faça upgrade para desbloquear.",
-                      )
-                    : navigate("/astrology")
-                }
-                className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                  userPlan === "free"
-                    ? "bg-white/5 text-slate-500 border-white/10"
-                    : "bg-white/10 hover:bg-white/20 border-white/10 text-white"
-                }`}
-                title={
-                  userPlan === "free"
-                    ? "Disponível apenas para planos pagos"
-                    : "Mapa Astral"
-                }
-              >
-                Mapa Astral
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => navigate("/sleep")}
-                className="flex items-center gap-2 px-4 py-2 font-medium rounded-full text-sm transition-all duration-200 shadow-md bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white hover:shadow-lg"
-              >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                </svg>
-                Soneca
-              </button>
-
-              <button
-                onClick={logout}
-                className="flex items-center justify-center w-10 h-10 font-medium rounded-full text-sm transition-all duration-200 shadow-md bg-white/10 hover:bg-red-500/20 text-white hover:text-red-400 border border-white/10 hover:border-red-500/30"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
           <div>
             <span
               className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
@@ -1155,6 +1133,6 @@ export default function Timeline() {
           </div>
         </div>
       )}
-    </div>
+    </AppContainer>
   );
 }

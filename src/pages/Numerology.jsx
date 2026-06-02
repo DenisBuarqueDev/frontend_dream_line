@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AppContainer from "../components/ui/AppContainer";
+import { AppHeader } from "../components/ui";
 
 const INTERPRETATIONS = {
   1: { essence: "Início, ação, liderança", traits: ["independência", "originalidade", "coragem"] },
@@ -131,23 +133,24 @@ export default function Numerology() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center">
+      <AppContainer className="md:items-center md:justify-center">
         <div className="text-white text-xl">Carregando...</div>
-      </div>
+      </AppContainer>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 p-4 sm:p-6">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all">
+    <AppContainer className="md:items-center md:justify-center">
+      <AppHeader title="Numerologia" onBack={() => navigate(-1)} />
+      <div className="w-full max-w-2xl flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
+        <div className="flex items-center justify-between mb-6 md:flex">
+          <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white hidden md:flex items-center justify-center transition-all">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="text-2xl font-bold text-white">Numerologia</h1>
-          <div className="w-10" />
+          <h1 className="text-2xl font-bold text-white md:block hidden">Numerologia</h1>
+          <div className="w-10 hidden md:block" />
         </div>
 
         {error && (
@@ -246,6 +249,6 @@ export default function Numerology() {
           </div>
         )}
       </div>
-    </div>
+    </AppContainer>
   );
 }

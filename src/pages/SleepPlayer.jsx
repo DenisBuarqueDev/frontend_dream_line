@@ -1,5 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useHzPlayer } from "../hooks/useHzPlayer";
+import AppContainer from "../components/ui/AppContainer";
+import { AppHeader } from "../components/ui";
 
 const FREQUENCY_MAP = {
   calmo: { hz: "963Hz", file: "963hz.mp3", label: "Calmo" },
@@ -65,17 +67,10 @@ export default function SleepPlayer() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-2xl">
-        <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl p-6 sm:p-10">
-          <button
-            onClick={() => navigate("/sleep")}
-            className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all mb-6"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
+    <AppContainer className="md:items-center md:justify-center">
+      <AppHeader title={stateLabel} onBack={() => navigate("/sleep")} />
+      <div className="w-full max-w-2xl flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
+        <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-2xl shadow-xl p-6 md:p-10">
 
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
@@ -157,6 +152,6 @@ export default function SleepPlayer() {
           </button>
         </div>
       </div>
-    </div>
+    </AppContainer>
   );
 }

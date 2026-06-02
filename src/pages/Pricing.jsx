@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import PricingCard from "../components/PricingCard";
 import logotipo from "../assets/logotipo.png";
+import AppContainer from "../components/ui/AppContainer";
+import { AppHeader } from "../components/ui";
 
 const PLANS = [
   {
@@ -73,9 +75,10 @@ function Pricing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-5xl">
-        <div className="text-center mb-12">
+    <AppContainer className="md:items-center md:justify-center">
+      <AppHeader title="Planos" onBack={() => navigate("/dashboard")} />
+      <div className="w-full max-w-5xl flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
+        <div className="text-center mb-12 mt-4 md:mt-0">
           <img
             src={logotipo}
             alt="Dream Line Logo"
@@ -121,7 +124,7 @@ function Pricing() {
           Você pode cancelar sua assinatura a qualquer momento.
         </p>
       </div>
-    </div>
+    </AppContainer>
   );
 }
 

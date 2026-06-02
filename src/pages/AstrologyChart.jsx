@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AppContainer from '../components/ui/AppContainer';
+import { AppHeader } from '../components/ui';
 import { generateAstralChart, getAstralCharts, getAstralChartById, deleteAstralChart } from '../services/api';
 import ChartSummary from '../components/ChartSummary';
 import { PlanetGrid, getPlanetsByCategory } from '../components/PlanetCardInterpretive';
@@ -585,22 +587,9 @@ export default function AstrologyChart() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-7xl mx-auto">
-        <header className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white">Mapa Astral</h1>
-            <p className="text-purple-200 text-sm mt-1">Descubra os segredos do seu céu natal</p>
-          </div>
-          <a 
-            href="/dashboard" 
-            className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all text-xl"
-            title="Voltar"
-          >
-            ←
-          </a>
-        </header>
-
+    <AppContainer className="md:items-start md:justify-center md:p-8">
+      <AppHeader title="Mapa Astral" onBack={() => { window.location.href = '/dashboard'; }} />
+      <div className="w-full max-w-7xl mx-auto flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
         <div className="flex flex-col gap-8">
           <div>
             {chartData ? (
@@ -815,6 +804,6 @@ export default function AstrologyChart() {
       {showExplanation && (
         <ChartExplanation onClose={() => setShowExplanation(false)} />
       )}
-    </div>
+    </AppContainer>
   );
 }

@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AppContainer from "../components/ui/AppContainer";
+import { AppHeader } from "../components/ui";
 
 const EMOTIONAL_STATES = [
   { id: "calmo", label: "Calmo", icon: "😌", color: "from-emerald-500 to-teal-600" },
@@ -28,17 +30,10 @@ export default function SleepMode() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-2xl">
-        <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl p-4 sm:p-8">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all mb-6"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
+    <AppContainer className="md:items-center md:justify-center">
+      <AppHeader title="Modo Sono" onBack={() => navigate("/dashboard")} />
+      <div className="w-full max-w-2xl flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
+        <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-2xl shadow-xl p-4 md:p-8">
 
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
@@ -80,6 +75,6 @@ export default function SleepMode() {
           </div>
         </div>
       </div>
-    </div>
+    </AppContainer>
   );
 }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { saveDream, getDreams, transcribeAudio, interpretDreamWithAI } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
+import AppContainer from "../components/ui/AppContainer";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import logotipo from "../assets/logotipo.png";
 import SecondaryButton from "../components/ui/SecondaryButton";
@@ -747,9 +748,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-xl">
-        <GlassCard className="p-6 sm:p-10">
+    <AppContainer className="md:items-center md:justify-center">
+      <div className="w-full max-w-xl flex flex-col md:block flex-1 md:flex-none">
+        <GlassCard className="flex flex-col flex-1 md:block rounded-none md:rounded-2xl p-4 pb-8 md:p-6 lg:p-10 shadow-none md:shadow-xl border-0 md:border">
           
           <div className="flex justify-between items-center mb-2">
             <div className="flex items-center gap-3">
@@ -837,7 +838,7 @@ export default function Dashboard() {
             <img
               src={logotipo}
               alt="Dream Line Logo"
-              className="w-24 h-24 object-contain mx-auto mb-4"
+              className="w-28 h-28 md:w-24 md:h-24 object-contain mx-auto mb-4"
             />
             <h1 className="text-3xl font-bold text-white">Dream Line</h1>
             <p className="text-purple-200 text-sm mt-2">
@@ -845,7 +846,7 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-6">
+          <div className="flex flex-col items-center gap-4 md:gap-6 flex-1 md:flex-none w-full justify-between md:justify-start">
             <div
               className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-xl shadow-purple-500/20 transition-all duration-300 ${isRecording ? "ring-4 ring-purple-400 ring-opacity-75 animate-pulse scale-110" : ""}`}
             >
@@ -1177,6 +1178,7 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-    </div>
+    </AppContainer>
   );
 }
+
