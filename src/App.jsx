@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { RequirePlan } from "./components/RequirePlan";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Timeline from "./pages/Timeline";
@@ -10,12 +11,15 @@ import Pricing from "./pages/Pricing";
 import AstrologyChart from "./pages/AstrologyChart";
 import Numerology from "./pages/Numerology";
 import LuckyNumbers from "./pages/LuckyNumbers";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentCancelled from "./pages/PaymentCancelled";
+import SubscriptionExpired from "./pages/SubscriptionExpired";
 import AIDebug from "./pages/AIDebug";
 import AITestPanel from "./pages/AITestPanel";
 
 function App() {
   const { isAuthenticated } = useAuth();
-  
+
   return (
     <Routes>
       <Route
@@ -25,6 +29,18 @@ function App() {
       <Route
         path="/pricing"
         element={<Pricing />}
+      />
+      <Route
+        path="/payment-success"
+        element={<PaymentSuccess />}
+      />
+      <Route
+        path="/payment-cancelled"
+        element={<PaymentCancelled />}
+      />
+      <Route
+        path="/subscription-expired"
+        element={<SubscriptionExpired />}
       />
       <Route
         path="/dashboard"
@@ -46,7 +62,9 @@ function App() {
         path="/sleep"
         element={
           <ProtectedRoute>
-            <SleepMode />
+            <RequirePlan plans={["premium", "pro"]}>
+              <SleepMode />
+            </RequirePlan>
           </ProtectedRoute>
         }
       />
@@ -62,7 +80,9 @@ function App() {
         path="/astrology"
         element={
           <ProtectedRoute>
-            <AstrologyChart />
+            <RequirePlan plans={["premium", "pro"]}>
+              <AstrologyChart />
+            </RequirePlan>
           </ProtectedRoute>
         }
       />
@@ -70,7 +90,9 @@ function App() {
         path="/numerology"
         element={
           <ProtectedRoute>
-            <Numerology />
+            <RequirePlan plans={["premium", "pro"]}>
+              <Numerology />
+            </RequirePlan>
           </ProtectedRoute>
         }
       />

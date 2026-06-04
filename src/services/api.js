@@ -107,18 +107,6 @@ export async function generateDreamImage(dreamId, imageUrl, imagePublicId) {
   return await handleResponse(response);
 }
 
-export async function upgradePlan(plan) {
-  const url = `${API_BASE_URL}/api/users/upgrade`;
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({ plan }),
-  });
-
-  return await handleResponse(response);
-}
-
 export async function getCurrentPlan() {
   const url = `${API_BASE_URL}/api/users/plan`;
 
@@ -234,6 +222,29 @@ export async function generateDreamImageWithAI(dreamId) {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({}),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function createSubscription(plan) {
+  const url = `${API_BASE_URL}/api/subscription/subscribe`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ plan }),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getSubscriptionStatus() {
+  const url = `${API_BASE_URL}/api/subscription/status`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
   });
 
   return await handleResponse(response);

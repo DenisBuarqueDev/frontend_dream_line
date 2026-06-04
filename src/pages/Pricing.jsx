@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PricingCard from "../components/PricingCard";
 import logotipo from "../assets/logotipo.png";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
+import { createSubscription } from "../services/api";
 
 const PLANS = [
   {
@@ -39,7 +41,6 @@ const PLANS = [
       { text: "1 Mapa Astral", locked: false },
       { text: "Numerologia do sonho", locked: true },
       { text: "Imagem do Sonho", locked: true },
-      
     ],
   },
   {
@@ -64,13 +65,28 @@ const PLANS = [
 
 function Pricing() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(null);
 
-  const handleSubscribe = (planId) => {
+  const handleSubscribe = async (planId) => {
     if (planId === "free") {
       navigate("/dashboard");
-    } else {
-      console.log(`Processando pagamento para plano: ${planId}`);
-      alert(`Em breve! Integração com pagamento para plano ${planId.toUpperCase()}`);
+      return;
+    }
+
+    setLoading(planId);
+
+    try {
+      const data = await createSubscription(planId);
+      if (data.success && data.data.initPoint) {
+        window.location.href = data.data.initPoint;
+      } else {
+        alert("Erro ao iniciar assinatura. Tente novamente.");
+      }
+    } catch (error) {
+      console.error("Erro ao processar assinatura:", error);
+      alert("Erro ao conectar com o servidor. Tente novamente mais tarde.");
+    } finally {
+      setLoading(null);
     }
   };
 
@@ -101,6 +117,7 @@ function Pricing() {
               key={plan.id}
               plan={plan}
               onSubscribe={handleSubscribe}
+              loading={loading}
             />
           ))}
         </div>
@@ -121,7 +138,7 @@ function Pricing() {
         </div>
 
         <p className="text-center text-sm text-slate-500 mt-8">
-          Você pode cancelar sua assinatura a qualquer momento.
+          Pagamento processado com segurança pelo Mercado Pago
         </p>
       </div>
     </AppContainer>

@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router-dom";
-
-function PricingCard({ plan, onSubscribe }) {
-  const navigate = useNavigate();
-
+function PricingCard({ plan, onSubscribe, loading }) {
   const handleClick = () => {
     onSubscribe(plan.id);
   };
+
+  const isFree = plan.id === "free";
+  const isLoading = loading === plan.id;
 
   return (
     <div
@@ -53,7 +52,8 @@ function PricingCard({ plan, onSubscribe }) {
 
       <button
         onClick={handleClick}
-        className={`w-full py-3 px-4 rounded-xl font-semibold transition-all duration-200 ${
+        disabled={isLoading}
+        className={`w-full py-3 px-4 rounded-xl font-semibold transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed ${
           plan.buttonStyle === "outline"
             ? "border-2 border-violet-500 text-violet-400 hover:bg-violet-500/10"
             : plan.buttonStyle === "gradient"
@@ -61,7 +61,7 @@ function PricingCard({ plan, onSubscribe }) {
             : "bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-white shadow-lg shadow-amber-500/25"
         }`}
       >
-        {plan.buttonText}
+        {isLoading ? "Redirecionando..." : plan.buttonText}
       </button>
     </div>
   );
