@@ -173,7 +173,7 @@ function TimelineItem({
 
       <div className="flex-1 pb-8">
         <div className="bg-white/10 rounded-2xl border border-white/10 p-4 hover:bg-white/15 transition-all">
-          {dream.imageUrl && userPlan === "pro" && (
+          {dream.imageUrl && userPlan === "premium" && (
             <div className="mb-3 relative group">
               <img
                 src={dream.imageUrl}
@@ -228,12 +228,12 @@ function TimelineItem({
             </div>
           )}
 
-          {dream.imageUrl && userPlan !== "pro" && (
+          {dream.imageUrl && userPlan !== "premium" && (
             <div className="flex justify-end mb-2">
               <button
                 onClick={() =>
                   showUpgradePlanModal(
-                    "Disponível apenas para plano Pro. Faça upgrade para gerar imagens dos seus sonhos.",
+                    "Disponível apenas para plano Premium. Faça upgrade para gerar imagens dos seus sonhos.",
                   )
                 }
                 className="flex items-center gap-1 px-3 py-1.5 bg-transparent border border-white/20 text-slate-500 text-xs font-medium rounded-full cursor-not-allowed"
@@ -276,7 +276,7 @@ function TimelineItem({
               <button
                 onClick={() =>
                   showUpgradePlanModal(
-                    "Disponível apenas para plano Pro. Faça upgrade para gerar imagens dos seus sonhos.",
+                    "Disponível apenas para plano Premium. Faça upgrade para gerar imagens dos seus sonhos.",
                   )
                 }
                 className="flex items-center gap-1 px-3 py-1.5 bg-transparent border border-white/20 text-slate-500 text-xs font-medium rounded-full cursor-not-allowed"
@@ -487,8 +487,8 @@ export default function Timeline() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const userPlan = user?.plan || "free";
-  const canSeeWeeklySummary = user?.plan === "premium" || user?.plan === "pro";
-  const canGenerateImage = user?.plan === "pro";
+  const canSeeWeeklySummary = user?.plan === "premium";
+  const canGenerateImage = user?.plan === "premium";
   const [dreams, setDreams] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -782,14 +782,12 @@ export default function Timeline() {
           <div>
             <span
               className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
-                userPlan === "pro"
-                  ? "bg-indigo-500/20 text-indigo-300"
-                  : userPlan === "premium"
-                    ? "bg-purple-500/20 text-purple-300"
-                    : "bg-white/10 text-slate-400"
+                userPlan === "premium"
+                  ? "bg-purple-500/20 text-purple-300"
+                  : "bg-white/10 text-slate-400"
               }`}
             >
-              {userPlan === "pro" ? "Pro" : userPlan === "premium" ? "Premium" : "Free"}
+              {userPlan === "premium" ? "Premium" : "Free"}
             </span>
           </div>
 
@@ -805,7 +803,7 @@ export default function Timeline() {
             <p className="text-purple-200 text-sm mt-2">
               Histórico dos seus sonhos
             </p>
-            {userPlan !== "pro" && (
+            {userPlan !== "premium" && (
               <button
                 onClick={() => navigate("/pricing")}
                 className="m-auto mt-4 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-semibold rounded-xl text-sm transition-all duration-200 shadow-lg hover:scale-[1.02] active:scale-[0.98]"
@@ -817,12 +815,7 @@ export default function Timeline() {
                 >
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                 </svg>
-                Sejá usuário{" "}
-                {userPlan === "free"
-                  ? "Pro"
-                  : userPlan === "premium"
-                    ? "Pro"
-                    : "Free"}
+                Seja Premium
               </button>
             )}
           </div>

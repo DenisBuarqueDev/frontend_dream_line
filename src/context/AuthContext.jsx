@@ -10,12 +10,6 @@ const PLAN_PERMISSIONS = {
     maxDreams: 5
   },
   premium: {
-    canGenerateImage: false,
-    canUseSleepMode: true,
-    canSeeWeeklySummary: true,
-    maxDreams: 30
-  },
-  pro: {
     canGenerateImage: true,
     canUseSleepMode: true,
     canSeeWeeklySummary: true,

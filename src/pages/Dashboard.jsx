@@ -778,7 +778,7 @@ export default function Dashboard() {
                   onClick={() =>
                     userPlan === "free"
                       ? showUpgradePlanModal(
-                          "Disponível apenas para planos Premium ou Pro. Faça upgrade para desbloquear.",
+                          "Disponível apenas para plano Premium. Faça upgrade para desbloquear.",
                         )
                       : navigate("/astrology")
                   }
@@ -823,14 +823,12 @@ export default function Dashboard() {
           <div>
             <span
               className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
-                userPlan === "pro"
-                  ? "bg-indigo-500/20 text-indigo-300"
-                  : userPlan === "premium"
-                    ? "bg-purple-500/20 text-purple-300"
-                    : "bg-white/10 text-slate-400"
+                userPlan === "premium"
+                  ? "bg-purple-500/20 text-purple-300"
+                  : "bg-white/10 text-slate-400"
               }`}
             >
-              {userPlan === "pro" ? "Pro" : userPlan === "premium" ? "Premium" : "Free"}
+              {userPlan === "premium" ? "Premium" : "Free"}
             </span>
           </div>
 

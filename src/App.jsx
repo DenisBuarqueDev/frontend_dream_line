@@ -58,44 +58,44 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/sleep"
-        element={
-          <ProtectedRoute>
-            <RequirePlan plans={["premium", "pro"]}>
-              <SleepMode />
-            </RequirePlan>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/sleep-player"
-        element={
-          <ProtectedRoute>
-            <SleepPlayer />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/astrology"
-        element={
-          <ProtectedRoute>
-            <RequirePlan plans={["premium", "pro"]}>
-              <AstrologyChart />
-            </RequirePlan>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/numerology"
-        element={
-          <ProtectedRoute>
-            <RequirePlan plans={["premium", "pro"]}>
-              <Numerology />
-            </RequirePlan>
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/sleep"
+          element={
+            <ProtectedRoute>
+              <RequirePlan plans={["premium"]}>
+                <SleepMode />
+              </RequirePlan>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sleep-player"
+          element={
+            <ProtectedRoute>
+              <SleepPlayer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/astrology"
+          element={
+            <ProtectedRoute>
+              <RequirePlan plans={["premium"]}>
+                <AstrologyChart />
+              </RequirePlan>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/numerology"
+          element={
+            <ProtectedRoute>
+              <RequirePlan plans={["premium"]}>
+                <Numerology />
+              </RequirePlan>
+            </ProtectedRoute>
+          }
+        />
       <Route
         path="/lucky-numbers"
         element={

@@ -22,7 +22,7 @@ export default function SleepMode() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const userPlan = user?.plan || "free";
-  const canUseEmotions = userPlan === "premium" || userPlan === "pro";
+  const canUseEmotions = userPlan === "premium";
 
   const handleSelect = (state) => {
     if (!canUseEmotions) return;

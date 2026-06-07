@@ -271,7 +271,6 @@ export default function AstrologyChart() {
   const [activeTab, setActiveTab] = useState('overview');
 
   const isPremium = userPlan === 'premium';
-  const isPro = userPlan === 'pro';
   const atPremiumLimit = isPremium && history.length >= 1;
 
   const parseDateToISO = (dateStr) => {
@@ -726,7 +725,7 @@ export default function AstrologyChart() {
                 {atPremiumLimit && (
                   <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-sm">
                     <p className="text-amber-300">
-                      Plano Premium permite apenas 1 mapa astral. Exclua o mapa existente para gerar outro ou faça upgrade para o plano Pro.
+                       Plano Premium permite apenas 1 mapa astral. Exclua o mapa existente para gerar outro.
                     </p>
                     <button
                       type="button"

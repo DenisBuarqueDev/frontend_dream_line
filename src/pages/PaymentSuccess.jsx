@@ -1,8 +1,30 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { getSubscriptionStatus } from "../services/api";
 import AppContainer from "../components/ui/AppContainer";
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
+  const { updatePlanInfo } = useAuth();
+
+  useEffect(() => {
+    getSubscriptionStatus()
+      .then((res) => {
+        if (res?.data?.status === "active") {
+          updatePlanInfo({
+            plan: res.data.plan,
+            subscription: {
+              plan: res.data.plan,
+              status: res.data.status,
+              startedAt: res.data.startedAt,
+              expiresAt: res.data.expiresAt,
+            },
+          });
+        }
+      })
+      .catch(() => {});
+  }, [updatePlanInfo]);
 
   return (
     <AppContainer className="items-center justify-center">
