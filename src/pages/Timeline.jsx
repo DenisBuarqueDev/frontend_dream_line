@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DreamInsights from "../components/DreamInsights";
-import { getDreams, deleteDream, generateDreamImageWithAI } from "../services/api";
+import { getDreams, deleteDream, generateDreamImageWithAI, getCurrentPlan } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
 import logotipo from "../assets/logotipo.png";
@@ -486,9 +486,6 @@ function TimelineItem({
 export default function Timeline() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const userPlan = user?.plan || "free";
-  const canSeeWeeklySummary = user?.plan === "premium";
-  const canGenerateImage = user?.plan === "premium";
   const [dreams, setDreams] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -502,6 +499,19 @@ export default function Timeline() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeMessage, setUpgradeMessage] = useState("");
   const [generatingIds, setGeneratingIds] = useState({});
+  const [realPlan, setRealPlan] = useState(user?.plan || "free");
+
+  const userPlan = realPlan;
+  const canSeeWeeklySummary = realPlan === "premium";
+  const canGenerateImage = realPlan === "premium";
+
+  useEffect(() => {
+    getCurrentPlan()
+      .then((data) => {
+        if (data?.data?.plan) setRealPlan(data.data.plan);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const loadDreamsOnMount = async () => {

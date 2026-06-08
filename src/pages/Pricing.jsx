@@ -3,9 +3,7 @@ import PricingCard from "../components/PricingCard";
 import logotipo from "../assets/logotipo.png";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
-
-const MP_CHECKOUT_URL =
-  "https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=b26fc8d05dc242c9825498592ebd3b93";
+import { createSubscription } from "../services/api";
 
 const PLANS = [
   {
@@ -45,12 +43,17 @@ const PLANS = [
 function Pricing() {
   const navigate = useNavigate();
 
-  const handleSubscribe = (planId) => {
+  const handleSubscribe = async (planId) => {
     if (planId === "free") {
       navigate("/dashboard");
       return;
     }
-    window.location.href = MP_CHECKOUT_URL;
+    try {
+      const response = await createSubscription("premium");
+      window.location.href = response.initPoint;
+    } catch (error) {
+      console.error("Erro ao criar assinatura:", error.message);
+    }
   };
 
   return (

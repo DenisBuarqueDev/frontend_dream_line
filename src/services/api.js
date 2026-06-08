@@ -62,8 +62,8 @@ export async function saveDream(dreamData) {
   return await handleResponse(response);
 }
 
-export async function getDreams() {
-  const url = `${API_BASE_URL}/api/dreams`;
+export async function getDreams(page = 1, limit = 20) {
+  const url = `${API_BASE_URL}/api/dreams?page=${page}&limit=${limit}`;
 
   const response = await fetch(url, {
     method: 'GET',

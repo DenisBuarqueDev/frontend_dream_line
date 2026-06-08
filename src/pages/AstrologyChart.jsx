@@ -271,7 +271,6 @@ export default function AstrologyChart() {
   const [activeTab, setActiveTab] = useState('overview');
 
   const isPremium = userPlan === 'premium';
-  const atPremiumLimit = isPremium && history.length >= 1;
 
   const parseDateToISO = (dateStr) => {
     if (!dateStr) return '';
@@ -722,29 +721,14 @@ export default function AstrologyChart() {
                   </div>
                 )}
 
-                {atPremiumLimit && (
-                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-sm">
-                    <p className="text-amber-300">
-                       Plano Premium permite apenas 1 mapa astral. Exclua o mapa existente para gerar outro.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => navigate('/pricing')}
-                      className="mt-2 text-purple-400 hover:text-purple-300 underline text-xs"
-                    >
-                      Ver planos
-                    </button>
-                  </div>
-                )}
+
 
                 <button
                   type="submit"
-                  disabled={loading || atPremiumLimit}
+                  disabled={loading}
                   className="astral-btn-primary w-full"
                 >
-                  {atPremiumLimit ? (
-                    'Limite atingido'
-                  ) : loading ? (
+                  {loading ? (
                     <span className="flex items-center justify-center gap-2">
                       <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       Gerando...

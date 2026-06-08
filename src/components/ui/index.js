@@ -8,5 +8,4 @@ export { default as Label } from './Label';
 export { default as SectionTitle } from './SectionTitle';
 export { default as Badge } from './Badge';
 export { default as LoadingSpinner } from './LoadingSpinner';
-export { default as EmptyState } from './EmptyState';
 export { default as AppHeader } from './AppHeader';
