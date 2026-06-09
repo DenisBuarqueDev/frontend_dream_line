@@ -227,13 +227,12 @@ export async function generateDreamImageWithAI(dreamId) {
   return await handleResponse(response);
 }
 
-export async function createSubscription(plan) {
-  const url = `${API_BASE_URL}/api/subscription/subscribe`;
+export async function createCheckout() {
+  const url = `${API_BASE_URL}/api/subscription/create-checkout`;
 
   const response = await fetch(url, {
     method: 'POST',
     headers: getAuthHeaders(),
-    body: JSON.stringify({ plan }),
   });
 
   return await handleResponse(response);

@@ -1,4 +1,4 @@
-function PricingCard({ plan, onSubscribe }) {
+function PricingCard({ plan, onSubscribe, disabled }) {
   const isFree = plan.id === "free";
 
   return (
@@ -60,10 +60,13 @@ function PricingCard({ plan, onSubscribe }) {
 
         <button
           onClick={() => onSubscribe(plan.id)}
+          disabled={disabled && !isFree}
           className={`w-full py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-200 ${
             isFree
               ? "bg-white/10 text-slate-400 border border-white/10 cursor-default"
-              : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98]"
+              : disabled
+                ? "bg-purple-600/50 text-white/60 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98]"
           }`}
         >
           {plan.buttonText}

@@ -4,7 +4,7 @@ import PricingCard from "../components/PricingCard";
 import logotipo from "../assets/logotipo.png";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
-import { createSubscription } from "../services/api";
+import { createCheckout } from "../services/api";
 
 const PLANS = [
   {
@@ -43,20 +43,29 @@ const PLANS = [
 
 function Pricing() {
   const navigate = useNavigate();
-  const [subscribing, setSubscribing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubscribe = async (planId) => {
     if (planId === "free") {
       navigate("/dashboard");
       return;
     }
-    setSubscribing(true);
+
+    setLoading(true);
+    setError("");
+
     try {
-      const response = await createSubscription("premium");
-      window.location.href = response.data.initPoint;
-    } catch (error) {
-      console.error("Erro ao criar assinatura:", error.message);
-      setSubscribing(false);
+      const response = await createCheckout();
+      if (response?.data?.initPoint) {
+        window.location.href = response.data.initPoint;
+      } else {
+        setError("Erro ao criar checkout. Tente novamente.");
+        setLoading(false);
+      }
+    } catch (err) {
+      setError(err.message || "Erro ao processar assinatura.");
+      setLoading(false);
     }
   };
 
@@ -78,17 +87,24 @@ function Pricing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start mb-16 max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-2xl mx-auto">
           {PLANS.map((plan) => (
             <PricingCard
               key={plan.id}
               plan={plan}
               onSubscribe={handleSubscribe}
+              disabled={loading}
             />
           ))}
         </div>
 
-        <div className="text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-lg mx-auto">
+        {error && (
+          <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-400 text-center max-w-lg mx-auto">
+            {error}
+          </div>
+        )}
+
+        <div className="text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-lg mx-auto mt-8">
           <h2 className="text-xl font-bold text-white mb-2">
             Transforme seus sonhos em clareza
           </h2>
@@ -102,7 +118,7 @@ function Pricing() {
         </p>
       </div>
 
-      {subscribing && (
+      {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl text-center">
             <p className="text-white text-lg">Redirecionando para o Mercado Pago...</p>

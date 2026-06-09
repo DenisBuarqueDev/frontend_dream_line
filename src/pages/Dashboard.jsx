@@ -860,6 +860,14 @@ export default function Dashboard() {
             <p className="text-purple-200 text-sm mt-2">
               Fale sobre seus sonhos
             </p>
+            {userPlan === "free" && (
+              <button
+                onClick={() => navigate("/pricing")}
+                className="mt-3 px-6 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Seja Premium
+              </button>
+            )}
           </div>
 
           <div className="flex flex-col items-center gap-4 md:gap-6 flex-1 md:flex-none w-full justify-between md:justify-start">

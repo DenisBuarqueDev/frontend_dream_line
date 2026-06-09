@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getSubscriptionStatus } from "../services/api";
@@ -7,23 +7,38 @@ import AppContainer from "../components/ui/AppContainer";
 export default function PaymentSuccess() {
   const navigate = useNavigate();
   const { updatePlanInfo } = useAuth();
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+
     getSubscriptionStatus()
       .then((res) => {
-        if (res?.data?.status === "active") {
+        if (cancelled) return;
+        const data = res?.data;
+        if (data) {
+          setStatus(data);
           updatePlanInfo({
-            plan: res.data.plan,
+            plan: data.plan,
+            isPremium: data.isPremium,
             subscription: {
-              plan: res.data.plan,
-              status: res.data.status,
-              startedAt: res.data.startedAt,
-              expiresAt: res.data.expiresAt,
+              plan: data.plan,
+              status: data.status,
+              startedAt: data.premiumSince,
+              expiresAt: data.premiumExpiresAt,
             },
           });
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!cancelled) setStatus({ plan: "free" });
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
   }, [updatePlanInfo]);
 
   return (
@@ -39,9 +54,21 @@ export default function PaymentSuccess() {
           Pagamento aprovado!
         </h1>
 
-        <p className="text-lg text-slate-300 mb-8">
-          Seu plano foi ativado com sucesso.
+        <p className="text-lg text-slate-300 mb-2">
+          Seu plano Premium foi ativado com sucesso.
         </p>
+
+        {loading ? (
+          <p className="text-slate-400 mb-8">Verificando status...</p>
+        ) : status?.isPremium ? (
+          <p className="text-purple-400 font-semibold mb-8">
+            Premium válido por {status.daysRemaining} dias
+          </p>
+        ) : (
+          <p className="text-yellow-400 mb-8">
+            O Premium pode levar alguns instantes para ser ativado.
+          </p>
+        )}
 
         <button
           onClick={() => navigate("/dashboard")}
