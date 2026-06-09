@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 
+const devLog = import.meta.env.DEV ? console.log : () => {};
+
 const audioModules = import.meta.glob('../assets/sounds/*.mp3', {
   eager: true,
   query: '?url',
@@ -17,13 +19,13 @@ export function useHzPlayer(audioFile) {
 
   const audioSrc = audioModules[`../assets/sounds/${audioFile}`] || '';
 
-  console.log(`[HzPlayer] Arquivo: ${audioFile}, URL:`, audioSrc);
+  devLog(`[HzPlayer] Arquivo: ${audioFile}, URL:`, audioSrc);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    console.log(`[HzPlayer] Carregando: ${audioFile}`);
+    devLog(`[HzPlayer] Carregando: ${audioFile}`);
 
     setIsPlaying(false);
     setCurrentTime(0);
@@ -33,7 +35,7 @@ export function useHzPlayer(audioFile) {
 
     const onLoadStart = () => setIsLoading(true);
     const onCanPlay = () => {
-      console.log(`[HzPlayer] Pronto: ${audioFile}`);
+      devLog(`[HzPlayer] Pronto: ${audioFile}`);
       setIsLoading(false);
     };
     const onLoadedMetadata = () => {
@@ -42,7 +44,7 @@ export function useHzPlayer(audioFile) {
     };
     const onTimeUpdate = () => setCurrentTime(audio.currentTime);
     const onEnded = () => {
-      console.log(`[HzPlayer] Concluído: ${audioFile}`);
+      devLog(`[HzPlayer] Concluído: ${audioFile}`);
       setIsPlaying(false);
     };
     const onError = () => {
@@ -77,10 +79,10 @@ export function useHzPlayer(audioFile) {
     const audio = audioRef.current;
     if (!audio || !audioSrc) return;
 
-    console.log('[HzPlayer] Reproduzir');
+    devLog('[HzPlayer] Reproduzir');
     audio.play()
       .then(() => {
-        console.log('[HzPlayer] Reproduzindo');
+        devLog('[HzPlayer] Reproduzindo');
         setIsPlaying(true);
         setError(null);
       })
@@ -94,7 +96,7 @@ export function useHzPlayer(audioFile) {
   const pause = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    console.log('[HzPlayer] Pausar');
+    devLog('[HzPlayer] Pausar');
     audio.pause();
     setIsPlaying(false);
   }, []);
@@ -102,7 +104,7 @@ export function useHzPlayer(audioFile) {
   const stop = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    console.log('[HzPlayer] Parar');
+    devLog('[HzPlayer] Parar');
     audio.pause();
     audio.currentTime = 0;
     setCurrentTime(0);

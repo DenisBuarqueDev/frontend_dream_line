@@ -621,9 +621,6 @@ export default function Dashboard() {
         if (ptVoice) {
           utterance.voice = ptVoice;
         }
-        console.log("Voice selected:", ptVoice?.name || "default");
-        console.log("Language:", ptVoice?.lang || "pt-BR");
-
         utterance.onend = () => setIsSpeaking(false);
         utterance.onerror = () => setIsSpeaking(false);
         synth.speak(utterance);
@@ -831,6 +828,27 @@ export default function Dashboard() {
               {userPlan === "premium" ? "Premium" : "Free"}
             </span>
           </div>
+
+          {userPlan === "premium" && user?.subscription?.expiresAt && (() => {
+            const daysLeft = Math.ceil((new Date(user.subscription.expiresAt) - new Date()) / (1000 * 60 * 60 * 24));
+            if (daysLeft <= 0) return null;
+            if (daysLeft > 7) return null;
+            return (
+              <div className="mb-4 mx-4 p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-center">
+                <p className="text-sm text-amber-300">
+                  {daysLeft === 1
+                    ? "Sua assinatura expira amanhã. Renove para continuar usando Premium."
+                    : `Sua assinatura expira em ${daysLeft} dias. Renove para continuar usando Premium.`}
+                </p>
+                <button
+                  onClick={() => navigate("/pricing")}
+                  className="mt-2 text-xs font-semibold text-amber-300 underline hover:text-amber-200"
+                >
+                  Renovar agora
+                </button>
+              </div>
+            );
+          })()}
 
           <div className="text-center mb-8">
             <img

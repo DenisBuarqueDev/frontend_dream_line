@@ -29,6 +29,7 @@ function TimelineItem({
   showUpgradePlanModal,
   userPlan,
 }) {
+  const dreamImageUrl = dream.imageUrl || dream.dreamNumerology?.imageUrl;
   const [expanded, setExpanded] = useState(false);
   const [showNumerology, setShowNumerology] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -80,9 +81,6 @@ function TimelineItem({
         if (ptVoice) {
           utterance.voice = ptVoice;
         }
-        console.log("Voice selected:", ptVoice?.name || "default");
-        console.log("Language:", ptVoice?.lang || "pt-BR");
-
         utterance.onend = () => setIsSpeaking(false);
 
         synth.speak(utterance);
@@ -117,8 +115,6 @@ function TimelineItem({
       voices.find((v) => v.lang === "pt-BR") ||
       voices.find((v) => v.lang.startsWith("pt")) ||
       voices[0];
-    console.log("Voice selected:", voice?.name || "default");
-    console.log("Language:", voice?.lang || "pt-BR");
 
     setIsSpeakingText(true);
 
@@ -173,20 +169,20 @@ function TimelineItem({
 
       <div className="flex-1 pb-8">
         <div className="bg-white/10 rounded-2xl border border-white/10 p-4 hover:bg-white/15 transition-all">
-          {dream.imageUrl && userPlan === "premium" && (
+          {dreamImageUrl && userPlan === "premium" && (
             <div className="mb-3 relative group">
               <img
-                src={dream.imageUrl}
+                src={dreamImageUrl}
                 alt="Imagem do sonho"
                 className="w-full aspect-video object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                onClick={() => onImageClick(dream.imageUrl)}
+                onClick={() => onImageClick(dreamImageUrl)}
                 loading="lazy"
               />
               <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={() => {
                     const link = document.createElement('a');
-                    link.href = dream.imageUrl;
+                    link.href = dreamImageUrl;
                     link.download = `sonho-${dream._id || dream.id}.webp`;
                     link.click();
                   }}
@@ -198,7 +194,7 @@ function TimelineItem({
                   </svg>
                 </button>
                 <button
-                  onClick={() => onImageClick(dream.imageUrl)}
+                onClick={() => onImageClick(dreamImageUrl)}
                   className="w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
                   title="Ampliar imagem"
                 >
@@ -228,7 +224,7 @@ function TimelineItem({
             </div>
           )}
 
-          {dream.imageUrl && userPlan !== "premium" && (
+          {dreamImageUrl && userPlan !== "premium" && (
             <div className="flex justify-end mb-2">
               <button
                 onClick={() =>
@@ -250,7 +246,7 @@ function TimelineItem({
             </div>
           )}
 
-          {!dream.imageUrl && canGenerateImage && (
+          {!dreamImageUrl && canGenerateImage && (
             <div className="flex justify-end mb-2">
               <button
                 onClick={() => onGenerateImage(dream)}
@@ -271,7 +267,7 @@ function TimelineItem({
               </button>
             </div>
           )}
-          {!dream.imageUrl && !canGenerateImage && (
+          {!dreamImageUrl && !canGenerateImage && (
             <div className="flex justify-end mb-2">
               <button
                 onClick={() =>

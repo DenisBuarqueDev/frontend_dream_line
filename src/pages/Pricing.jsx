@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PricingCard from "../components/PricingCard";
 import logotipo from "../assets/logotipo.png";
@@ -42,17 +43,20 @@ const PLANS = [
 
 function Pricing() {
   const navigate = useNavigate();
+  const [subscribing, setSubscribing] = useState(false);
 
   const handleSubscribe = async (planId) => {
     if (planId === "free") {
       navigate("/dashboard");
       return;
     }
+    setSubscribing(true);
     try {
       const response = await createSubscription("premium");
-      window.location.href = response.initPoint;
+      window.location.href = response.data.initPoint;
     } catch (error) {
       console.error("Erro ao criar assinatura:", error.message);
+      setSubscribing(false);
     }
   };
 
@@ -97,6 +101,14 @@ function Pricing() {
           Pagamento processado com segurança pelo Mercado Pago
         </p>
       </div>
+
+      {subscribing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl text-center">
+            <p className="text-white text-lg">Redirecionando para o Mercado Pago...</p>
+          </div>
+        </div>
+      )}
     </AppContainer>
   );
 }
