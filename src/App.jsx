@@ -16,13 +16,16 @@ import PaymentCancelled from "./pages/PaymentCancelled";
 import SubscriptionExpired from "./pages/SubscriptionExpired";
 import AIDebug from "./pages/AIDebug";
 import AITestPanel from "./pages/AITestPanel";
+import NotificationSettings from "./pages/NotificationSettings";
 import InstallPWA from "./components/InstallPWA";
+import NotificationPrompt from "./components/NotificationPrompt";
 
 function App() {
   const { isAuthenticated } = useAuth();
 
   return (
     <>
+    <NotificationPrompt />
     <InstallPWA />
     <Routes>
       <Route
@@ -110,6 +113,14 @@ function App() {
       <Route path="/admin/ai-debug" element={<AIDebug />} />
       <Route path="/admin/ai-test" element={<AITestPanel />} />
       <Route path="/admin/ai-diagnostics" element={<AITestPanel />} />
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <NotificationSettings />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
     </>
