@@ -16,11 +16,14 @@ import PaymentCancelled from "./pages/PaymentCancelled";
 import SubscriptionExpired from "./pages/SubscriptionExpired";
 import AIDebug from "./pages/AIDebug";
 import AITestPanel from "./pages/AITestPanel";
+import InstallPWA from "./components/InstallPWA";
 
 function App() {
   const { isAuthenticated } = useAuth();
 
   return (
+    <>
+    <InstallPWA />
     <Routes>
       <Route
         path="/login"
@@ -109,6 +112,8 @@ function App() {
       <Route path="/admin/ai-diagnostics" element={<AITestPanel />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
+    </>
+
   );
 }
 
