@@ -60,7 +60,7 @@ export default function AIStepsOverlay({ steps, currentStep, isVisible, onCancel
 
           {!isComplete && !isError && (
             <p className="text-purple-200/60 text-sm">
-              Processando seu sonho com inteligência artificial
+              Processando seu sonho.
             </p>
           )}
         </div>
