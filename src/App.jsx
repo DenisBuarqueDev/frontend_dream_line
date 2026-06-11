@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RequirePlan } from "./components/RequirePlan";
+import { onForegroundMessage } from "./services/firebaseClient";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Timeline from "./pages/Timeline";
@@ -23,10 +25,22 @@ import NotificationPrompt from "./components/NotificationPrompt";
 function App() {
   const { isAuthenticated } = useAuth();
 
+  useEffect(() => {
+    const unsub = onForegroundMessage((payload) => {
+      const { title, body } = payload.notification || {};
+      if (title && Notification.permission === 'granted') {
+        try {
+          new Notification(title, { body, icon: '/icons/pwa-192x192.png' });
+        } catch {}
+      }
+    });
+    return () => unsub?.();
+  }, []);
+
   return (
     <>
-    <NotificationPrompt />
     <InstallPWA />
+    <NotificationPrompt />
     <Routes>
       <Route
         path="/login"

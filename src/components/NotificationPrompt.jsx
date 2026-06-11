@@ -1,12 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useAuth } from "../context/AuthContext";
 import { requestFCMPermission } from "../services/firebaseClient";
 import { registerFCMToken, getNotificationSettings, updateNotificationSettings } from "../services/notificationService";
 
-export default function NotificationPrompt({ onDone }) {
+export default function NotificationPrompt() {
+  const { isAuthenticated } = useAuth();
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const checkedRef = useRef(false);
 
   useEffect(() => {
+    if (!isAuthenticated || checkedRef.current) return;
+    checkedRef.current = true;
+
     getNotificationSettings()
       .then((settings) => {
         if (!settings.notificationPrompted && "Notification" in window) {
@@ -14,7 +20,7 @@ export default function NotificationPrompt({ onDone }) {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [isAuthenticated]);
 
   const handleActivate = async () => {
     setLoading(true);
@@ -24,22 +30,20 @@ export default function NotificationPrompt({ onDone }) {
         await registerFCMToken(token);
         await updateNotificationSettings({ notificationsEnabled: true });
       } else {
-        await updateNotificationSettings({ notificationsEnabled: false });
+        await updateNotificationSettings({ notificationsEnabled: false, notificationPrompted: true });
       }
     } catch {
-      await updateNotificationSettings({ notificationsEnabled: false });
+      await updateNotificationSettings({ notificationsEnabled: false, notificationPrompted: true });
     }
     setLoading(false);
     setShow(false);
-    onDone?.();
   };
 
   const handleLater = async () => {
     try {
-      await updateNotificationSettings({ notificationsEnabled: false });
+      await updateNotificationSettings({ notificationsEnabled: false, notificationPrompted: true });
     } catch {}
     setShow(false);
-    onDone?.();
   };
 
   if (!show) return null;

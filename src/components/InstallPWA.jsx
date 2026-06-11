@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
 export default function InstallPWA() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -14,9 +20,13 @@ export default function InstallPWA() {
       return;
     }
 
+    if (deferredPrompt) {
+      setShow(true);
+    }
+
     const handler = (e) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      deferredPrompt = e;
       setShow(true);
     };
 
@@ -45,7 +55,7 @@ export default function InstallPWA() {
       setIsInstalled(true);
     }
 
-    setDeferredPrompt(null);
+    deferredPrompt = null;
     setShow(false);
   };
 
