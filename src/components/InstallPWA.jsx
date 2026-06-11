@@ -1,65 +1,28 @@
 import { useState, useEffect } from "react";
-
-let deferredPrompt = null;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
+import { subscribe, isPWAInstalled, triggerInstall } from "../services/pwaInstall";
 
 export default function InstallPWA() {
-  const [isInstalled, setIsInstalled] = useState(false);
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    const isInstalledApp = window.navigator.standalone === true;
-
-    if (isStandalone || isInstalledApp) {
-      setIsInstalled(true);
-      return;
-    }
-
-    if (deferredPrompt) {
+    const unsub = subscribe(({ deferredPrompt, isInstalled }) => {
+      if (isInstalled || !deferredPrompt) {
+        setShow(false);
+        return;
+      }
       setShow(true);
-    }
-
-    const handler = (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      setShow(true);
-    };
-
-    window.addEventListener("beforeinstallprompt", handler);
-
-    const installedHandler = () => {
-      setIsInstalled(true);
-      setShow(false);
-    };
-
-    window.addEventListener("appinstalled", installedHandler);
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handler);
-      window.removeEventListener("appinstalled", installedHandler);
-    };
+    });
+    return unsub;
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-
-    if (result.outcome === "accepted") {
-      setIsInstalled(true);
-    }
-
-    deferredPrompt = null;
-    setShow(false);
+    const installed = await triggerInstall();
+    if (installed) setShow(false);
   };
 
-  if (!show || isInstalled) return null;
+  const handleDismiss = () => setShow(false);
+
+  if (!show) return null;
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm animate-fade-in">
@@ -83,7 +46,7 @@ export default function InstallPWA() {
             Instalar
           </button>
           <button
-            onClick={() => setShow(false)}
+            onClick={handleDismiss}
             className="flex-shrink-0 p-2 text-slate-500 hover:text-slate-300 transition-colors"
             aria-label="Fechar"
           >

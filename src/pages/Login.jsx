@@ -7,6 +7,7 @@ import logotipo from "../assets/logotipo.png";
 import Input from "../components/ui/Input";
 import Label from "../components/ui/Label";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import LoginInstallCTA from "../components/LoginInstallCTA";
 
 const BENEFITS = [
   { icon: "brain", text: "Interpretação de Sonhos com IA" },
@@ -270,6 +271,7 @@ export default function Login() {
                 </button>
               </div>
             </form>
+            <LoginInstallCTA />
           </GlassCard>
         </div>
 

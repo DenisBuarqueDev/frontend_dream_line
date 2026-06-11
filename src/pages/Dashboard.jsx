@@ -12,6 +12,7 @@ import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
 import LuckyNumbersCard from "../components/LuckyNumbersCard";
 import AIStepsOverlay from "../components/AIStepsOverlay";
 import aiService, { AI_STEPS, AI_STEP_ORDER } from "../services/aiService";
+import DashboardInstallBanner from "../components/DashboardInstallBanner";
 
 const TEMATICOS = [
   "amigo",
@@ -874,6 +875,8 @@ export default function Dashboard() {
               </div>
             );
           })()}
+
+          <DashboardInstallBanner />
 
           <div className="text-center mb-8">
             <img
