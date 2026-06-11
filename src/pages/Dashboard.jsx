@@ -13,6 +13,7 @@ import LuckyNumbersCard from "../components/LuckyNumbersCard";
 import AIStepsOverlay from "../components/AIStepsOverlay";
 import aiService, { AI_STEPS, AI_STEP_ORDER } from "../services/aiService";
 import DashboardInstallBanner from "../components/DashboardInstallBanner";
+import PWAIndicator from "../components/PWAIndicator";
 
 const TEMATICOS = [
   "amigo",
@@ -797,6 +798,7 @@ export default function Dashboard() {
               </div>
             </div>
 
+            <PWAIndicator />
             <button
               onClick={() => navigate("/notifications")}
               className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"

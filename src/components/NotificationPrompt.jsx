@@ -3,6 +3,16 @@ import { useAuth } from "../context/AuthContext";
 import { requestFCMPermission } from "../services/firebaseClient";
 import { registerFCMToken, getNotificationSettings, updateNotificationSettings } from "../services/notificationService";
 
+const DISMISS_KEY = "pwa_notif_dismissed";
+const RETRY_DAYS = 7;
+
+function shouldShowFromLocal() {
+  const ts = localStorage.getItem(DISMISS_KEY);
+  if (!ts) return true;
+  const elapsed = Date.now() - Number(ts);
+  return elapsed > RETRY_DAYS * 24 * 60 * 60 * 1000;
+}
+
 export default function NotificationPrompt() {
   const { isAuthenticated } = useAuth();
   const [show, setShow] = useState(false);
@@ -13,9 +23,11 @@ export default function NotificationPrompt() {
     if (!isAuthenticated || checkedRef.current) return;
     checkedRef.current = true;
 
+    if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
+
     getNotificationSettings()
       .then((settings) => {
-        if (!settings.notificationPrompted && "Notification" in window) {
+        if (!settings.notificationPrompted && shouldShowFromLocal()) {
           setShow(true);
         }
       })
@@ -23,12 +35,13 @@ export default function NotificationPrompt() {
   }, [isAuthenticated]);
 
   const handleActivate = async () => {
+    localStorage.removeItem(DISMISS_KEY);
     setLoading(true);
     try {
       const token = await requestFCMPermission();
       if (token) {
         await registerFCMToken(token);
-        await updateNotificationSettings({ notificationsEnabled: true });
+        await updateNotificationSettings({ notificationsEnabled: true, notificationPrompted: true });
       } else {
         await updateNotificationSettings({ notificationsEnabled: false, notificationPrompted: true });
       }
@@ -39,10 +52,16 @@ export default function NotificationPrompt() {
     setShow(false);
   };
 
-  const handleLater = async () => {
+  const handleLater = () => {
+    localStorage.setItem(DISMISS_KEY, String(Date.now()));
+    setShow(false);
+  };
+
+  const handleNever = async () => {
     try {
       await updateNotificationSettings({ notificationsEnabled: false, notificationPrompted: true });
     } catch {}
+    localStorage.removeItem(DISMISS_KEY);
     setShow(false);
   };
 
@@ -63,7 +82,7 @@ export default function NotificationPrompt() {
             <p className="text-xs text-slate-400 mt-0.5">Notificações diárias para não esquecer seus sonhos</p>
           </div>
         </div>
-        <div className="flex gap-2 mt-3">
+        <div className="flex items-center gap-2 mt-3">
           <button
             onClick={handleLater}
             disabled={loading}
@@ -79,6 +98,13 @@ export default function NotificationPrompt() {
             {loading ? "Ativando..." : "Ativar"}
           </button>
         </div>
+        <button
+          onClick={handleNever}
+          disabled={loading}
+          className="mt-2 w-full text-xs text-slate-500 hover:text-slate-400 transition-colors text-center"
+        >
+          Não mostrar novamente
+        </button>
       </div>
     </div>
   );

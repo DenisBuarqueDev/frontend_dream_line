@@ -1,25 +1,36 @@
-import { useState, useEffect } from "react";
-import { subscribe, isPWAInstalled, triggerInstall, isMobile } from "../services/pwaInstall";
+import { useState, useEffect, useRef } from "react";
+import { subscribe, triggerInstall, isMobile, isInstallAvailable, waitForInstallPrompt } from "../services/pwaInstall";
 
 export default function LoginInstallCTA() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [waiting, setWaiting] = useState(false);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     const unsub = subscribe(({ deferredPrompt, isInstalled }) => {
-      if (isInstalled || !deferredPrompt || !isMobile()) {
+      if (isInstalled || !isMobile()) {
         setShow(false);
         return;
       }
       setShow(true);
     });
-    return unsub;
+    return () => {
+      unsub();
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, []);
 
   const handleInstall = async () => {
-    setLoading(true);
-    await triggerInstall();
-    setLoading(false);
+    const prompt = await waitForInstallPrompt(3000);
+    if (prompt) {
+      setLoading(true);
+      await triggerInstall();
+      setLoading(false);
+    } else {
+      setWaiting(true);
+      timerRef.current = setTimeout(() => setWaiting(false), 4000);
+    }
   };
 
   if (!show) return null;
@@ -44,10 +55,10 @@ export default function LoginInstallCTA() {
         </div>
         <button
           onClick={handleInstall}
-          disabled={loading}
+          disabled={loading || waiting}
           className="mt-3 w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
         >
-          {loading ? "Instalando..." : "Instalar App"}
+          {loading ? "Instalando..." : waiting ? "Preparando..." : "Instalar App"}
         </button>
       </div>
     </div>

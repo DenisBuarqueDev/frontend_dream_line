@@ -1,28 +1,44 @@
-import { useState, useEffect } from "react";
-import { subscribe, isPWAInstalled, triggerInstall } from "../services/pwaInstall";
+import { useState, useEffect, useRef } from "react";
+import { subscribe, triggerInstall, isInstallAvailable, waitForInstallPrompt } from "../services/pwaInstall";
+
+const DISMISS_KEY = "pwa_dismissed";
 
 export default function DashboardInstallBanner() {
   const [show, setShow] = useState(false);
-  const [dismissed, setDismissed] = useState(() => localStorage.getItem("pwa_dismissed") === "true");
+  const [loading, setLoading] = useState(false);
+  const [waiting, setWaiting] = useState(false);
+  const [dismissed, setDismissed] = useState(() => localStorage.getItem(DISMISS_KEY) === "true");
+  const timerRef = useRef(null);
 
   useEffect(() => {
     const unsub = subscribe(({ deferredPrompt, isInstalled }) => {
-      if (isInstalled || !deferredPrompt || dismissed) {
+      if (isInstalled || !isInstallAvailable() || dismissed) {
         setShow(false);
         return;
       }
       setShow(true);
     });
-    return unsub;
+    return () => {
+      unsub();
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, [dismissed]);
 
   const handleInstall = async () => {
-    await triggerInstall();
+    const prompt = await waitForInstallPrompt(3000);
+    if (prompt) {
+      setLoading(true);
+      await triggerInstall();
+      setLoading(false);
+    } else {
+      setWaiting(true);
+      timerRef.current = setTimeout(() => setWaiting(false), 4000);
+    }
   };
 
   const handleDismiss = () => {
     setDismissed(true);
-    localStorage.setItem("pwa_dismissed", "true");
+    localStorage.setItem(DISMISS_KEY, "true");
     setShow(false);
   };
 
@@ -43,9 +59,10 @@ export default function DashboardInstallBanner() {
       <div className="flex gap-2 flex-shrink-0">
         <button
           onClick={handleInstall}
-          className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg transition-all"
+          disabled={loading || waiting}
+          className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg transition-all disabled:opacity-50"
         >
-          Instalar
+          {loading ? "Instalando..." : waiting ? "Preparando..." : "Instalar"}
         </button>
         <button
           onClick={handleDismiss}

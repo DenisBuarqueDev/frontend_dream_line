@@ -1,5 +1,6 @@
 let deferredPrompt = null;
 let isInstalled = false;
+let swReady = false;
 const listeners = new Set();
 
 function notify() {
@@ -13,6 +14,10 @@ function checkInstalled() {
 }
 
 isInstalled = checkInstalled();
+
+navigator.serviceWorker?.getRegistration().then((reg) => {
+  swReady = !!reg && !!reg.active;
+});
 
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
@@ -44,6 +49,17 @@ export function isPWAInstalled() {
   return isInstalled;
 }
 
+export function isSWReady() {
+  return swReady;
+}
+
+export function isInstallAvailable() {
+  if (isInstalled) return false;
+  if (typeof window === "undefined") return false;
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+    || window.matchMedia("(max-width: 768px)").matches;
+}
+
 export async function triggerInstall() {
   if (!deferredPrompt) return false;
   deferredPrompt.prompt();
@@ -69,4 +85,19 @@ export function isMobile() {
   if (typeof window === "undefined") return false;
   return /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     || window.matchMedia("(max-width: 768px)").matches;
+}
+
+export async function waitForInstallPrompt(timeoutMs = 60000) {
+  if (deferredPrompt) return deferredPrompt;
+  return new Promise((resolve) => {
+    const handler = (e) => {
+      e.preventDefault();
+      resolve(e);
+    };
+    window.addEventListener("beforeinstallprompt", handler, { once: true });
+    setTimeout(() => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      resolve(null);
+    }, timeoutMs);
+  });
 }
