@@ -16,7 +16,11 @@ export default defineConfig(({ mode }) => {
         srcDir: 'src',
         filename: 'sw.js',
         includeAssets: ['favicon.svg', 'icons/pwa-192x192.png', 'icons/pwa-512x512.png'],
+        injectManifest: {
+          globIgnores: ['**/firebase-messaging-sw*'],
+        },
         manifest: {
+          id: '/',
           name: 'Dream Line',
           short_name: 'Dream Line',
           description: 'Transforme seus sonhos em autoconhecimento com inteligência artificial',
