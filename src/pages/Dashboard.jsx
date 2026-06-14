@@ -409,11 +409,13 @@ export default function Dashboard() {
 
       const isEdge = navigator.userAgent.includes("Edg");
       const isSamsung = navigator.userAgent.includes("SamsungBrowser");
+      const isStandalonePWA = window.matchMedia("(display-mode: standalone)").matches;
       const hasSpeechRecognition =
         ("SpeechRecognition" in window ||
           "webkitSpeechRecognition" in window) &&
         !isEdge &&
-        !isSamsung;
+        !isSamsung &&
+        !isStandalonePWA;
 
       if (hasSpeechRecognition) {
         console.log("🧠 Web Speech API disponível, iniciando...");
