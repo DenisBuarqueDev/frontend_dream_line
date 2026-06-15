@@ -19,6 +19,11 @@ import SubscriptionExpired from "./pages/SubscriptionExpired";
 import AIDebug from "./pages/AIDebug";
 import AITestPanel from "./pages/AITestPanel";
 import NotificationSettings from "./pages/NotificationSettings";
+import EmotionEntryPage from "./pages/EmotionEntryPage";
+import EmotionAnalysisPage from "./pages/EmotionAnalysisPage";
+import EmotionChatPage from "./pages/EmotionChatPage";
+import EmotionTimelinePage from "./pages/EmotionTimelinePage";
+import EmotionInsightsPage from "./pages/EmotionInsightsPage";
 import InstallPWA from "./components/InstallPWA";
 import NotificationPrompt from "./components/NotificationPrompt";
 
@@ -132,6 +137,46 @@ function App() {
         element={
           <ProtectedRoute>
             <NotificationSettings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/emotions/new"
+        element={
+          <ProtectedRoute>
+            <EmotionEntryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/emotions/timeline"
+        element={
+          <ProtectedRoute>
+            <EmotionTimelinePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/emotions/insights"
+        element={
+          <ProtectedRoute>
+            <EmotionInsightsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/emotions/:id/analysis"
+        element={
+          <ProtectedRoute>
+            <EmotionAnalysisPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/emotions/:id/chat"
+        element={
+          <ProtectedRoute>
+            <EmotionChatPage />
           </ProtectedRoute>
         }
       />

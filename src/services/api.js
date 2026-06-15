@@ -259,3 +259,93 @@ export async function getAIGatewayStatus() {
 
   return await handleResponse(response);
 }
+
+export async function createEmotion(text) {
+  const url = `${API_BASE_URL}/api/emotions`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ text }),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getEmotions(page = 1, limit = 20) {
+  const url = `${API_BASE_URL}/api/emotions?page=${page}&limit=${limit}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getEmotionById(emotionId) {
+  const url = `${API_BASE_URL}/api/emotions/${emotionId}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function deleteEmotion(emotionId) {
+  const url = `${API_BASE_URL}/api/emotions/${emotionId}`;
+
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function sendEmotionChatMessage(emotionId, message) {
+  const url = `${API_BASE_URL}/api/emotions/${emotionId}/chat`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ message }),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getEmotionConversation(emotionId) {
+  const url = `${API_BASE_URL}/api/emotions/${emotionId}/chat`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getEmotionInsights() {
+  const url = `${API_BASE_URL}/api/emotions/insights`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getEmotionStats() {
+  const url = `${API_BASE_URL}/api/emotions/stats`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}

@@ -754,52 +754,63 @@ export default function Dashboard() {
         <GlassCard className="flex flex-col flex-1 md:block rounded-none md:rounded-2xl p-4 pb-8 md:p-6 lg:p-10 shadow-none md:shadow-xl border-0 md:border">
           
           <div className="flex justify-between items-center mb-2">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => navigate("/timeline")}
-                  className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-                  title="Timeline"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                    />
-                  </svg>
-                </button>
-                <button
-                  onClick={() =>
-                    userPlan === "free"
-                      ? showUpgradePlanModal(
-                          "Disponível apenas para plano Premium. Faça upgrade para desbloquear.",
-                        )
-                      : navigate("/astrology")
-                  }
-                  className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                    userPlan === "free"
-                      ? "bg-white/5 text-slate-500 border-white/10"
-                      : "bg-white/10 hover:bg-white/20 border-white/10 text-white"
-                  }`}
-                  title={
-                    userPlan === "free"
-                      ? "Disponível apenas para planos pagos"
-                      : "Mapa Astral"
-                  }
-                >
-                  Mapa Astral
-                </button>
-
-              </div>
-            </div>
-
+            <button
+              onClick={() => navigate("/timeline")}
+              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
+              title="Timeline"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={() => navigate("/emotions/timeline")}
+              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
+              title="Histórico Emocional"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={() => navigate("/emotions/insights")}
+              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
+              title="Insights Emocionais"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </button>
             <PWAIndicator />
             <button
               onClick={() => navigate("/notifications")}
@@ -900,6 +911,19 @@ export default function Dashboard() {
                 Seja Premium
               </button>
             )}
+          </div>
+
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold shadow-lg shadow-purple-500/20 transition-all">
+              🌙 Sonho
+            </button>
+            <span className="text-white/30 text-sm">ou</span>
+            <button
+              onClick={() => navigate("/emotions/new")}
+              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              ❤️ Emoção
+            </button>
           </div>
 
           <div className="flex flex-col items-center gap-4 md:gap-6 flex-1 md:flex-none w-full justify-between md:justify-start">
