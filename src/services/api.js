@@ -349,3 +349,14 @@ export async function getEmotionStats() {
 
   return await handleResponse(response);
 }
+
+export async function getDreamEmotionCorrelations(days = 30) {
+  const url = `${API_BASE_URL}/api/insights/correlations?days=${days}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}

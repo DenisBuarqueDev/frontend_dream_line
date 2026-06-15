@@ -24,6 +24,7 @@ import EmotionAnalysisPage from "./pages/EmotionAnalysisPage";
 import EmotionChatPage from "./pages/EmotionChatPage";
 import EmotionTimelinePage from "./pages/EmotionTimelinePage";
 import EmotionInsightsPage from "./pages/EmotionInsightsPage";
+import DreamEmotionInsightsPage from "./pages/DreamEmotionInsightsPage";
 import InstallPWA from "./components/InstallPWA";
 import NotificationPrompt from "./components/NotificationPrompt";
 
@@ -177,6 +178,14 @@ function App() {
         element={
           <ProtectedRoute>
             <EmotionChatPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/insights/correlations"
+        element={
+          <ProtectedRoute>
+            <DreamEmotionInsightsPage />
           </ProtectedRoute>
         }
       />
