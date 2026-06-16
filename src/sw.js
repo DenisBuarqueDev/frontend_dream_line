@@ -1,9 +1,16 @@
-import { precacheAndRoute } from 'workbox-precaching';
+import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { CacheFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst, NetworkOnly } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
 
 precacheAndRoute(self.__WB_MANIFEST);
+cleanupOutdatedCaches();
+
+// API do backend → nunca em cache
+registerRoute(
+  ({ url }) => url.pathname.startsWith('/api/'),
+  new NetworkOnly()
+);
 
 registerRoute(
   ({ url }) => url.pathname.endsWith('.mp3'),
@@ -82,6 +89,17 @@ self.addEventListener('notificationclick', (event) => {
       }
     })
   );
+});
+
+// Força ativação imediata quando solicitado pela página
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+self.addEventListener('activate', () => {
+  self.clients.claim();
 });
 
 self.addEventListener('push', (event) => {

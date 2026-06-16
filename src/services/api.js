@@ -17,13 +17,20 @@ const handleResponse = async (response) => {
       throw new Error(data.message || data.error || 'Erro na requisição');
     }
     return data;
-  } else {
-    const text = await response.text();
-    if (!response.ok) {
-      throw new Error(text || 'Erro desconhecido');
-    }
-    return text;
   }
+
+  const text = await response.text();
+
+  if (!response.ok) {
+    throw new Error(text || 'Erro desconhecido');
+  }
+
+  // Se veio HTML onde esperávamos JSON, é um erro de roteamento
+  if (contentType && contentType.includes('text/html')) {
+    throw new Error('API indisponível: servidor retornou HTML');
+  }
+
+  return text;
 };
 
 export async function login(email, password) {

@@ -96,12 +96,14 @@ export default function EmotionTimelinePage() {
   const navigate = useNavigate();
   const [emotions, setEmotions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [deleting, setDeleting] = useState(null);
 
   const loadEmotions = async (p = 1) => {
     try {
+      setError(null);
       const result = await getEmotions(p, 20);
       if (result.success) {
         const newEmotions = result.data.emotions;
@@ -111,9 +113,12 @@ export default function EmotionTimelinePage() {
           setEmotions((prev) => [...prev, ...newEmotions]);
         }
         setHasMore(result.data.pagination.page < result.data.pagination.pages);
+      } else {
+        setError(result.message || 'Erro ao carregar emoções.');
       }
     } catch (err) {
       console.error("Erro ao carregar emoções:", err);
+      setError(err.message || 'Erro ao carregar emoções.');
     } finally {
       setLoading(false);
     }
@@ -161,7 +166,23 @@ export default function EmotionTimelinePage() {
             </button>
           </div>
 
-          {emotions.length === 0 ? (
+          {error ? (
+            <div className="text-center py-12">
+              <div className="text-5xl mb-4">⚠️</div>
+              <h3 className="text-white font-semibold text-lg mb-2">Erro ao carregar</h3>
+              <p className="text-purple-200 text-sm mb-4">{error}</p>
+              <button
+                onClick={() => {
+                  setLoading(true);
+                  setError(null);
+                  loadEmotions(1);
+                }}
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Tentar novamente
+              </button>
+            </div>
+          ) : emotions.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-5xl mb-4">❤️</div>
               <h3 className="text-white font-semibold text-lg mb-2">
