@@ -1,8 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { getNotificationSettings, updateNotificationSettings, sendTestNotification } from "../services/notificationService";
-import { registerFCMToken, unregisterFCMToken } from "../services/notificationService";
+import {
+  getNotificationSettings,
+  updateNotificationSettings,
+  sendTestNotification,
+  registerFCMToken,
+  unregisterFCMToken,
+} from "../services/notificationService";
 import { requestFCMPermission } from "../services/firebaseClient";
 import GlassCard from "../components/ui/GlassCard";
 import AppContainer from "../components/ui/AppContainer";
@@ -21,79 +25,136 @@ const TIME_OPTIONS = [
   { label: "22:00", value: "22:00" },
 ];
 
+function calcNextNotification(times, enabled) {
+  if (!enabled || !times || times.length === 0) return null;
+  const now = new Date();
+  const currentMin = now.getHours() * 60 + now.getMinutes();
+  const sorted = [...times].sort();
+  for (const time of sorted) {
+    const [h, m] = time.split(":").map(Number);
+    if (h * 60 + m > currentMin) {
+      return { time, label: `hoje às ${time}` };
+    }
+  }
+  return { time: sorted[0], label: `amanhã às ${sorted[0]}` };
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export default function NotificationSettings() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [enabled, setEnabled] = useState(false);
   const [times, setTimes] = useState(["07:00", "21:00"]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
+  const [testing, setTesting] = useState(false);
+  const [hasToken, setHasToken] = useState(false);
+  const [lastSent, setLastSent] = useState(null);
+  const [animTime, setAnimTime] = useState(null);
+  const [feedback, setFeedback] = useState(null);
+  const timerRef = useRef(null);
+
+  const nextNotif = useMemo(() => calcNextNotification(times, enabled), [times, enabled]);
+
+  const showFeedback = useCallback((text, type = "success") => {
+    setFeedback({ text, type });
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setFeedback(null), 3500);
+  }, []);
 
   useEffect(() => {
     getNotificationSettings()
-      .then((settings) => {
-        setEnabled(settings.notificationsEnabled);
-        setTimes(settings.notificationTimes || ["07:00", "21:00"]);
+      .then((s) => {
+        setEnabled(s.notificationsEnabled);
+        setTimes(s.notificationTimes || ["07:00", "21:00"]);
+        setHasToken(s.hasToken);
+        setLastSent(s.lastNotificationSent);
       })
-      .catch(() => setMessage("Erro ao carregar configurações"))
+      .catch(() => showFeedback("Erro ao carregar configurações", "error"))
       .finally(() => setLoading(false));
+  }, [showFeedback]);
+
+  useEffect(() => {
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, []);
 
   const toggleEnabled = async () => {
     setSaving(true);
-    setMessage("");
     try {
       const newEnabled = !enabled;
       if (newEnabled) {
         const token = await requestFCMPermission();
         if (token) {
           await registerFCMToken(token);
+          setHasToken(true);
         } else {
-          setMessage("Permissão de notificação negada");
+          showFeedback("Permissão de notificação negada", "error");
           setSaving(false);
           return;
         }
       } else {
         await unregisterFCMToken();
+        setHasToken(false);
       }
       await updateNotificationSettings({ notificationsEnabled: newEnabled });
       setEnabled(newEnabled);
-      setMessage(newEnabled ? "Notificações ativadas" : "Notificações desativadas");
+      showFeedback(newEnabled ? "Notificações ativadas" : "Notificações desativadas");
     } catch (e) {
-      setMessage("Erro ao atualizar");
+      console.error("[Notificações] Erro ao alternar:", e);
+      showFeedback("Erro ao atualizar", "error");
     }
     setSaving(false);
   };
 
   const toggleTime = async (time) => {
     setSaving(true);
-    setMessage("");
+    setAnimTime(time);
+    const isAdding = !times.includes(time);
     try {
-      const newTimes = times.includes(time)
-        ? times.filter((t) => t !== time)
-        : [...times, time].sort();
+      const newTimes = isAdding
+        ? [...times, time].sort()
+        : times.filter((t) => t !== time);
       if (newTimes.length === 0) {
-        setMessage("Selecione pelo menos um horário");
+        showFeedback("Selecione pelo menos um horário", "error");
+        setAnimTime(null);
         setSaving(false);
         return;
       }
       await updateNotificationSettings({ notificationTimes: newTimes });
       setTimes(newTimes);
-      setMessage("Horários atualizados");
-    } catch {
-      setMessage("Erro ao atualizar horários");
+      showFeedback(`${time} ${isAdding ? "selecionado" : "removido"}`);
+    } catch (e) {
+      console.error("[Notificações] Erro ao alterar horário:", e);
+      showFeedback("Erro ao atualizar horários", "error");
     }
+    setTimeout(() => setAnimTime(null), 350);
     setSaving(false);
   };
 
   const handleTest = async () => {
-    setMessage("");
+    setTesting(true);
     try {
       const result = await sendTestNotification();
-      setMessage(result.success ? "Notificação de teste enviada!" : "Falha ao enviar teste");
-    } catch {
-      setMessage("Erro ao enviar teste");
+      if (result.success) {
+        showFeedback("✅ Notificação enviada com sucesso");
+      } else {
+        console.error("[Notificações] Falha no teste:", result.reason, result.error);
+        showFeedback("❌ Não foi possível enviar a notificação", "error");
+      }
+    } catch (e) {
+      console.error("[Notificações] Erro no teste:", e);
+      showFeedback("❌ Não foi possível enviar a notificação", "error");
+    } finally {
+      setTesting(false);
     }
   };
 
@@ -112,6 +173,7 @@ export default function NotificationSettings() {
       <AppHeader title="Notificações" onBack={() => navigate("/dashboard")} />
 
       <div className="p-4 space-y-6">
+
         <GlassCard>
           <div className="flex items-center justify-between">
             <div>
@@ -141,16 +203,17 @@ export default function NotificationSettings() {
           <div className="flex flex-wrap gap-2">
             {TIME_OPTIONS.map((opt) => {
               const selected = times.includes(opt.value);
+              const isAnim = animTime === opt.value;
               return (
                 <button
                   key={opt.value}
                   onClick={() => toggleTime(opt.value)}
                   disabled={saving}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                     selected
                       ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg"
                       : "bg-white/10 text-slate-300 hover:bg-white/20"
-                  }`}
+                  } ${isAnim ? "scale-110" : ""} ${saving ? "opacity-50" : ""}`}
                 >
                   {opt.label}
                 </button>
@@ -162,32 +225,86 @@ export default function NotificationSettings() {
           </p>
         </div>
 
+        <GlassCard>
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+            Status das notificações
+          </p>
+          <div className="flex items-center gap-2">
+            <span className={`w-2.5 h-2.5 rounded-full ${hasToken ? "bg-green-500" : "bg-red-500"}`} />
+            <span className="text-sm text-white">
+              {hasToken ? "Dispositivo registrado" : "Notificações não autorizadas"}
+            </span>
+          </div>
+          {hasToken ? (
+            <p className="text-xs text-slate-400 mt-1 ml-[18px]">FCM Token válido</p>
+          ) : (
+            <button
+              onClick={toggleEnabled}
+              className="mt-2 text-xs text-purple-400 hover:text-purple-300 ml-[18px] transition-colors"
+            >
+              Solicitar permissão novamente
+            </button>
+          )}
+        </GlassCard>
+
         {enabled && (
-          <PrimaryButton onClick={handleTest} disabled={saving}>
-            Enviar notificação de teste
+          <PrimaryButton onClick={handleTest} disabled={testing || saving}>
+            {testing ? "Enviando…" : "Enviar notificação de teste"}
           </PrimaryButton>
         )}
 
-        {message && (
-          <p className={`text-sm text-center ${message.includes("Erro") ? "text-red-400" : "text-green-400"}`}>
-            {message}
-          </p>
+        {feedback && (
+          <div
+            className={`text-sm text-center px-4 py-2.5 rounded-xl transition-all duration-300 ${
+              feedback.type === "error"
+                ? "text-red-400 bg-red-500/10"
+                : "text-green-400 bg-green-500/10"
+            }`}
+          >
+            {feedback.text}
+          </div>
         )}
 
-        <div className="bg-white/5 rounded-xl p-4 space-y-2">
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <GlassCard>
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
             Sobre as notificações
           </p>
-          <p className="text-sm text-slate-400">
-            🌙 07:00 — Lembrete para registrar o sonho da noite
-          </p>
-          <p className="text-sm text-slate-400">
-            ✨ 21:00 — Preparação para uma nova noite de sonhos
-          </p>
-          <p className="text-sm text-slate-400">
-            Você pode personalizar os horários acima.
-          </p>
-        </div>
+          <div className="space-y-2.5">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-slate-400">Lembretes</span>
+              <span className={enabled ? "text-green-400" : "text-slate-500"}>
+                {enabled ? "Ativados" : "Desativados"}
+              </span>
+            </div>
+
+            {times.length > 0 && (
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-400">Horários selecionados</span>
+                <span className="text-white">{times.join(", ")}</span>
+              </div>
+            )}
+
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-slate-400">Quantidade de horários</span>
+              <span className="text-white">{times.length} ativo(s)</span>
+            </div>
+
+            {nextNotif && (
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-400">Próximo lembrete</span>
+                <span className="text-purple-400">⏰ {nextNotif.label}</span>
+              </div>
+            )}
+
+            {formatDate(lastSent) && (
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-slate-400">Último envio</span>
+                <span className="text-slate-300">{formatDate(lastSent)}</span>
+              </div>
+            )}
+          </div>
+        </GlassCard>
+
       </div>
     </AppContainer>
   );
