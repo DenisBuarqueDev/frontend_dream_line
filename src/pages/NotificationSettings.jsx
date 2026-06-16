@@ -8,6 +8,8 @@ import {
   unregisterFCMToken,
 } from "../services/notificationService";
 import { requestFCMPermission } from "../services/firebaseClient";
+import { usePermissions } from "../hooks/usePermissions";
+import PremiumModal from "../components/PremiumModal";
 import GlassCard from "../components/ui/GlassCard";
 import AppContainer from "../components/ui/AppContainer";
 import AppHeader from "../components/ui/AppHeader";
@@ -52,6 +54,7 @@ function formatDate(dateStr) {
 
 export default function NotificationSettings() {
   const navigate = useNavigate();
+  const { isPremium } = usePermissions();
   const [enabled, setEnabled] = useState(false);
   const [times, setTimes] = useState(["07:00", "21:00"]);
   const [loading, setLoading] = useState(true);
@@ -61,6 +64,7 @@ export default function NotificationSettings() {
   const [lastSent, setLastSent] = useState(null);
   const [animTime, setAnimTime] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const timerRef = useRef(null);
 
   const nextNotif = useMemo(() => calcNextNotification(times, enabled), [times, enabled]);
@@ -88,6 +92,10 @@ export default function NotificationSettings() {
   }, []);
 
   const toggleEnabled = async () => {
+    if (!enabled && !isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
     setSaving(true);
     try {
       const newEnabled = !enabled;
@@ -306,6 +314,12 @@ export default function NotificationSettings() {
         </GlassCard>
 
       </div>
+
+      <PremiumModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        featureName="Notificações Push"
+      />
     </AppContainer>
   );
 }

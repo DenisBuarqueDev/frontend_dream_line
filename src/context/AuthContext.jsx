@@ -7,13 +7,27 @@ const PLAN_PERMISSIONS = {
     canGenerateImage: false,
     canUseSleepMode: false,
     canSeeWeeklySummary: false,
-    maxDreams: 5
+    canDeleteDream: false,
+    canDeleteEmotion: false,
+    canUseCorrelations: false,
+    canUseNotifications: false,
+    canUseNumerology: false,
+    maxDreams: 5,
+    maxInterpretationsPerDay: 3,
+    maxEmotionAnalysesPerDay: 3
   },
   premium: {
     canGenerateImage: true,
     canUseSleepMode: true,
     canSeeWeeklySummary: true,
-    maxDreams: 60
+    canDeleteDream: true,
+    canDeleteEmotion: true,
+    canUseCorrelations: true,
+    canUseNotifications: true,
+    canUseNumerology: true,
+    maxDreams: 60,
+    maxInterpretationsPerDay: Infinity,
+    maxEmotionAnalysesPerDay: Infinity
   }
 };
 

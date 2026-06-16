@@ -1,8 +1,10 @@
-import { Navigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import PremiumModal from './PremiumModal';
 
 export function RequirePlan({ children, plans }) {
   const { user, isLoading } = useAuth();
+  const [showModal, setShowModal] = useState(true);
 
   if (isLoading) {
     return (
@@ -15,7 +17,16 @@ export function RequirePlan({ children, plans }) {
   const userPlan = user?.plan || 'free';
 
   if (!plans.includes(userPlan)) {
-    return <Navigate to="/pricing" replace />;
+    return (
+      <>
+        {children}
+        <PremiumModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          featureName="Este recurso"
+        />
+      </>
+    );
   }
 
   return children;

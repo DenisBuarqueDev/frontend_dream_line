@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { getDreamEmotionCorrelations } from "../services/api";
+import { usePermissions } from "../hooks/usePermissions";
+import PremiumModal from "../components/PremiumModal";
 import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
 import AppHeader from "../components/ui/AppHeader";
@@ -54,12 +56,19 @@ function ChartTooltip({ active, payload, label }) {
 
 export default function DreamEmotionInsightsPage() {
   const navigate = useNavigate();
+  const { isPremium } = usePermissions();
   const [days, setDays] = useState(30);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   useEffect(() => {
+    if (!isPremium) {
+      setShowPremiumModal(true);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     getDreamEmotionCorrelations(days)
@@ -75,7 +84,7 @@ export default function DreamEmotionInsightsPage() {
         setError(err.message || "Erro ao carregar correlações.");
       })
       .finally(() => setLoading(false));
-  }, [days]);
+  }, [days, isPremium]);
 
   if (loading) {
     return (
@@ -301,6 +310,12 @@ export default function DreamEmotionInsightsPage() {
 
         </div>
       </div>
+
+      <PremiumModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        featureName="Correlação sonhos × emoções"
+      />
     </AppContainer>
   );
 }

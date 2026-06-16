@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getEmotions, deleteEmotion } from "../services/api";
+import { usePermissions } from "../hooks/usePermissions";
+import PremiumModal from "../components/PremiumModal";
 import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
 import AppHeader from "../components/ui/AppHeader";
@@ -94,12 +96,14 @@ function formatDate(dateStr) {
 
 export default function EmotionTimelinePage() {
   const navigate = useNavigate();
+  const { isPremium } = usePermissions();
   const [emotions, setEmotions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [deleting, setDeleting] = useState(null);
+  const [showPremiumModal, setShowPremiumModal] = useState(null);
 
   const loadEmotions = async (p = 1) => {
     try {
@@ -129,6 +133,10 @@ export default function EmotionTimelinePage() {
   }, []);
 
   const handleDelete = async (emotionId) => {
+    if (!isPremium) {
+      setShowPremiumModal("Excluir registros emocionais");
+      return;
+    }
     setDeleting(emotionId);
     try {
       await deleteEmotion(emotionId);
@@ -275,6 +283,12 @@ export default function EmotionTimelinePage() {
           )}
         </div>
       </div>
+
+      <PremiumModal
+        isOpen={!!showPremiumModal}
+        onClose={() => setShowPremiumModal(null)}
+        featureName={showPremiumModal}
+      />
     </AppContainer>
   );
 }
