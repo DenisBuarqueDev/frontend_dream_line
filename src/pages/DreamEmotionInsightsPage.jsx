@@ -19,7 +19,7 @@ const DREAM_CATEGORIES = [
 ];
 
 const CATEGORY_EMOJIS = {
-  Perseguição: "🏃", Queda: "📉", Água: "🌊", Família: "👨‍👩‍👧‍👦",
+  Perseguição: "🏃", Queda: "📉", Água: "🌊", Família: "👨‍👩‍👧‍👧",
   Trabalho: "💼", Morte: "💀", Dinheiro: "💰", Viagem: "✈️",
   Relacionamento: "💕", Outros: "📌",
 };
@@ -123,7 +123,16 @@ export default function DreamEmotionInsightsPage() {
     );
   }
 
-  const { dreamCategories = {}, correlationTable = [], insights = [], totalDreams, totalEmotions } = data;
+  const {
+    dreamCategories = {},
+    correlationTable = [],
+    correlations = [],
+    insights = [],
+    totalDreams,
+    totalEmotions,
+    correlatedCount,
+    categoriesIdentified,
+  } = data;
 
   const catChartData = DREAM_CATEGORIES
     .filter(c => (dreamCategories[c] || 0) > 0)
@@ -131,12 +140,7 @@ export default function DreamEmotionInsightsPage() {
     .sort((a, b) => b.count - a.count);
 
   const topCatEntry = catChartData.length > 0 ? catChartData[0] : null;
-  const topEmotionRow = correlationTable.length > 0
-    ? correlationTable.reduce((best, row) => {
-        const max = Math.max(...DREAM_CATEGORIES.map(c => row[c] || 0));
-        return max > (best.max || 0) ? { emotion: row.emotion, max } : best;
-      }, { emotion: "", max: 0 })
-    : null;
+  const topCorrelation = correlations.length > 0 ? correlations[0] : null;
 
   return (
     <AppContainer>
@@ -165,11 +169,11 @@ export default function DreamEmotionInsightsPage() {
               <div className="text-3xl mb-2">🔗</div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Principal</p>
               <p className="text-white font-bold text-sm truncate">
-                {topEmotionRow && topEmotionRow.max >= 40
-                  ? `${topEmotionRow.emotion} (${topEmotionRow.max}%)`
+                {topCorrelation
+                  ? `${topCorrelation.emotion} (${topCorrelation.percentage}%)`
                   : "—"}
               </p>
-              <p className="text-purple-300 text-xs">maior correlação</p>
+              <p className="text-purple-300 text-xs">{topCorrelation?.dreamCategory || "—"}</p>
             </GlassCard>
 
             <GlassCard className="p-4 border-white/10 text-center">
@@ -190,7 +194,7 @@ export default function DreamEmotionInsightsPage() {
               <div className="text-3xl mb-2">{totalDreams > 0 ? "🌙" : "—"}</div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Sonhos</p>
               <p className="text-white font-bold text-lg">{totalDreams}</p>
-              <p className="text-purple-300 text-xs">registrados</p>
+              <p className="text-purple-300 text-xs">{correlatedCount} correlacionados</p>
             </GlassCard>
           </div>
 
@@ -208,8 +212,8 @@ export default function DreamEmotionInsightsPage() {
           {catChartData.length > 0 && (
             <GlassCard className="p-4 border-white/10">
               <h3 className="text-white font-semibold mb-3">📊 Distribuição por Categoria</h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
+              <div style={{ minHeight: 300 }}>
+                <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={catChartData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                     <XAxis dataKey="name" tick={{ fill: "#a78bfa", fontSize: 11 }} angle={-20} textAnchor="end" height={50} />
@@ -226,7 +230,7 @@ export default function DreamEmotionInsightsPage() {
             <GlassCard className="p-4 border-white/10">
               <h3 className="text-white font-semibold mb-3">🔥 Mapa de Calor: Emoção × Categoria</h3>
               <p className="text-purple-300 text-xs mb-3">
-                Percentual de sonhos de cada categoria quando a emoção foi registrada
+                Percentual de sonhos correlacionados por emoção e categoria
               </p>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs text-white">
@@ -263,9 +267,35 @@ export default function DreamEmotionInsightsPage() {
             </GlassCard>
           )}
 
+          {correlations.length > 0 && (
+            <GlassCard className="p-4 border-white/10">
+              <h3 className="text-white font-semibold mb-3">📋 Correlações Detalhadas</h3>
+              <div className="space-y-2">
+                {correlations.map((c, i) => (
+                  <div
+                    key={`${c.emotion}-${c.dreamCategory}-${i}`}
+                    className="flex items-center justify-between bg-white/5 rounded-xl px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-white font-medium min-w-[100px]">{c.emotion}</span>
+                      <span className="text-purple-300 text-sm">→</span>
+                      <span className="text-white text-sm">{getCatEmoji(c.dreamCategory)} {c.dreamCategory}</span>
+                    </div>
+                    <div className="flex items-center gap-4 text-sm">
+                      <span className="text-white/60">{c.occurrences} sonho{c.occurrences !== 1 ? 's' : ''}</span>
+                      <span className={`font-bold ${c.percentage >= 50 ? 'text-green-400' : c.percentage >= 30 ? 'text-yellow-400' : 'text-purple-300'}`}>
+                        {c.percentage}%
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </GlassCard>
+          )}
+
           <div className="text-center pb-4">
             <p className="text-white/30 text-xs">
-              Período: {days} dias · {totalDreams} sonhos · {totalEmotions} emoções
+              Período: {days} dias · {totalDreams} sonhos · {totalEmotions} emoções · {correlatedCount} correlações · {categoriesIdentified} categorias
             </p>
           </div>
 
