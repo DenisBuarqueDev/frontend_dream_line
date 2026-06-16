@@ -18,6 +18,12 @@ const BENEFITS = [
   { icon: "number", text: "Numerologia do Sonho" },
   { icon: "stars", text: "Mapa Astral da Família" },
   { icon: "history", text: "Histórico completo dos sonhos" },
+  { icon: "emotion", text: "Interpretação de emoções e sentimentos" },
+  { icon: "diary", text: "Diário Emocional" },
+  { icon: "analysis", text: "Análise Emocional" },
+  { icon: "advisor", text: "Conselheiro Virtual" },
+  { icon: "insights", text: "Insights Padrões Emocionais" },
+  { icon: "correlation", text: "Correlação entre sonhos e emoções" },
 ];
 
 function BenefitIcon({ type }) {
@@ -25,31 +31,57 @@ function BenefitIcon({ type }) {
     brain: (
       <path d="M12 2a7 7 0 0 0-7 7c0 1.5.47 2.9 1.27 4.05A4.5 4.5 0 0 0 8 21h8a4.5 4.5 0 0 0 1.73-7.95A6.98 6.98 0 0 0 19 9a7 7 0 0 0-7-7z" />
     ),
-    timeline: (
-      <path d="M3 12h4l3-9 4 18 3-9h4" />
-    ),
+    timeline: <path d="M3 12h4l3-9 4 18 3-9h4" />,
     image: (
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-9a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6zm0 0l-5 5m0 0l5 5m-5-5h12" />
     ),
-    chart: (
-      <path d="M18 20V10m-6 10V4M6 20v-6" />
-    ),
+    chart: <path d="M18 20V10m-6 10V4M6 20v-6" />,
     music: (
       <path d="M9 18V5l12-2v13M9 18a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm12-2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" />
     ),
-    number: (
-      <path d="M4 17l8-12m0 0l8 12m-8-12v22" />
+    number: <path d="M4 17l8-12m0 0l8 12m-8-12v22" />,
+    stars: <path d="M12 2l2.4 7.2L22 9l-6 5 2 8-6-5-6 5 2-8-6-5 7.6.2z" />,
+    history: <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />,
+    emotion: (
+      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
     ),
-    stars: (
-      <path d="M12 2l2.4 7.2L22 9l-6 5 2 8-6-5-6 5 2-8-6-5 7.6.2z" />
+    diary: (
+      <>
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+      </>
     ),
-    history: (
-      <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+    analysis: <path d="M22 12h-4l-3 9L9 3l-3 9H2" />,
+    advisor: (
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    ),
+    insights: (
+      <>
+        <path d="M9 18h6" />
+        <path d="M10 22h4" />
+        <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14" />
+      </>
+    ),
+    correlation: (
+      <>
+        <path d="M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+        <path d="M6 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+        <path d="M15.5 5.5 9 10" />
+        <path d="M9 14l6.5 4.5" />
+      </>
     ),
   };
 
   return (
-    <svg className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className="w-5 h-5 text-purple-400 flex-shrink-0 mt-0.5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       {icons[type]}
     </svg>
   );
@@ -97,7 +129,7 @@ export default function Login() {
         canGenerateImage: false,
         canUseSleepMode: false,
         canSeeWeeklySummary: false,
-        ...data.data?.user
+        ...data.data?.user,
       };
 
       if (!token) {
@@ -115,11 +147,21 @@ export default function Login() {
 
       if (err.message) {
         const lowerMessage = err.message.toLowerCase();
-        if (lowerMessage.includes("401") || lowerMessage.includes("invalid") || lowerMessage.includes("credenciais")) {
+        if (
+          lowerMessage.includes("401") ||
+          lowerMessage.includes("invalid") ||
+          lowerMessage.includes("credenciais")
+        ) {
           errorMessage = "Credenciais incorretas. Verifique seu email e senha.";
-        } else if (lowerMessage.includes("already registered") || lowerMessage.includes("já cadastrado")) {
+        } else if (
+          lowerMessage.includes("already registered") ||
+          lowerMessage.includes("já cadastrado")
+        ) {
           errorMessage = "Este email já está cadastrado. Faça login.";
-        } else if (lowerMessage.includes("password") && lowerMessage.includes("6")) {
+        } else if (
+          lowerMessage.includes("password") &&
+          lowerMessage.includes("6")
+        ) {
           errorMessage = "A senha deve ter pelo menos 6 caracteres.";
         } else if (lowerMessage.includes("email")) {
           errorMessage = "Formato de email inválido.";
@@ -137,30 +179,45 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center p-4 overflow-hidden">
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
-
         {/* ─── PAINEL INSTITUCIONAL ─── */}
         <div className="order-2 lg:order-2 space-y-6">
           <GlassCard className="p-6 sm:p-8 lg:p-10">
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-500/20 mb-5 animate-float">
-                <svg className="w-7 h-7 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg
+                  className="w-7 h-7 text-purple-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg>
               </div>
 
               <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
                 Entenda o que seus{" "}
-                <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">sonhos</span>{" "}
+                <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                  sonhos
+                </span>{" "}
+                e{" "}
+                <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                  emoções
+                </span>{" "}
                 querem dizer.
               </h2>
 
               <p className="text-purple-200/80 text-sm sm:text-base mt-4 leading-relaxed">
-                Transforme seus sonhos em autoconhecimento com inteligência artificial.
+                Transforme seus sonhos e emoções em autoconhecimento.
               </p>
 
               <p className="text-slate-400 text-sm mt-3 leading-relaxed">
-                O Dream Line ajuda você a registrar, interpretar e acompanhar seus sonhos ao longo do tempo.
-                Descubra padrões ocultos, visualize imagens dos seus sonhos e acompanhe sua evolução emocional dia após dia.
+                O Dream Line ajuda você a registrar, interpretar e acompanhar
+                seus sonhos e emoções ao longo do tempo. Descubra padrões ocultos,
+                visualize imagens dos seus sonhos e acompanhe sua evolução
+                emocional dia após dia.
               </p>
             </div>
 
@@ -244,9 +301,24 @@ export default function Login() {
               <PrimaryButton type="submit" disabled={isLoading} fullWidth>
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    <svg
+                      className="w-5 h-5 animate-spin"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
                     </svg>
                     {isRegister ? "Cadastrando..." : "Acessando..."}
                   </span>
@@ -260,21 +332,22 @@ export default function Login() {
               <div className="text-center">
                 <button
                   type="button"
-                  onClick={() => { setIsRegister(!isRegister); setError(""); }}
+                  onClick={() => {
+                    setIsRegister(!isRegister);
+                    setError("");
+                  }}
                   className="text-purple-300 hover:text-purple-200 text-sm underline underline-offset-2 transition-colors"
                   disabled={isLoading}
                 >
                   {isRegister
                     ? "Já tem uma conta? Faça login"
-                    : "Não tem uma conta? Cadastre-se"
-                  }
+                    : "Não tem uma conta? Cadastre-se"}
                 </button>
               </div>
             </form>
             <LoginInstallCTA />
           </GlassCard>
         </div>
-
       </div>
     </div>
   );
