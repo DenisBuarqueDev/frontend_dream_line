@@ -57,6 +57,28 @@ export async function register(email, password, recaptchaToken) {
   return await handleResponse(response);
 }
 
+export async function verifyEmail(token) {
+  const url = `${API_BASE_URL}/api/auth/verify-email?token=${encodeURIComponent(token)}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+  });
+
+  return await handleResponse(response);
+}
+
+export async function resendVerification(email) {
+  const url = `${API_BASE_URL}/api/auth/resend-verification`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+
+  return await handleResponse(response);
+}
+
 export async function saveDream(dreamData) {
   const url = `${API_BASE_URL}/api/dreams`;
 

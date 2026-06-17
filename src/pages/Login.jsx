@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { login as apiLogin, register as apiRegister } from "../services/api";
+import { login as apiLogin, register as apiRegister, resendVerification } from "../services/api";
 import { executeRecaptcha } from "../services/recaptcha";
 import GlassCard from "../components/ui/GlassCard";
 import logotipo from "../assets/logotipo.png";
@@ -96,10 +96,15 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isRegister, setIsRegister] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState("");
 
   async function handleLogin(e) {
     e.preventDefault();
     setError("");
+    setNeedsVerification(false);
+    setResendMessage("");
 
     if (!email || !password) {
       setError("Preencha todos os campos");
@@ -120,9 +125,11 @@ export default function Login() {
 
       if (isRegister) {
         data = await apiRegister(email, password, recaptchaToken);
-      } else {
-        data = await apiLogin(email, password, recaptchaToken);
+        navigate("/verify-email", { state: { email } });
+        return;
       }
+
+      data = await apiLogin(email, password, recaptchaToken);
 
       const token = data.data?.token;
       const userData = {
@@ -144,12 +151,20 @@ export default function Login() {
     } catch (err) {
       console.error("Erro:", err);
 
+      const lowerMessage = (err.message || "").toLowerCase();
+
+      if (lowerMessage.includes("verifique seu e-mail")) {
+        setNeedsVerification(true);
+        setError(err.message);
+        setIsLoading(false);
+        return;
+      }
+
       let errorMessage = isRegister
         ? "Erro ao cadastrar. Verifique se o email já não está cadastrado."
         : "Credenciais incorretas. Verifique seu email e senha.";
 
       if (err.message) {
-        const lowerMessage = err.message.toLowerCase();
         if (
           lowerMessage.includes("401") ||
           lowerMessage.includes("invalid") ||
@@ -176,6 +191,19 @@ export default function Login() {
       setError(errorMessage);
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleResendVerification() {
+    setResending(true);
+    setResendMessage("");
+    try {
+      const result = await resendVerification(email);
+      setResendMessage(result?.data?.message || "Se o e-mail estiver cadastrado, um novo link será enviado.");
+    } catch {
+      setResendMessage("Erro ao reenviar. Tente novamente.");
+    } finally {
+      setResending(false);
     }
   }
 
@@ -297,7 +325,22 @@ export default function Login() {
 
               {error && (
                 <div className="bg-red-500/20 border border-red-500/30 text-white px-4 py-3 rounded-xl text-sm text-center">
-                  {error}
+                  <p>{error}</p>
+                  {needsVerification && (
+                    <div className="mt-3">
+                      <button
+                        type="button"
+                        onClick={handleResendVerification}
+                        disabled={resending}
+                        className="text-purple-300 hover:text-purple-200 text-xs underline underline-offset-2 transition-colors"
+                      >
+                        {resending ? "Enviando..." : "Reenviar e-mail de verificação"}
+                      </button>
+                      {resendMessage && (
+                        <p className="text-xs text-purple-300/70 mt-1">{resendMessage}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
