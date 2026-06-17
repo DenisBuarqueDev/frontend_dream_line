@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { login as apiLogin, register as apiRegister } from "../services/api";
+import { executeRecaptcha } from "../services/recaptcha";
 import GlassCard from "../components/ui/GlassCard";
 import logotipo from "../assets/logotipo.png";
 import Input from "../components/ui/Input";
@@ -112,13 +113,15 @@ export default function Login() {
 
     setIsLoading(true);
 
+    const recaptchaToken = await executeRecaptcha(isRegister ? 'register' : 'login');
+
     try {
       let data;
 
       if (isRegister) {
-        data = await apiRegister(email, password);
+        data = await apiRegister(email, password, recaptchaToken);
       } else {
-        data = await apiLogin(email, password);
+        data = await apiLogin(email, password, recaptchaToken);
       }
 
       const token = data.data?.token;

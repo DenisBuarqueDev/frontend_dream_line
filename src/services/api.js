@@ -33,25 +33,25 @@ const handleResponse = async (response) => {
   return text;
 };
 
-export async function login(email, password) {
+export async function login(email, password, recaptchaToken) {
   const url = `${API_BASE_URL}/api/auth/login`;
 
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, password, recaptchaToken }),
   });
 
   return await handleResponse(response);
 }
 
-export async function register(email, password) {
+export async function register(email, password, recaptchaToken) {
   const url = `${API_BASE_URL}/api/auth/register`;
 
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, password, recaptchaToken }),
   });
 
   return await handleResponse(response);
