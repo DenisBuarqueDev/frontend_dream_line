@@ -28,6 +28,7 @@ import EmotionChatPage from "./pages/EmotionChatPage";
 import EmotionTimelinePage from "./pages/EmotionTimelinePage";
 import EmotionInsightsPage from "./pages/EmotionInsightsPage";
 import DreamEmotionInsightsPage from "./pages/DreamEmotionInsightsPage";
+import HelpSupport from "./pages/HelpSupport";
 import InstallPWA from "./components/InstallPWA";
 import NotificationPrompt from "./components/NotificationPrompt";
 
@@ -151,6 +152,14 @@ function App() {
         element={
           <ProtectedRoute>
             <NotificationSettings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/support"
+        element={
+          <ProtectedRoute>
+            <HelpSupport />
           </ProtectedRoute>
         }
       />
