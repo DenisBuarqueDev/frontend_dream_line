@@ -103,9 +103,7 @@ function App() {
           path="/sleep"
           element={
             <ProtectedRoute>
-              <RequirePlan plans={["premium"]}>
-                <SleepMode />
-              </RequirePlan>
+              <SleepMode />
             </ProtectedRoute>
           }
         />
