@@ -67,6 +67,38 @@ export async function verifyEmail(token) {
   return await handleResponse(response);
 }
 
+export async function forgotPassword(email) {
+  const url = `${API_BASE_URL}/api/auth/forgot-password`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function validateResetToken(token) {
+  const url = `${API_BASE_URL}/api/auth/validate-reset-token?token=${encodeURIComponent(token)}`;
+
+  const response = await fetch(url);
+
+  return await handleResponse(response);
+}
+
+export async function resetPassword(token, password) {
+  const url = `${API_BASE_URL}/api/auth/reset-password`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, password }),
+  });
+
+  return await handleResponse(response);
+}
+
 export async function resendVerification(email) {
   const url = `${API_BASE_URL}/api/auth/resend-verification`;
 

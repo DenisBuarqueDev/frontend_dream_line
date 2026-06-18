@@ -323,6 +323,18 @@ export default function Login() {
                 />
               </div>
 
+              {!isRegister && (
+                <div className="text-right -mt-2">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-purple-300/70 hover:text-purple-200 text-xs underline underline-offset-2 transition-colors"
+                  >
+                    Esqueci minha senha
+                  </button>
+                </div>
+              )}
+
               {error && (
                 <div className="bg-red-500/20 border border-red-500/30 text-white px-4 py-3 rounded-xl text-sm text-center">
                   <p>{error}</p>

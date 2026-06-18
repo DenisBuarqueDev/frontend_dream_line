@@ -6,6 +6,8 @@ import { RequirePlan } from "./components/RequirePlan";
 import { onForegroundMessage } from "./services/firebaseClient";
 import Login from "./pages/Login";
 import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Timeline from "./pages/Timeline";
 import SleepMode from "./pages/SleepMode";
@@ -60,6 +62,14 @@ function App() {
       <Route
         path="/verify-email"
         element={<VerifyEmail />}
+      />
+      <Route
+        path="/forgot-password"
+        element={<ForgotPassword />}
+      />
+      <Route
+        path="/reset-password"
+        element={<ResetPassword />}
       />
       <Route
         path="/payment-success"
