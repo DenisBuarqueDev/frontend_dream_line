@@ -31,7 +31,7 @@ export default function SleepMode() {
 
   return (
     <AppContainer className="md:items-center md:justify-center">
-      <AppHeader title="Modo Sono" onBack={() => navigate("/dashboard")} />
+      <AppHeader title="Modo Sono" onBack={() => navigate("/timeline")} />
       <div className="w-full max-w-2xl flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
         <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl md:rounded-2xl shadow-xl p-4 md:p-8">
 

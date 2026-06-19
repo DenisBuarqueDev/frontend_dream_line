@@ -586,7 +586,7 @@ export default function AstrologyChart() {
 
   return (
     <AppContainer className="md:items-start md:justify-center md:p-8">
-      <AppHeader title="Mapa Astral" onBack={() => { window.location.href = '/dashboard'; }} />
+      <AppHeader title="Mapa Astral" onBack={() => { window.location.href = '/timeline'; }} />
       <div className="w-full max-w-7xl mx-auto flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
         <div className="flex flex-col gap-8">
           <div>
