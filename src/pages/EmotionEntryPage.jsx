@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { transcribeAudio, createEmotion } from "../services/api";
 import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
-import PWAIndicator from "../components/PWAIndicator";
+import { triggerInstall, isPWAInstalled } from "../services/pwaInstall";
 import logotipo from "../assets/logotipo.png";
 
 const getSupportedMimeType = () => {
@@ -34,6 +34,7 @@ export default function EmotionEntryPage() {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [error, setError] = useState("");
 
   const mediaRecorderRef = useRef(null);
@@ -44,6 +45,11 @@ export default function EmotionEntryPage() {
   const recognitionRef = useRef(null);
 
   const userPlan = user?.plan || "free";
+
+  const handleInstallClick = async () => {
+    await triggerInstall();
+    setSidebarOpen(false);
+  };
 
   useEffect(() => {
     return () => {
@@ -209,50 +215,12 @@ export default function EmotionEntryPage() {
 
           <div className="flex justify-between items-center mb-2">
             <button
-              onClick={() => navigate("/timeline")}
+              onClick={() => setSidebarOpen(true)}
               className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-              title="Timeline"
+              title="Menu"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
-            </button>
-            <button
-              onClick={() => navigate("/emotions/timeline")}
-              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-              title="Histórico Emocional"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
-            </button>
-            <button
-              onClick={() => navigate("/emotions/insights")}
-              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-              title="Insights Emocionais"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </button>
-            <PWAIndicator />
-            <button
-              onClick={() => navigate("/notifications")}
-              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-              title="Notificações"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-            </button>
-            <button
-              onClick={logout}
-              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-              title="Sair"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
             </button>
           </div>
@@ -419,6 +387,94 @@ export default function EmotionEntryPage() {
           </div>
         </GlassCard>
       </div>
+
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
+          <div className="absolute left-0 top-0 bottom-0 w-72 bg-slate-950/95 backdrop-blur-xl border-r border-white/10 shadow-2xl flex flex-col">
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">Dream Line</h2>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+              <button
+                onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+              >
+                <span className="text-lg">📋</span>
+                <span className="font-medium">Sonhos</span>
+              </button>
+              <button
+                onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+              >
+                <span className="text-lg">📊</span>
+                <span className="font-medium">Insights</span>
+              </button>
+              <button
+                onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+              >
+                <span className="text-lg">🔗</span>
+                <span className="font-medium">Correlações</span>
+              </button>
+              <button
+                onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+              >
+                <span className="text-lg">⭐</span>
+                <span className="font-medium">Planos</span>
+              </button>
+
+              <div className="border-t border-white/10 my-3" />
+
+              {!isPWAInstalled() && (
+                <button
+                  onClick={handleInstallClick}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+                >
+                  <span className="text-lg">⬇️</span>
+                  <span className="font-medium">Instalar App</span>
+                </button>
+              )}
+              <button
+                onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+              >
+                <span className="text-lg">🔔</span>
+                <span className="font-medium">Notificações</span>
+              </button>
+              <button
+                onClick={() => { navigate("/support"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+              >
+                <span className="text-lg">💬</span>
+                <span className="font-medium">Suporte</span>
+              </button>
+            </nav>
+
+            <div className="p-4 border-t border-white/10">
+              <button
+                onClick={logout}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-left"
+              >
+                <span className="text-lg">🚪</span>
+                <span className="font-medium">Sair</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppContainer>
   );
 }

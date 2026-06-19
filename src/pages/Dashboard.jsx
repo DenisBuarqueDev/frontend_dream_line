@@ -1206,14 +1206,14 @@ export default function Dashboard() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
               >
                 <span className="text-lg">📋</span>
-                <span className="font-medium">Tarefas</span>
+                <span className="font-medium">Sonhos</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
               >
                 <span className="text-lg">📊</span>
-                <span className="font-medium">Analytics</span>
+                <span className="font-medium">Insights</span>
               </button>
               <button
                 onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
@@ -1227,7 +1227,7 @@ export default function Dashboard() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
               >
                 <span className="text-lg">⭐</span>
-                <span className="font-medium">Premium</span>
+                <span className="font-medium">Planos</span>
               </button>
 
               <div className="border-t border-white/10 my-3" />
