@@ -770,7 +770,7 @@ export default function Timeline() {
             </button>
             <button
               onClick={() => navigate("/sleep")}
-              className="w-10 h-10 rounded-2xl border border-white/10 flex items-center justify-center transition-all "
+              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/10 flex items-center justify-center transition-all "
               title="Soneca"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
