@@ -533,8 +533,6 @@ export default function Timeline() {
     loadDreamsOnMount();
   }, []);
 
-
-
   const generateWeeklySummary = (dreamsList) => {
     if (!dreamsList || dreamsList.length === 0) return "";
 
@@ -772,7 +770,7 @@ export default function Timeline() {
             </button>
             <button
               onClick={() => navigate("/sleep")}
-              className="w-10 h-10 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white flex items-center justify-center transition-all shadow-md"
+              className="w-10 h-10 rounded-2xl border border-white/10 flex items-center justify-center transition-all "
               title="Soneca"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
