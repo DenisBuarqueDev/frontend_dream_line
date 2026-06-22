@@ -47,7 +47,7 @@ export default function SleepMode() {
           {!canUseEmotions && (
             <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
               <p className="text-amber-300 text-sm">
-                As opções emocionais estão disponíveis apenas para planos Premium ou Pro.
+                As opções emocionais estão disponíveis apenas para planos Premium.
               </p>
             </div>
           )}

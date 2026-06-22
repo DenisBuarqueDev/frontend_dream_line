@@ -413,7 +413,7 @@ function TimelineItem({
                   onClick={() =>
                     userPlan === "free"
                       ? showUpgradePlanModal(
-                          "Disponível apenas para planos Premium ou Pro. Faça upgrade para desbloquear.",
+                          "Disponível apenas para planos Premium. Faça upgrade para desbloquear.",
                         )
                       : setShowNumerology(!showNumerology)
                   }
@@ -440,7 +440,7 @@ function TimelineItem({
               onClick={() => {
                 if (userPlan === "free") {
                   showUpgradePlanModal(
-                    "Disponível apenas para planos Premium ou Pro. Faça upgrade para excluir seus sonhos.",
+                    "Disponível apenas para planos Premium. Faça upgrade para excluir seus sonhos.",
                   );
                 } else {
                   onDeleteClick(dream);
@@ -749,7 +749,7 @@ export default function Timeline() {
               onClick={() =>
                 userPlan === "free"
                   ? showUpgradePlanModal(
-                      "Disponível apenas para planos Premium ou Pro. Faça upgrade para desbloquear.",
+                      "Disponível apenas para planos Premium. Faça upgrade para desbloquear.",
                     )
                   : navigate("/astrology")
               }
@@ -940,7 +940,7 @@ export default function Timeline() {
                 Resumo da Semana
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Disponível apenas para planos Premium ou Pro. Faça upgrade para
+                Disponível apenas para planos Premium. Faça upgrade para
                 desbloquear.
               </p>
               <button

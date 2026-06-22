@@ -7,10 +7,11 @@ const PREMIUM_FEATURES = {
   delete_dream: { label: 'Excluir sonhos', premiumOnly: true },
   delete_emotion: { label: 'Excluir registros emocionais', premiumOnly: true },
   correlations: { label: 'Correlação sonhos × emoções', premiumOnly: true },
-  notifications: { label: 'Notificações Push', premiumOnly: true },
   numerology: { label: 'Numerologia', premiumOnly: true },
   astral_chart: { label: 'Mapa Astral', premiumOnly: true },
-  interpretation: { label: 'Interpretação de sonhos', premiumOnly: false, dailyLimit: 3 },
+  chat_emotional: { label: 'Chat emocional', premiumOnly: true },
+  emotion_insights: { label: 'Insights emocionais', premiumOnly: true },
+  interpretation: { label: 'Interpretação de sonhos', premiumOnly: false, dailyLimit: 1 },
   emotion_analysis: { label: 'Análise emocional', premiumOnly: false, dailyLimit: 3 },
 };
 

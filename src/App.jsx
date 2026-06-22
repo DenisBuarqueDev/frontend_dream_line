@@ -183,7 +183,9 @@ function App() {
         path="/emotions/insights"
         element={
           <ProtectedRoute>
-            <EmotionInsightsPage />
+            <RequirePlan plans={["premium"]}>
+              <EmotionInsightsPage />
+            </RequirePlan>
           </ProtectedRoute>
         }
       />
@@ -199,7 +201,9 @@ function App() {
         path="/emotions/:id/chat"
         element={
           <ProtectedRoute>
-            <EmotionChatPage />
+            <RequirePlan plans={["premium"]}>
+              <EmotionChatPage />
+            </RequirePlan>
           </ProtectedRoute>
         }
       />

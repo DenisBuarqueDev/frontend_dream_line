@@ -169,7 +169,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const userPlan = user?.plan || "free";
-  const maxDreams = 3;
+  const userPermissions = getUserPermissions(userPlan);
+  const maxDreams = userPermissions.maxDreams;
   const [dailyDreamCount, setDailyDreamCount] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -761,7 +761,7 @@ export default function AstrologyChart() {
                               ☀️ {chart.sunSign} • 🌙 {chart.moonSign} • ⬆️ {chart.ascendant}
                             </p>
                           </div>
-                          {(isPremium || isPro) && (
+                          {isPremium && (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();

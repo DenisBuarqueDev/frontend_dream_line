@@ -10,10 +10,10 @@ const PLAN_PERMISSIONS = {
     canDeleteDream: false,
     canDeleteEmotion: false,
     canUseCorrelations: false,
-    canUseNotifications: false,
+    canUseNotifications: true,
     canUseNumerology: false,
-    maxDreams: 5,
-    maxInterpretationsPerDay: 3,
+    maxDreams: 1,
+    maxInterpretationsPerDay: 1,
     maxEmotionAnalysesPerDay: 3
   },
   premium: {
@@ -25,7 +25,7 @@ const PLAN_PERMISSIONS = {
     canUseCorrelations: true,
     canUseNotifications: true,
     canUseNumerology: true,
-    maxDreams: 60,
+    maxDreams: 3,
     maxInterpretationsPerDay: Infinity,
     maxEmotionAnalysesPerDay: Infinity
   }
