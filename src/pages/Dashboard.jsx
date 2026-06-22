@@ -1203,28 +1203,35 @@ export default function Dashboard() {
             <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
               <button
                 onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <span className="text-lg">📋</span>
                 <span className="font-medium">Sonhos</span>
               </button>
               <button
+                onClick={() => { navigate("/emotions/new"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <span className="text-lg">📖</span>
+                <span className="font-medium">Diário de Emoções</span>
+              </button>
+              <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <span className="text-lg">📊</span>
                 <span className="font-medium">Insights</span>
               </button>
               <button
                 onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <span className="text-lg">🔗</span>
                 <span className="font-medium">Correlações</span>
               </button>
               <button
                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <span className="text-lg">⭐</span>
                 <span className="font-medium">Planos</span>
@@ -1235,7 +1242,7 @@ export default function Dashboard() {
               {!isPWAInstalled() && (
                 <button
                   onClick={handleInstallClick}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
                 >
                   <span className="text-lg">⬇️</span>
                   <span className="font-medium">Instalar App</span>
@@ -1243,14 +1250,14 @@ export default function Dashboard() {
               )}
               <button
                 onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <span className="text-lg">🔔</span>
                 <span className="font-medium">Notificações</span>
               </button>
               <button
                 onClick={() => { navigate("/support"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <span className="text-lg">💬</span>
                 <span className="font-medium">Suporte</span>
