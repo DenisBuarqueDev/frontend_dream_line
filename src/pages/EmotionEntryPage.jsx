@@ -415,11 +415,11 @@ export default function EmotionEntryPage() {
                 <span className="font-medium">Sonhos</span>
               </button>
               <button
-                onClick={() => { navigate("/emotions/new"); setSidebarOpen(false); }}
+                onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <span className="text-lg">📖</span>
-                <span className="font-medium">Diário de Emoções</span>
+                <span className="font-medium">Emoções</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}

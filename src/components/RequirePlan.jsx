@@ -18,14 +18,11 @@ export function RequirePlan({ children, plans }) {
 
   if (!plans.includes(userPlan)) {
     return (
-      <>
-        {children}
-        <PremiumModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          featureName="Este recurso"
-        />
-      </>
+      <PremiumModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        featureName="Este recurso"
+      />
     );
   }
 
