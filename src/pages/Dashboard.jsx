@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth, getUserPermissions } from "../context/AuthContext";
 import { saveDream, getDreams, transcribeAudio, interpretDreamWithAI } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
 import AppContainer from "../components/ui/AppContainer";
