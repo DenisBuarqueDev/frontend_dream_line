@@ -13,18 +13,23 @@ function registerPWA() {
         const registration = await navigator.serviceWorker.register("/sw.js");
         console.log("📱 SW registrado:", registration.scope);
 
-        // Check for updates on every load
+        function onSWInstalling(worker) {
+          worker.addEventListener("statechange", () => {
+            if (worker.state === "installed" && navigator.serviceWorker.controller) {
+              console.log("📱 Nova versão disponível — atualizando...");
+              worker.postMessage({ type: "SKIP_WAITING" });
+            }
+          });
+        }
+
+        // Pode já estar instalando se registerSW.js iniciou antes
+        if (registration.installing) {
+          onSWInstalling(registration.installing);
+        }
+
         registration.addEventListener("updatefound", () => {
-          const installing = registration.installing;
-          if (installing) {
-            installing.addEventListener("statechange", () => {
-              if (installing.state === "installed") {
-                if (navigator.serviceWorker.controller) {
-                  console.log("📱 Nova versão disponível — atualizando...");
-                  installing.postMessage({ type: "SKIP_WAITING" });
-                }
-              }
-            });
+          if (registration.installing) {
+            onSWInstalling(registration.installing);
           }
         });
 
