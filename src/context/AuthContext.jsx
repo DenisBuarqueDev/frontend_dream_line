@@ -80,6 +80,30 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
+  const refreshUser = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return null;
+
+      const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) return null;
+      const data = await response.json();
+      if (data && data.plan) {
+        const permissions = getUserPermissions(data.plan);
+        const userWithPermissions = { ...data, ...permissions };
+        localStorage.setItem('user', JSON.stringify(userWithPermissions));
+        setUser(userWithPermissions);
+        return userWithPermissions;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }, []);
+
   const value = {
     user,
     isAuthenticated: !!user,
@@ -88,6 +112,7 @@ export function AuthProvider({ children }) {
     logout,
     getToken: () => localStorage.getItem('token'),
     updatePlanInfo,
+    refreshUser,
     getUserPermissions: (plan) => getUserPermissions(plan)
   };
 

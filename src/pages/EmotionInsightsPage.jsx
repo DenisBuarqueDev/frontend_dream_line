@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   PieChart, Pie, Cell, Tooltip,
@@ -84,35 +84,70 @@ function PremiumBlock() {
 
 export default function EmotionInsightsPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isLoading, refreshUser } = useAuth();
   const [raw, setRaw] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchInsights = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await getEmotionInsights();
+      if (result.success) {
+        setRaw(result.data);
+      } else {
+        setError("erro_tecnico");
+      }
+    } catch (err) {
+      const msg = err.message || "";
+      if (msg.includes("Premium")) {
+        setError("premium_block");
+      } else {
+        setError("erro_tecnico");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
+    if (isLoading) return;
+
     if (user?.plan !== "premium") {
       setLoading(false);
       return;
     }
 
-    getEmotionInsights()
-      .then((result) => {
-        if (result.success) {
-          setRaw(result.data);
-        } else {
-          setError("erro_tecnico");
-        }
-      })
-      .catch((err) => {
-        const msg = err.message || "";
-        if (msg.includes("Premium")) {
-          setError("premium_block");
-        } else {
-          setError("erro_tecnico");
-        }
-      })
-      .finally(() => setLoading(false));
-  }, [user?.plan]);
+    fetchInsights();
+  }, [user?.plan, isLoading, fetchInsights]);
+
+  const handleRefresh = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const refreshed = await refreshUser();
+    if (refreshed && refreshed.plan === "premium") {
+      await fetchInsights();
+    } else {
+      setLoading(false);
+      if (refreshed) {
+        setError(null);
+      } else {
+        setError("erro_tecnico");
+      }
+    }
+  }, [refreshUser, fetchInsights]);
+
+  if (isLoading) {
+    return (
+      <AppContainer>
+        <AppHeader title="Insights Emocionais" onBack={() => navigate("/dashboard")} />
+        <div className="flex-1 flex items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      </AppContainer>
+    );
+  }
 
   if (user?.plan !== "premium") {
     return <PremiumBlock />;
@@ -130,7 +165,28 @@ export default function EmotionInsightsPage() {
   }
 
   if (error === "premium_block") {
-    return <PremiumBlock />;
+    return (
+      <AppContainer>
+        <AppHeader title="Insights Emocionais" onBack={() => navigate("/dashboard")} />
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="text-center max-w-sm">
+            <div className="text-6xl mb-4">🔄</div>
+            <h3 className="text-white font-semibold text-lg mb-2">
+              Sincronização necessária
+            </h3>
+            <p className="text-purple-200 text-sm mb-6">
+              Seu plano não pôde ser verificado. Atualize seus dados para acessar os Insights Emocionais.
+            </p>
+            <button
+              onClick={handleRefresh}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:opacity-90 transition-opacity"
+            >
+              Atualizar dados da conta
+            </button>
+          </div>
+        </div>
+      </AppContainer>
+    );
   }
 
   if (error || !raw || raw.totalCount === 0) {
