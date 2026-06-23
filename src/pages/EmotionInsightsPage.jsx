@@ -6,6 +6,7 @@ import {
   BarChart, Bar, ResponsiveContainer,
 } from "recharts";
 import { getEmotionInsights } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
 import AppHeader from "../components/ui/AppHeader";
@@ -55,27 +56,67 @@ function safeArr(arr) {
   return Array.isArray(arr) ? arr : [];
 }
 
+function PremiumBlock() {
+  const navigate = useNavigate();
+  return (
+    <AppContainer>
+      <AppHeader title="Insights Emocionais" onBack={() => navigate("/dashboard")} />
+      <div className="flex-1 flex items-center justify-center px-4">
+        <div className="text-center max-w-sm">
+          <div className="text-6xl mb-4">🔒</div>
+          <h3 className="text-white font-semibold text-lg mb-2">
+            Insights Emocionais são exclusivos do Premium
+          </h3>
+          <p className="text-purple-200 text-sm mb-6">
+            Acompanhe padrões, intensidade emocional e evolução dos seus sentimentos ao longo do tempo.
+          </p>
+          <button
+            onClick={() => navigate("/pricing")}
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:opacity-90 transition-opacity"
+          >
+            Seja Premium
+          </button>
+        </div>
+      </div>
+    </AppContainer>
+  );
+}
+
 export default function EmotionInsightsPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [raw, setRaw] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (user?.plan !== "premium") {
+      setLoading(false);
+      return;
+    }
+
     getEmotionInsights()
       .then((result) => {
         if (result.success) {
           setRaw(result.data);
         } else {
-          setError("Erro ao carregar insights.");
+          setError("erro_tecnico");
         }
       })
       .catch((err) => {
-        console.error("Erro ao carregar insights:", err);
-        setError(err.message || "Erro ao carregar insights.");
+        const msg = err.message || "";
+        if (msg.includes("Premium")) {
+          setError("premium_block");
+        } else {
+          setError("erro_tecnico");
+        }
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.plan]);
+
+  if (user?.plan !== "premium") {
+    return <PremiumBlock />;
+  }
 
   if (loading) {
     return (
@@ -86,6 +127,10 @@ export default function EmotionInsightsPage() {
         </div>
       </AppContainer>
     );
+  }
+
+  if (error === "premium_block") {
+    return <PremiumBlock />;
   }
 
   if (error || !raw || raw.totalCount === 0) {
