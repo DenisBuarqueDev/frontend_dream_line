@@ -440,7 +440,7 @@ export default function EmotionEntryPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <span className="text-lg">🔢</span>
-                <span className="font-medium">Numerologia do Nome</span>
+                <span className="font-medium">Numerologia</span>
               </button>
               <button
                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
