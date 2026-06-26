@@ -15,6 +15,7 @@ import SleepPlayer from "./pages/SleepPlayer";
 import Pricing from "./pages/Pricing";
 import AstrologyChart from "./pages/AstrologyChart";
 import Numerology from "./pages/Numerology";
+import NameNumerologyPage from "./pages/NameNumerologyPage";
 import LuckyNumbers from "./pages/LuckyNumbers";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancelled from "./pages/PaymentCancelled";
@@ -136,6 +137,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+      <Route
+        path="/numerology/nome"
+        element={
+          <ProtectedRoute>
+            <NameNumerologyPage />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/lucky-numbers"
         element={

@@ -1231,6 +1231,13 @@ export default function Dashboard() {
                 <span className="font-medium">Correlações</span>
               </button>
               <button
+                onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <span className="text-lg">🔢</span>
+                <span className="font-medium">Numerologia do Nome</span>
+              </button>
+              <button
                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >

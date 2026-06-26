@@ -11,6 +11,7 @@ const PREMIUM_FEATURES = {
   astral_chart: { label: 'Mapa Astral', premiumOnly: true },
   chat_emotional: { label: 'Chat emocional', premiumOnly: true },
   emotion_insights: { label: 'Insights emocionais', premiumOnly: true },
+  name_numerology: { label: 'Numerologia do Nome', premiumOnly: false, dailyLimit: 1 },
   interpretation: { label: 'Interpretação de sonhos', premiumOnly: false, dailyLimit: 1 },
   emotion_analysis: { label: 'Análise emocional', premiumOnly: false, dailyLimit: 3 },
 };

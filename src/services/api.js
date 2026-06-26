@@ -421,3 +421,37 @@ export async function getDreamEmotionCorrelations(days = 30) {
 
   return await handleResponse(response);
 }
+
+export async function generateNameNumerology(fullName, birthDate) {
+  const url = `${API_BASE_URL}/api/numerology-name/generate`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ fullName, birthDate }),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getNameNumerologyList(page = 1, limit = 20) {
+  const url = `${API_BASE_URL}/api/numerology-name?page=${page}&limit=${limit}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getNameNumerologyRemaining() {
+  const url = `${API_BASE_URL}/api/numerology-name/remaining`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
