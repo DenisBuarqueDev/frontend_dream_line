@@ -21,7 +21,7 @@ export default function LuckyNumbers() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("/api/lucky-numbers", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/lucky-numbers`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const result = await response.json();
@@ -37,7 +37,7 @@ export default function LuckyNumbers() {
     setRegenerating(gameKey);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`/api/lucky-numbers/regenerate/${gameKey}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/lucky-numbers/regenerate/${gameKey}`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` }
       });

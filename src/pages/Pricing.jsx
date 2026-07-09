@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PricingCard from "../components/PricingCard";
-import logotipo from "../assets/logotipo.png";
+import logotipo from "../assets/logotipo-white.png";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
 import { createCheckout } from "../services/api";

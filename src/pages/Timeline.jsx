@@ -4,7 +4,7 @@ import DreamInsights from "../components/DreamInsights";
 import { getDreams, deleteDream, generateDreamImageWithAI, getCurrentPlan } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
-import logotipo from "../assets/logotipo.png";
+import logotipo from "../assets/logotipo-white.png";
 import LuckyNumbersCard from "../components/LuckyNumbersCard";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";

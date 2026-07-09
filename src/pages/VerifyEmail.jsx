@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { verifyEmail, resendVerification } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
 import PrimaryButton from "../components/ui/PrimaryButton";
-import logotipo from "../assets/logotipo.png";
+import logotipo from "../assets/logotipo-white.png";
 
 export default function VerifyEmail() {
   const [searchParams] = useSearchParams();

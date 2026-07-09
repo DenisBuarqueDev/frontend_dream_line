@@ -91,8 +91,8 @@ export default function Numerology() {
       try {
         const token = localStorage.getItem("token");
         const [energyRes, luckyRes] = await Promise.all([
-          fetch("/api/energy/today", { headers: { Authorization: `Bearer ${token}` } }),
-          fetch("/api/lucky-numbers", { headers: { Authorization: `Bearer ${token}` } })
+          fetch(`${import.meta.env.VITE_API_URL || ""}/api/energy/today`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${import.meta.env.VITE_API_URL || ""}/api/lucky-numbers`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
         const energyResult = await energyRes.json();
         const luckyResult = await luckyRes.json();

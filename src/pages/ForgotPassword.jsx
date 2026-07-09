@@ -5,7 +5,7 @@ import GlassCard from "../components/ui/GlassCard";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Input from "../components/ui/Input";
 import Label from "../components/ui/Label";
-import logotipo from "../assets/logotipo.png";
+import logotipo from "../assets/logotipo-white.png";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { login as apiLogin, register as apiRegister, resendVerification } from "../services/api";
 import { executeRecaptcha } from "../services/recaptcha";
 import GlassCard from "../components/ui/GlassCard";
-import logotipo from "../assets/logotipo.png";
+import logotipo from "../assets/logotipo-white.png";
 import Input from "../components/ui/Input";
 import Label from "../components/ui/Label";
 import PrimaryButton from "../components/ui/PrimaryButton";

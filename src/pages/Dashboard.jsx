@@ -10,7 +10,7 @@ import MorningCompanion from "../components/MorningCompanion";
 import DailyCheckinModal from "../components/DailyCheckinModal";
 import GlassCard from "../components/ui/GlassCard";
 import AppContainer from "../components/ui/AppContainer";
-import logotipo from "../assets/logotipo.png";
+import logotipo from "../assets/logotipo-white.png";
 import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
 import LuckyNumbersCard from "../components/LuckyNumbersCard";
 import AIStepsOverlay from "../components/AIStepsOverlay";
@@ -835,18 +835,6 @@ export default function Dashboard() {
             </button>
           </div>
 
-          <div>
-            <span
-              className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${
-                userPlan === "premium"
-                  ? "bg-purple-500/20 text-purple-300"
-                  : "bg-white/10 text-slate-400"
-              }`}
-            >
-              {userPlan === "premium" ? "Premium" : "Free"}
-            </span>
-          </div>
-
           {userPlan === "premium" && user?.subscription?.expiresAt && (() => {
             const daysLeft = Math.ceil((new Date(user.subscription.expiresAt) - new Date()) / (1000 * 60 * 60 * 24));
             if (daysLeft <= 0) return null;
@@ -871,7 +859,7 @@ export default function Dashboard() {
           <DashboardInstallBanner />
 
           {homeData && (
-            <MorningCompanion greeting={homeData.greeting}>
+            <MorningCompanion greeting={homeData.greeting} userPlan={userPlan}>
               {homeMessage !== null && (
                 <HomeCompanionCard
                   message={homeMessage}

@@ -26,7 +26,7 @@ export default function QuickSummaryBar({ summary }) {
     <div
       className={`bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 mb-6 transition-all duration-600 ${animClass}`}
     >
-      <div className="flex justify-between">
+      <div className="grid grid-cols-4 gap-0">
         <Indicator
           icon="🏆"
           label="Score"

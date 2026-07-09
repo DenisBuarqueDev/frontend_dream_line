@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function MorningCompanion({ greeting, children }) {
+export default function MorningCompanion({ greeting, children, userPlan }) {
   const [animClass, setAnimClass] = useState("opacity-0 translate-y-4");
 
   useEffect(() => {
@@ -18,6 +18,17 @@ export default function MorningCompanion({ greeting, children }) {
           <span className="text-[10px] font-bold text-amber-400 tracking-widest">
             COMPANHEIRO DO DIA
           </span>
+          <div className="ml-auto">
+            <span
+              className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${
+                userPlan === "premium"
+                  ? "bg-purple-500/20 text-purple-300"
+                  : "bg-white/10 text-slate-400"
+              }`}
+            >
+              {userPlan === "premium" ? "Premium" : "Free"}
+            </span>
+          </div>
         </div>
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">
           {greeting}

@@ -5,7 +5,7 @@ import { transcribeAudio, createEmotion } from "../services/api";
 import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
 import { triggerInstall, isPWAInstalled } from "../services/pwaInstall";
-import logotipo from "../assets/logotipo.png";
+import logotipo from "../assets/logotipo-white.png";
 
 const getSupportedMimeType = () => {
   const types = [

@@ -65,7 +65,7 @@ export default function LifeInsights() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/life-insights", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/life-insights`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 403) {

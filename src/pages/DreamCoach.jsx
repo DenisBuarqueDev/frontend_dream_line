@@ -48,7 +48,7 @@ export default function DreamCoach() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/dream-coach", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/dream-coach`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 403) {
