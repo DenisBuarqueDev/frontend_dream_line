@@ -87,7 +87,7 @@ export default function LifeInsights() {
 
   return (
     <AppContainer>
-      <AppHeader title="Life Insights" />
+      <AppHeader title="Life Insights" onBack={() => navigate("/dashboard")} />
 
       {loading && (
         <div className="flex justify-center pt-20">

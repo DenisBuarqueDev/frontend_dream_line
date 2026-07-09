@@ -10,6 +10,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Timeline from "./pages/Timeline";
+import DreamEntryPage from "./pages/DreamEntryPage";
 import SleepMode from "./pages/SleepMode";
 import SleepPlayer from "./pages/SleepPlayer";
 import Pricing from "./pages/Pricing";
@@ -100,6 +101,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Timeline />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dreams/new"
+        element={
+          <ProtectedRoute>
+            <DreamEntryPage />
           </ProtectedRoute>
         }
       />

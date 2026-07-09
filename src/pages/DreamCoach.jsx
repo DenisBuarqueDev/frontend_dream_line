@@ -75,7 +75,7 @@ export default function DreamCoach() {
 
   return (
     <AppContainer>
-      <AppHeader title="Dream Coach" />
+      <AppHeader title="Dream Coach" onBack={() => navigate("/dashboard")} />
 
       {loading && (
         <div className="flex justify-center pt-20">
