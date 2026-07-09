@@ -86,11 +86,11 @@ export default function Dashboard() {
     <AppContainer className="md:items-center md:justify-center">
       <div className="w-full max-w-xl flex flex-col md:block flex-1 md:flex-none">
         <GlassCard className="flex flex-col flex-1 md:block rounded-none md:rounded-2xl p-4 pb-8 md:p-6 lg:p-10 shadow-none md:shadow-xl border-0 md:border">
-          
-          <div className="flex justify-between items-center mb-2">
+
+          <div className="flex justify-between items-center mb-6">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
+              className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
               title="Menu"
             >
               <svg
@@ -107,6 +107,26 @@ export default function Dashboard() {
                 />
               </svg>
             </button>
+          </div>
+
+          <div className="text-center mb-10 animate-fade-in">
+            <img
+              src={logotipo}
+              alt="Dream Line Logo"
+              className="w-28 h-28 md:w-24 md:h-24 object-contain mx-auto mb-5"
+            />
+            <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Dream Line</h1>
+            <p className="text-purple-300/70 text-sm mt-2.5 tracking-wide">
+              Padrões Ocultos da Mente
+            </p>
+            {userPlan === "free" && (
+              <button
+                onClick={() => navigate("/pricing")}
+                className="mt-4 px-6 py-2.5 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Seja Premium
+              </button>
+            )}
           </div>
 
           {userPlan === "premium" && user?.subscription?.expiresAt && (() => {
@@ -146,106 +166,90 @@ export default function Dashboard() {
             </MorningCompanion>
           )}
 
-          <div className="mb-6">
-            <div className="grid grid-cols-2 gap-2 max-w-sm mx-auto">
-              <button
-                onClick={() => navigate("/dreams/new")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span className="text-lg">🌙</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Sonhos</span>
-              </button>
-              <button
-                onClick={() => navigate("/emotions/timeline")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span className="text-lg">😊</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Emoções</span>
-              </button>
+          <div className="space-y-4 mb-10 animate-fade-in" style={{ animationDelay: "150ms", animationFillMode: "both" }}>
+            <button
+              onClick={() => navigate("/dreams/new")}
+              className="w-full py-6 rounded-2xl font-bold text-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-xl shadow-purple-500/25 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-purple-500/40"
+            >
+              🌙 Registrar Sonho
+            </button>
+            <button
+              onClick={() => navigate("/emotions/new")}
+              className="w-full py-6 rounded-2xl font-bold text-lg bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white shadow-xl shadow-pink-500/25 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-pink-500/40"
+            >
+              ❤️ Diário Emocional
+            </button>
+          </div>
+
+          <div className="animate-fade-in" style={{ animationDelay: "300ms", animationFillMode: "both" }}>
+            <p className="text-[10px] font-semibold text-slate-500/60 uppercase tracking-[0.2em] mb-4 text-center">
+              Explorar
+            </p>
+            <div className="grid grid-cols-3 gap-2.5">
               <button
                 onClick={() => navigate("/timeline")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">📅</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Timeline</span>
+                <span className="text-lg leading-none">📅</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Timeline</span>
               </button>
               <button
                 onClick={() => navigate("/emotions/insights")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">📊</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Insights</span>
+                <span className="text-lg leading-none">📊</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Insights</span>
               </button>
               <button
                 onClick={() => navigate("/insights/correlations")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">🔗</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Correlações</span>
+                <span className="text-lg leading-none">🔗</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Correlações</span>
               </button>
               <button
                 onClick={() => navigate("/life-insights")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">💡</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Life Insights</span>
+                <span className="text-lg leading-none">💡</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Life</span>
               </button>
               <button
                 onClick={() => navigate("/dream-coach")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">🌟</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Dream Coach</span>
+                <span className="text-lg leading-none">🌟</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Dream Coach</span>
               </button>
               <button
                 onClick={() => navigate("/numerology/nome")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">🔢</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Numerologia</span>
+                <span className="text-lg leading-none">🔢</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Numerologia</span>
               </button>
               <button
                 onClick={() => navigate("/pricing")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">⭐</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Planos</span>
+                <span className="text-lg leading-none">⭐</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Planos</span>
               </button>
               <button
                 onClick={() => navigate("/notifications")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">🔔</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Notificações</span>
+                <span className="text-lg leading-none">🔔</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Notificações</span>
               </button>
               <button
                 onClick={() => navigate("/support")}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98] col-span-2 justify-self-center w-1/2"
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
-                <span className="text-lg">💬</span>
-                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Suporte</span>
+                <span className="text-lg leading-none">❓</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Suporte</span>
               </button>
             </div>
-          </div>
-
-          <div className="text-center mb-8">
-            <img
-              src={logotipo}
-              alt="Dream Line Logo"
-              className="w-28 h-28 md:w-24 md:h-24 object-contain mx-auto mb-4"
-            />
-            <h1 className="text-3xl font-bold text-white">Dream Line</h1>
-            <p className="text-purple-200 text-sm mt-2">
-              Padrões Ocultos da Mente
-            </p>
-            {userPlan === "free" && (
-              <button
-                onClick={() => navigate("/pricing")}
-                className="mt-3 px-6 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Seja Premium
-              </button>
-            )}
           </div>
         </GlassCard>
       </div>

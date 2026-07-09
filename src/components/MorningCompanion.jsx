@@ -9,31 +9,31 @@ export default function MorningCompanion({ greeting, children, userPlan }) {
   }, []);
 
   return (
-    <div className={`mb-6 transition-all duration-600 ${animClass}`}>
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
-          <span className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-sm">
-            ☀️
-          </span>
-          <span className="text-[10px] font-bold text-amber-400 tracking-widest">
-            COMPANHEIRO DO DIA
-          </span>
-          <div className="ml-auto">
-            <span
-              className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${
-                userPlan === "premium"
-                  ? "bg-purple-500/20 text-purple-300"
-                  : "bg-white/10 text-slate-400"
-              }`}
-            >
-              {userPlan === "premium" ? "Premium" : "Free"}
-            </span>
-          </div>
+    <div className={`mb-8 transition-all duration-700 ease-out ${animClass}`}>
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400/20 to-amber-600/20 flex items-center justify-center text-base shadow-inner shadow-amber-500/10">
+          ☀️
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">
+        <div className="flex-1">
+          <p className="text-[11px] font-bold text-amber-400/90 tracking-[0.15em] uppercase">
+            Companheiro do Dia
+          </p>
+        </div>
+        <span
+          className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${
+            userPlan === "premium"
+              ? "bg-purple-500/20 text-purple-300"
+              : "bg-white/10 text-slate-400"
+          }`}
+        >
+          {userPlan === "premium" ? "Premium" : "Free"}
+        </span>
+      </div>
+      <div className="mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-1.5 leading-tight">
           {greeting}
         </h2>
-        <p className="text-purple-200/70 text-sm">
+        <p className="text-purple-300/60 text-sm leading-relaxed">
           Que bom ter você por aqui.
         </p>
       </div>
