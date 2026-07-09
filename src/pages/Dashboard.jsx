@@ -872,63 +872,60 @@ export default function Dashboard() {
             </MorningCompanion>
           )}
 
-          <GlassCard className="p-5 mb-6">
-            <p className="text-sm text-purple-200/70 text-center mb-5">
-              Continue cuidando de você. Pequenos passos fazem a diferença.
-            </p>
+          <GlassCard className="mb-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <button
                 onClick={() => navigate("/timeline")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-2xl">🌙</span>
                 <span className="text-xs font-semibold text-purple-200/80">Sonhos</span>
               </button>
               <button
                 onClick={() => navigate("/dreams/new")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-2xl">✏️</span>
                 <span className="text-xs font-semibold text-purple-200/80">Novo Sonho</span>
               </button>
               <button
                 onClick={() => navigate("/emotions/new")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-2xl">😊</span>
                 <span className="text-xs font-semibold text-purple-200/80">Emoções</span>
               </button>
               <button
                 onClick={() => navigate("/dream-coach")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-2xl">🌟</span>
                 <span className="text-xs font-semibold text-purple-200/80">Dream Coach</span>
               </button>
               <button
                 onClick={() => navigate("/life-insights")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-2xl">📈</span>
                 <span className="text-xs font-semibold text-purple-200/80">Life Insights</span>
               </button>
               <button
                 onClick={() => navigate("/numerology/nome")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-2xl">🔮</span>
                 <span className="text-xs font-semibold text-purple-200/80">Numerologia</span>
               </button>
               <button
                 onClick={() => navigate("/astrology")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-2xl">⭐</span>
                 <span className="text-xs font-semibold text-purple-200/80">Mapa Astral</span>
               </button>
               <button
                 onClick={() => navigate("/notifications")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-2xl">⚙</span>
                 <span className="text-xs font-semibold text-purple-200/80">Configurações</span>
