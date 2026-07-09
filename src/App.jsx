@@ -89,7 +89,11 @@ function App() {
       />
       <Route
         path="/dashboard"
-        element={<Navigate to="/timeline" replace />}
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/timeline"
