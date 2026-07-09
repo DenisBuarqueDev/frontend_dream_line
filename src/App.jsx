@@ -88,6 +88,10 @@ function App() {
         element={<SubscriptionExpired />}
       />
       <Route
+        path="/dashboard"
+        element={<Navigate to="/timeline" replace />}
+      />
+      <Route
         path="/timeline"
         element={
           <ProtectedRoute>
