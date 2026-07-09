@@ -100,7 +100,7 @@ export default function Timeline() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/timeline", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/timeline`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.status === 403) {
