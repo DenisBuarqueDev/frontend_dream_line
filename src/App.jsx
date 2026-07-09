@@ -23,6 +23,8 @@ import SubscriptionExpired from "./pages/SubscriptionExpired";
 import AIDebug from "./pages/AIDebug";
 import AITestPanel from "./pages/AITestPanel";
 import NotificationSettings from "./pages/NotificationSettings";
+import DreamCoach from "./pages/DreamCoach";
+import LifeInsights from "./pages/LifeInsights";
 import EmotionEntryPage from "./pages/EmotionEntryPage";
 import EmotionAnalysisPage from "./pages/EmotionAnalysisPage";
 import EmotionChatPage from "./pages/EmotionChatPage";
@@ -86,18 +88,18 @@ function App() {
         element={<SubscriptionExpired />}
       />
       <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
         path="/timeline"
         element={
           <ProtectedRoute>
             <Timeline />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/life-insights"
+        element={
+          <ProtectedRoute>
+            <LifeInsights />
           </ProtectedRoute>
         }
       />
@@ -221,6 +223,14 @@ function App() {
         element={
           <ProtectedRoute>
             <DreamEmotionInsightsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dream-coach"
+        element={
+          <ProtectedRoute>
+            <DreamCoach />
           </ProtectedRoute>
         }
       />

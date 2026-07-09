@@ -2,16 +2,19 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, getUserPermissions } from "../context/AuthContext";
 import { saveDream, getDreams, transcribeAudio, interpretDreamWithAI } from "../services/api";
+import HomeCompanionCard from "../components/HomeCompanionCard";
+import QuickSummaryBar from "../components/QuickSummaryBar";
+import NextStepCard from "../components/NextStepCard";
+import CurrentJourneyCard from "../components/CurrentJourneyCard";
+import MorningCompanion from "../components/MorningCompanion";
+import DailyCheckinModal from "../components/DailyCheckinModal";
 import GlassCard from "../components/ui/GlassCard";
 import AppContainer from "../components/ui/AppContainer";
-import PrimaryButton from "../components/ui/PrimaryButton";
 import logotipo from "../assets/logotipo.png";
-import SecondaryButton from "../components/ui/SecondaryButton";
-import Input from "../components/ui/Input";
 import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
 import LuckyNumbersCard from "../components/LuckyNumbersCard";
 import AIStepsOverlay from "../components/AIStepsOverlay";
-import aiService, { AI_STEPS, AI_STEP_ORDER } from "../services/aiService";
+import aiService, { AI_STEPS } from "../services/aiService";
 import DashboardInstallBanner from "../components/DashboardInstallBanner";
 import { triggerInstall, isPWAInstalled } from "../services/pwaInstall";
 
@@ -165,7 +168,7 @@ function detectPatterns(textoSonho) {
 }
 
 export default function Dashboard() {
-  const { user, logout, getToken, updatePlanInfo } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const userPlan = user?.plan || "free";
@@ -177,10 +180,60 @@ export default function Dashboard() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeMessage, setUpgradeMessage] = useState("");
 
+  const [homeMessage, setHomeMessage] = useState(null);
+  const [homeData, setHomeData] = useState(null);
+  const [showCheckin, setShowCheckin] = useState(false);
+  const [checkinMessage, setCheckinMessage] = useState(null);
+
   const showUpgradePlanModal = (message) => {
     setUpgradeMessage(message);
     setShowUpgradeModal(true);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const headers = {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+
+    const fetchHomeCompanion = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/home-companion`, { headers });
+        const json = await res.json();
+        const payload = json.data;
+        setHomeMessage(payload?.available ? payload.message : null);
+      } catch {
+        setHomeMessage(null);
+      }
+    };
+
+    const fetchHome = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/home`, { headers });
+        const json = await res.json();
+        setHomeData(json.data ?? null);
+      } catch {
+        // non-critical
+      }
+    };
+
+    const fetchCheckin = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/daily-checkin`, { headers });
+        const json = await res.json();
+        if (json.data?.checkedIn === false) {
+          setShowCheckin(true);
+        }
+      } catch {
+        // non-critical
+      }
+    };
+
+    fetchHomeCompanion();
+    fetchHome();
+    fetchCheckin();
+  }, []);
 
   useEffect(() => {
     const fetchTodayDreams = async () => {
@@ -738,7 +791,7 @@ export default function Dashboard() {
         setSavedDreamNumerology(dreamNumerology);
         setShowNumerology(true);
       } else {
-        setMonthlyDreamCount((prev) => prev + 1);
+        setDailyDreamCount((prev) => prev + 1);
         deleteAudio();
         navigate("/timeline");
       }
@@ -816,6 +869,20 @@ export default function Dashboard() {
           })()}
 
           <DashboardInstallBanner />
+
+          {homeData && (
+            <MorningCompanion greeting={homeData.greeting}>
+              {homeMessage !== null && (
+                <HomeCompanionCard
+                  message={homeMessage}
+                  onViewed={() => setHomeMessage((prev) => prev ? { ...prev, viewed: true } : prev)}
+                />
+              )}
+              {homeData?.currentJourney && <CurrentJourneyCard journey={homeData.currentJourney} />}
+              {homeData && <QuickSummaryBar summary={homeData.quickSummary} />}
+              {homeData && <NextStepCard nextStep={homeData.nextStep} />}
+            </MorningCompanion>
+          )}
 
           <div className="text-center mb-8">
             <img
@@ -1128,6 +1195,24 @@ export default function Dashboard() {
         </GlassCard>
       </div>
 
+      {checkinMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-green-500/15 border border-green-500/30 rounded-2xl px-6 py-3 shadow-lg animate-fade-in">
+          <p className="text-sm text-green-300 font-medium text-center">
+            💜 {checkinMessage}
+          </p>
+        </div>
+      )}
+
+      <DailyCheckinModal
+        visible={showCheckin}
+        onComplete={(message) => {
+          setShowCheckin(false);
+          setCheckinMessage(message);
+          setTimeout(() => setCheckinMessage(null), 5000);
+        }}
+        onClose={() => setShowCheckin(false)}
+      />
+
       <AIStepsOverlay
         steps={aiSteps}
         currentStep={aiCurrentStep}
@@ -1229,6 +1314,27 @@ export default function Dashboard() {
               >
                 <span className="text-lg">🔗</span>
                 <span className="font-medium">Correlações</span>
+              </button>
+              <button
+                onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <span className="text-lg">⏳</span>
+                <span className="font-medium">Timeline</span>
+              </button>
+              <button
+                onClick={() => { navigate("/life-insights"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <span className="text-lg">💡</span>
+                <span className="font-medium">Life Insights</span>
+              </button>
+              <button
+                onClick={() => { navigate("/dream-coach"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <span className="text-lg">🧘</span>
+                <span className="font-medium">Dream Coach</span>
               </button>
               <button
                 onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
