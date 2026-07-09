@@ -1,181 +1,23 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, getUserPermissions } from "../context/AuthContext";
-import { saveDream, getDreams, transcribeAudio, interpretDreamWithAI } from "../services/api";
 import HomeCompanionCard from "../components/HomeCompanionCard";
 import QuickSummaryBar from "../components/QuickSummaryBar";
 import NextStepCard from "../components/NextStepCard";
 import CurrentJourneyCard from "../components/CurrentJourneyCard";
 import MorningCompanion from "../components/MorningCompanion";
 import DailyCheckinModal from "../components/DailyCheckinModal";
+import DashboardInstallBanner from "../components/DashboardInstallBanner";
 import GlassCard from "../components/ui/GlassCard";
 import AppContainer from "../components/ui/AppContainer";
 import logotipo from "../assets/logotipo-white.png";
-import DreamNumerologyPanel from "../components/DreamNumerologyPanel";
-import LuckyNumbersCard from "../components/LuckyNumbersCard";
-import AIStepsOverlay from "../components/AIStepsOverlay";
-import aiService, { AI_STEPS } from "../services/aiService";
-import DashboardInstallBanner from "../components/DashboardInstallBanner";
 import { triggerInstall, isPWAInstalled } from "../services/pwaInstall";
-
-const TEMATICOS = [
-  "amigo",
-  "desconhecido",
-  "multidao",
-  "crianca",
-  "idoso",
-  "professor",
-  "chefe",
-  "escola",
-  "hospital",
-  "floresta",
-  "praia",
-  "estrada",
-  "ponte",
-  "quarto",
-  "predio",
-  "sombra",
-  "luz",
-  "escuridao",
-  "espelho",
-  "porta",
-  "janela",
-  "escada",
-  "labirinto",
-  "fugir",
-  "correr",
-  "esconder",
-  "gritar",
-  "cair",
-  "subir",
-  "perder",
-  "encontrar",
-  "medo",
-  "ansiedade",
-  "alegria",
-  "tristeza",
-  "confusao",
-  "vazio",
-  "fogo",
-  "tempestade",
-  "vento",
-  "chuva",
-  "passado",
-  "futuro",
-  "memoria",
-  "esquecimento",
-  "segredo",
-  "misterio",
-  "perseguicao",
-];
-
-const ESPIRITUAIS = [
-  "luz",
-  "energia",
-  "alma",
-  "consciencia",
-  "universo",
-  "infinito",
-  "eterno",
-  "destino",
-  "proposito",
-  "intuicao",
-  "silencio",
-  "meditacao",
-  "presenca",
-  "despertar",
-  "transcendencia",
-  "vibracao",
-  "aura",
-  "chakra",
-  "equilibrio",
-  "harmonia",
-  "renascimento",
-  "transformacao",
-  "cura",
-  "sabedoria",
-  "verdade",
-  "essencia",
-  "espelho interior",
-  "conexao",
-  "divino",
-  "sagrado",
-  "ceu",
-  "cosmos",
-  "energia vital",
-  "fluxo",
-  "caminho",
-  "guia",
-  "mensagem",
-  "sinal",
-  "portal",
-  "dimensao",
-  "espiral",
-];
-
-const BIOLOGICOS = [
-  "fadiga",
-  "exaustao",
-  "insomnia",
-  "sonolencia",
-  "bocejo",
-  "pesadelo",
-  "respiracao",
-  "falta de ar",
-  "sufocamento",
-  "batimento",
-  "coracao acelerado",
-  "palpitacao",
-  "pressao",
-  "tontura",
-  "vertigem",
-  "fraqueza",
-  "desmaio",
-  "suor",
-  "suor frio",
-  "calor",
-  "frio",
-  "tremor",
-  "arrepio",
-  "dor",
-  "dor de cabeca",
-  "enxaqueca",
-  "dor muscular",
-  "tensao",
-  "rigidez",
-  "inquietacao",
-  "agitacao",
-  "digestao",
-  "nausea",
-  "vomito",
-  "azia",
-  "sede",
-  "boca seca",
-  "fome intensa",
-  "respirar",
-  "espirro",
-  "tosse",
-  "nariz entupido",
-];
-
-function detectPatterns(textoSonho) {
-  const texto = textoSonho.toLowerCase();
-  return {
-    tematicos: TEMATICOS.filter((p) => texto.includes(p)),
-    espirituais: ESPIRITUAIS.filter((p) => texto.includes(p)),
-    biologicos: BIOLOGICOS.filter((p) => texto.includes(p)),
-  };
-}
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const userPlan = user?.plan || "free";
-  const userPermissions = getUserPermissions(userPlan);
-  const maxDreams = userPermissions.maxDreams;
-  const [dailyDreamCount, setDailyDreamCount] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [upgradeMessage, setUpgradeMessage] = useState("");
@@ -234,574 +76,6 @@ export default function Dashboard() {
     fetchHome();
     fetchCheckin();
   }, []);
-
-  useEffect(() => {
-    const fetchTodayDreams = async () => {
-      try {
-        const now = new Date();
-        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const endOfDay = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate(),
-          23,
-          59,
-          59,
-        );
-
-        const response = await getDreams();
-        let dreams = [];
-        if (response && response.data && Array.isArray(response.data.dreams)) {
-          dreams = response.data.dreams;
-        } else if (response && Array.isArray(response.dreams)) {
-          dreams = response.dreams;
-        } else if (Array.isArray(response)) {
-          dreams = response;
-        }
-
-        const todayDreams = dreams.filter((dream) => {
-          const dreamDate = new Date(dream.createdAt || dream.data);
-          return dreamDate >= startOfDay && dreamDate <= endOfDay;
-        });
-
-        setDailyDreamCount(todayDreams.length);
-        setIsLoaded(true);
-      } catch (error) {
-        console.error("Erro ao buscar sonhos do dia:", error);
-        setIsLoaded(true);
-      }
-    };
-
-    if (!isLoaded) {
-      fetchTodayDreams();
-    }
-  }, [isLoaded]);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        setIsLoaded(false);
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () =>
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, []);
-
-  const remainingDreams = Math.max(0, maxDreams - dailyDreamCount);
-  const canInterpret = remainingDreams > 0;
-
-  const [isRecording, setIsRecording] = useState(false);
-  const [audioUrl, setAudioUrl] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showInterpretation, setShowInterpretation] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [sleepTime, setSleepTime] = useState("");
-  const [wakeTime, setWakeTime] = useState("");
-  const [allTranscripts, setAllTranscripts] = useState([]);
-  const [interpretation, setInterpretation] = useState("");
-  const [error, setError] = useState("");
-  const [isTranscribing, setIsTranscribing] = useState(false);
-  const [patterns, setPatterns] = useState({
-    tematicos: [],
-    espirituais: [],
-    biologicos: [],
-  });
-  const [savedDreamNumerology, setSavedDreamNumerology] = useState(null);
-  const [showNumerology, setShowNumerology] = useState(false);
-  const [aiSteps, setAiSteps] = useState([]);
-  const [aiCurrentStep, setAiCurrentStep] = useState(null);
-  const [showAiOverlay, setShowAiOverlay] = useState(false);
-
-  const mediaRecorderRef = useRef(null);
-  const audioRef = useRef(null);
-  const chunksRef = useRef([]);
-  const recognitionRef = useRef(null);
-  const speechRecognitionStartedRef = useRef(false);
-  const streamRef = useRef(null);
-
-  useEffect(() => {
-    return () => {
-      if (audioUrl) URL.revokeObjectURL(audioUrl);
-    };
-  }, [audioUrl]);
-
-  const cleanTranscription = useCallback((text) => {
-    if (!text) return "";
-    let cleaned = text.toLowerCase();
-    cleaned = cleaned.replace(/[^\x00-\x7F]/g, (char) => {
-      const map = {
-        ã: "a",
-        á: "a",
-        à: "a",
-        â: "a",
-        é: "e",
-        è: "e",
-        ê: "e",
-        í: "i",
-        ì: "i",
-        î: "i",
-        ó: "o",
-        ò: "o",
-        ô: "o",
-        õ: "o",
-        ú: "u",
-        ù: "u",
-        û: "u",
-        ñ: "n",
-        ç: "c",
-      };
-      return map[char] || char;
-    });
-    const words = cleaned.split(/\s+/).filter((w) => w.length > 1);
-    const cleanedWords = [];
-    for (let i = 0; i < words.length; i++) {
-      if (words[i] === words[i - 1] && words[i] === words[i - 2]) continue;
-      if (words[i] === words[i - 1] && words[i] === words[i + 1]) continue;
-      cleanedWords.push(words[i]);
-    }
-    cleaned = cleanedWords.join(" ");
-    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-  }, []);
-
-  const stopMediaStream = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    }
-  };
-
-  const getSupportedMimeType = () => {
-    const types = [
-      "audio/webm; codecs=opus",
-      "audio/webm",
-      "audio/ogg; codecs=opus",
-      "audio/mp4; codecs=mp4a.40.2",
-      "audio/mp4",
-      "audio/aac",
-      "audio/mpeg",
-    ];
-    for (const t of types) {
-      if (MediaRecorder.isTypeSupported(t)) {
-        console.log("🎤 MIME type suportado:", t);
-        return t;
-      }
-    }
-    return "";
-  };
-
-  const startRecording = async () => {
-    try {
-      stopMediaStream();
-
-      const constraints = {
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      };
-
-      console.log("🎤 Solicitando microfone...");
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      streamRef.current = stream;
-      console.log("🎤 Microfone OK");
-
-      const mimeType = getSupportedMimeType();
-      if (!mimeType) {
-        throw new Error("Nenhum formato de áudio suportado neste navegador");
-      }
-
-      console.log("🎤 Criando MediaRecorder com:", mimeType);
-      let mediaRecorder;
-      try {
-        mediaRecorder = new MediaRecorder(stream, { mimeType });
-      } catch (mrErr) {
-        console.error("🎤 MediaRecorder falhou com", mimeType, mrErr);
-        throw new Error("Falha ao criar gravador de áudio");
-      }
-
-      mediaRecorderRef.current = mediaRecorder;
-      chunksRef.current = [];
-      const actualMimeType = mediaRecorder.mimeType || mimeType;
-      console.log("🎤 MediaRecorder mimeType real:", actualMimeType);
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          console.log(`🎤 Chunk recebido: ${e.data.size} bytes`);
-          chunksRef.current.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const totalBytes = chunksRef.current.reduce((s, c) => s + c.size, 0);
-        console.log(`🎤 Gravação finalizada: ${totalBytes} bytes no total`);
-        console.log("📦 Criando blob...");
-
-        const blob = new Blob(chunksRef.current, { type: actualMimeType });
-        console.log("📦 Blob criado:", { size: blob.size, type: blob.type });
-
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        stopMediaStream();
-
-        if (!speechRecognitionStartedRef.current && blob.size > 0) {
-          console.log("📤 Enviando áudio para transcrição...");
-          sendAudioForTranscription(blob);
-        } else if (blob.size === 0) {
-          console.warn("⚠️ Blob vazio, nada para transcrever");
-          setError("Gravação vazia. Tente novamente.");
-        } else {
-          console.log("🧠 Usando transcrição do Web Speech API");
-        }
-      };
-
-      mediaRecorder.start(1000);
-      setIsRecording(true);
-      console.log("🎤 Gravação iniciada");
-
-      const isEdge = navigator.userAgent.includes("Edg");
-      const isSamsung = navigator.userAgent.includes("SamsungBrowser");
-      const isStandalonePWA = window.matchMedia("(display-mode: standalone)").matches;
-      const hasSpeechRecognition =
-        ("SpeechRecognition" in window ||
-          "webkitSpeechRecognition" in window) &&
-        !isEdge &&
-        !isSamsung &&
-        !isStandalonePWA;
-
-      if (hasSpeechRecognition) {
-        console.log("🧠 Web Speech API disponível, iniciando...");
-        speechRecognitionStartedRef.current = true;
-        startSpeechRecognition();
-      } else {
-        console.log(
-          isEdge
-            ? "🧠 Web Speech API não suportado no Edge, usará Groq Whisper"
-            : isSamsung
-              ? "🧠 Web Speech API não suportado no Samsung Browser, usará Groq Whisper"
-              : "🧠 Web Speech API não disponível, usará Groq Whisper"
-        );
-        speechRecognitionStartedRef.current = false;
-      }
-    } catch (err) {
-      console.error("Erro ao acessar microfone:", err);
-      if (
-        err.name === "NotAllowedError" ||
-        err.name === "PermissionDeniedError"
-      ) {
-        setError(
-          "Permissão do microfone negada. Permita o acesso ao microfone nas configurações do navegador.",
-        );
-      } else if (
-        err.name === "NotFoundError" ||
-        err.name === "DevicesNotFoundError"
-      ) {
-        setError(
-          "Nenhum microfone encontrado. Conecte um microfone ao seu dispositivo.",
-        );
-      } else if (
-        err.name === "NotReadableError" ||
-        err.name === "TrackStartError"
-      ) {
-        setError(
-          "Microfone ocupado por outro aplicativo. Feche outros programas que usam o microfone. Se o erro persistir, verifique as permissões de áudio nas configurações do Windows (Configurações > Privacidade e segurança > Microfone).",
-        );
-      } else if (err.name === "SecurityError") {
-        setError(
-          "Acesso ao microfone bloqueado por política de segurança. Use HTTPS ou ambiente de desenvolvimento local.",
-        );
-      } else if (
-        err.message?.includes("audio source") ||
-        err.message?.includes("device")
-      ) {
-        setError(
-          "Não foi possível acessar o microfone. Verifique se o dispositivo está conectado e funcionando (Configurações > Sistema > Som > Dispositivos de entrada).",
-        );
-      } else {
-        setError("Erro ao acessar microfone: " + err.message);
-      }
-    }
-  };
-
-  const startSpeechRecognition = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-      console.log("🧠 Web Speech API não disponível");
-      return;
-    }
-
-    try {
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = "pt-BR";
-
-      recognitionRef.current.onresult = (event) => {
-        let finalTranscript = "";
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript + " ";
-          }
-        }
-        if (finalTranscript) {
-          console.log("🧠 Texto capturado:", finalTranscript.trim().substring(0, 80));
-          setAllTranscripts((prev) => [...prev, finalTranscript.trim()]);
-        }
-      };
-
-      recognitionRef.current.onerror = (event) => {
-        console.error("❌ Web Speech API error:", event.error);
-        if (event.error === "not-allowed") {
-          speechRecognitionStartedRef.current = false;
-        }
-      };
-
-      recognitionRef.current.onend = () => {
-        if (isRecording) {
-          try {
-            recognitionRef.current.start();
-          } catch (_) {}
-        }
-      };
-
-      recognitionRef.current.start();
-      console.log("🧠 Web Speech API iniciado");
-    } catch (err) {
-      console.error("❌ Web Speech API falhou ao iniciar:", err);
-      speechRecognitionStartedRef.current = false;
-    }
-  };
-
-  const sendAudioForTranscription = async (blob) => {
-    setIsTranscribing(true);
-    setError("");
-    setShowInterpretation(false);
-
-    console.log("📤 Enviando áudio para transcrição:", {
-      size: blob.size,
-      type: blob.type,
-    });
-
-    const timeoutMs = 60000;
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-    try {
-      const result = await transcribeAudio(blob, controller.signal);
-      console.log("🧠 Transcrição recebida:", result);
-
-      if (result && result.text) {
-        const text = result.text;
-        console.log("✅ Texto transcrito:", text.substring(0, 100));
-        setAllTranscripts([text]);
-        setError("");
-      } else {
-        console.warn("⚠️ Transcrição vazia do servidor");
-        setError("Transcrição vazia. Tente novamente.");
-      }
-    } catch (err) {
-      console.error("❌ Erro na transcrição:", err);
-
-      if (err.name === "AbortError") {
-        setError("Transcrição excedeu o tempo limite (60s). Tente novamente ou use uma rede mais rápida.");
-      } else if (err.message?.includes("401") || err.message?.includes("Unauthorized")) {
-        setError("Sessão expirada. Faça login novamente.");
-      } else if (err.message?.includes("413") || err.message?.includes("too large")) {
-        setError("Áudio muito grande. Tente gravar um sonho mais curto.");
-      } else if (err.message?.includes("429") || err.message?.includes("too many")) {
-        setError("Muitas requisições. Aguarde alguns segundos e tente novamente.");
-      } else if (err.message?.includes("file must be one of the following types")) {
-        setError("Formato de áudio não suportado pelo servidor de transcrição. Tente usar um navegador diferente (Chrome ou Edge).");
-      } else {
-        setError(err.message || "Erro ao transcrever áudio pelo servidor.");
-      }
-    } finally {
-      clearTimeout(timeoutId);
-      setIsTranscribing(false);
-    }
-  };
-
-  const stopRecording = () => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      recognitionRef.current = null;
-    }
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    }
-    stopMediaStream();
-  };
-
-  const toggleRecording = () => {
-    if (isRecording) stopRecording();
-    else startRecording();
-  };
-
-  const togglePlayback = () => {
-    if (audioRef.current) {
-      if (isPlaying) audioRef.current.pause();
-      else audioRef.current.play();
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const deleteAudio = () => {
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
-      setAudioUrl(null);
-      setIsPlaying(false);
-      setShowInterpretation(false);
-      setAllTranscripts([]);
-      setInterpretation("");
-    }
-  };
-
-  const speakInterpretation = () => {
-    if ("speechSynthesis" in window) {
-      if (isSpeaking) {
-        window.speechSynthesis.cancel();
-        setIsSpeaking(false);
-      } else {
-        const synth = window.speechSynthesis;
-        const utterance = new SpeechSynthesisUtterance(interpretation);
-        utterance.lang = "pt-BR";
-        utterance.rate = 1;
-
-        const voices = synth.getVoices();
-        const ptVoice =
-          voices.find((v) => v.lang === "pt-BR") ||
-          voices.find((v) => v.lang.startsWith("pt"));
-        if (ptVoice) {
-          utterance.voice = ptVoice;
-        }
-        utterance.onend = () => setIsSpeaking(false);
-        utterance.onerror = () => setIsSpeaking(false);
-        synth.speak(utterance);
-        setIsSpeaking(true);
-      }
-    }
-  };
-
-  const calculateDuration = (sleep, wake) => {
-    if (!sleep || !wake) return null;
-    const [sleepH, sleepM] = sleep.split(":").map(Number);
-    const [wakeH, wakeM] = wake.split(":").map(Number);
-    let hours = wakeH - sleepH;
-    let minutes = wakeM - sleepM;
-    if (minutes < 0) {
-      hours -= 1;
-      minutes += 60;
-    }
-    if (hours < 0) hours += 24;
-    return Number((hours + minutes / 60).toFixed(1));
-  };
-
-  useEffect(() => {
-    aiService.setStepCallback((step) => {
-      setAiCurrentStep(step);
-    });
-  }, []);
-
-  const handleInterpret = async () => {
-    const fullText = allTranscripts.join(" ");
-    const cleanedText = cleanTranscription(fullText);
-
-    if (!cleanedText.trim()) {
-      setError("Nenhum texto transcrito. Grave seu sonho primeiro.");
-      return;
-    }
-
-    setError("");
-
-    const steps = aiService.getStepOrder(false);
-    setAiSteps(steps);
-    setShowAiOverlay(true);
-    setIsLoading(true);
-
-    try {
-      const detectedPatterns = detectPatterns(cleanedText);
-      setPatterns(detectedPatterns);
-
-      const result = await interpretDreamWithAI(cleanedText);
-      setInterpretation(result.interpretation || '');
-      setShowInterpretation(true);
-
-      setAiCurrentStep(AI_STEPS.COMPLETE);
-      setTimeout(() => setShowAiOverlay(false), 1200);
-    } catch (err) {
-      console.error("Erro ao interpretar:", err);
-      setError("Erro ao processar interpretação.");
-      setAiCurrentStep(AI_STEPS.ERROR);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSaveToTimeline = async () => {
-    if (!user?.id) {
-      setError("Usuário não identificado.");
-      return;
-    }
-
-    if (!canInterpret) {
-      setError(
-        "Limite de 2 sonhos por dia atingido. Volte amanhã para registrar mais sonhos.",
-      );
-      return;
-    }
-
-    const fullText = allTranscripts.join(" ");
-    const textoSonho = cleanTranscription(fullText);
-
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const duracao = calculateDuration(sleepTime, wakeTime);
-
-      const dreamData = {
-        userId: user.id,
-        textoSonho,
-        interpretacao: interpretation,
-        padroes: patterns,
-        sono:
-          sleepTime && wakeTime
-            ? {
-                horaDormir: sleepTime,
-                horaAcordar: wakeTime,
-                duracaoHoras: duracao,
-              }
-            : null,
-      };
-
-      const response = await saveDream(dreamData);
-
-      let dreamNumerology = null;
-      if (response?.data?.dream?.dreamNumerology) {
-        dreamNumerology = response.data.dream.dreamNumerology;
-      }
-
-      if (dreamNumerology) {
-        setSavedDreamNumerology(dreamNumerology);
-        setShowNumerology(true);
-      } else {
-        setDailyDreamCount((prev) => prev + 1);
-        deleteAudio();
-        navigate("/timeline");
-      }
-    } catch (err) {
-      console.error("Erro ao salvar sonho:", err);
-      setError(err.message || "Erro ao salvar sonho no servidor.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleInstallClick = async () => {
     await triggerInstall();
@@ -873,62 +147,83 @@ export default function Dashboard() {
           )}
 
           <div className="mb-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <button
-                onClick={() => navigate("/timeline")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span className="text-2xl">🌙</span>
-                <span className="text-xs font-semibold text-purple-200/80">Sonhos</span>
-              </button>
+            <div className="grid grid-cols-2 gap-2 max-w-sm mx-auto">
               <button
                 onClick={() => navigate("/dreams/new")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span className="text-2xl">✏️</span>
-                <span className="text-xs font-semibold text-purple-200/80">Novo Sonho</span>
+                <span className="text-lg">🌙</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Sonhos</span>
               </button>
               <button
-                onClick={() => navigate("/emotions/new")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                onClick={() => navigate("/emotions/timeline")}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span className="text-2xl">😊</span>
-                <span className="text-xs font-semibold text-purple-200/80">Emoções</span>
+                <span className="text-lg">😊</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Emoções</span>
               </button>
               <button
-                onClick={() => navigate("/dream-coach")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                onClick={() => navigate("/timeline")}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span className="text-2xl">🌟</span>
-                <span className="text-xs font-semibold text-purple-200/80">Dream Coach</span>
+                <span className="text-lg">📅</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Timeline</span>
+              </button>
+              <button
+                onClick={() => navigate("/emotions/insights")}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span className="text-lg">📊</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Insights</span>
+              </button>
+              <button
+                onClick={() => navigate("/insights/correlations")}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span className="text-lg">🔗</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Correlações</span>
               </button>
               <button
                 onClick={() => navigate("/life-insights")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span className="text-2xl">📈</span>
-                <span className="text-xs font-semibold text-purple-200/80">Life Insights</span>
+                <span className="text-lg">💡</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Life Insights</span>
+              </button>
+              <button
+                onClick={() => navigate("/dream-coach")}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span className="text-lg">🌟</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Dream Coach</span>
               </button>
               <button
                 onClick={() => navigate("/numerology/nome")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span className="text-2xl">🔮</span>
-                <span className="text-xs font-semibold text-purple-200/80">Numerologia</span>
+                <span className="text-lg">🔢</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Numerologia</span>
               </button>
               <button
-                onClick={() => navigate("/astrology")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                onClick={() => navigate("/pricing")}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span className="text-2xl">⭐</span>
-                <span className="text-xs font-semibold text-purple-200/80">Mapa Astral</span>
+                <span className="text-lg">⭐</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Planos</span>
               </button>
               <button
                 onClick={() => navigate("/notifications")}
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white hover:border-purple-500/30 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span className="text-2xl">⚙</span>
-                <span className="text-xs font-semibold text-purple-200/80">Configurações</span>
+                <span className="text-lg">🔔</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Notificações</span>
+              </button>
+              <button
+                onClick={() => navigate("/support")}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-2xl border border-white/20 hover:border-purple-500/50 text-white transition-all hover:scale-[1.02] active:scale-[0.98] col-span-2 justify-self-center w-1/2"
+              >
+                <span className="text-lg">💬</span>
+                <span className="text-[10px] font-semibold text-purple-200/80 leading-tight text-center">Suporte</span>
               </button>
             </div>
           </div>
@@ -952,295 +247,6 @@ export default function Dashboard() {
               </button>
             )}
           </div>
-
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold shadow-lg shadow-purple-500/20 transition-all">
-              🌙 Sonho
-            </button>
-            <span className="text-white/30 text-sm">ou</span>
-            <button
-              onClick={() => navigate("/emotions/new")}
-              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              ❤️ Emoção
-            </button>
-          </div>
-
-          <div className="flex flex-col items-center gap-4 md:gap-6 flex-1 md:flex-none w-full justify-between md:justify-start">
-            <div
-              className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-xl shadow-purple-500/20 transition-all duration-300 ${isRecording ? "ring-4 ring-purple-400 ring-opacity-75 animate-pulse scale-110" : ""}`}
-            >
-              {isRecording && (
-                <div className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-purple-400 animate-ping opacity-30"></div>
-              )}
-              <svg
-                className={`w-10 h-10 sm:w-12 sm:h-12 text-white ${isRecording ? "animate-bounce" : ""}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                />
-              </svg>
-            </div>
-
-            <div className="flex flex-col text-center">
-              {isLoaded && (
-                <p className="text-purple-300 text-md mt-1">
-                  Você pode interpretar {remainingDreams} sonho(s) hoje.
-                </p>
-              )}
-            </div>
-
-              {!showInterpretation && (
-              <button
-                onClick={toggleRecording}
-                disabled={remainingDreams === 0}
-                className={`px-8 py-3 w-full rounded-xl font-semibold text-base transition-all duration-300 ${
-                  remainingDreams === 0
-                    ? "bg-white/5 text-slate-500 cursor-not-allowed"
-                    : isRecording
-                      ? "bg-red-500/80 hover:bg-red-500 text-white shadow-lg shadow-red-500/20"
-                      : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/20 hover:scale-[1.02] active:scale-[0.98]"
-                }`}
-              >
-                {remainingDreams === 0
-                  ? "Limite diário atingido"
-                  : isRecording
-                    ? "Parar gravação"
-                    : "Começar gravação"}
-              </button> 
-            )}
-
-            {audioUrl && (
-              <div className="w-full space-y-4 animate-fade-in">
-                {allTranscripts.length > 0 && (
-                  <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                    <p className="text-white/80 text-sm">
-                      "{cleanTranscription(allTranscripts.join(" "))}"
-                    </p>
-                  </div>
-                )}
-
-                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <div className="flex items-center justify-between gap-4">
-                    <button
-                      onClick={togglePlayback}
-                      className="w-12 h-12 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white flex items-center justify-center transition-all"
-                    >
-                      {isPlaying ? (
-                        <svg
-                          className="w-5 h-5"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          className="w-5 h-5 ml-0.5"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      )}
-                    </button>
-
-                    <div className="flex-1 flex items-center justify-center">
-                      <audio
-                        ref={audioRef}
-                        src={audioUrl}
-                        onPlay={() => setIsPlaying(true)}
-                        onPause={() => setIsPlaying(false)}
-                        onEnded={() => setIsPlaying(false)}
-                        className="hidden"
-                      />
-                      <span className="text-slate-300 text-sm font-medium">
-                        Áudio gravado
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={deleteAudio}
-                      className="w-10 h-10 rounded-xl bg-white/10 hover:bg-red-500/20 border border-white/10 hover:border-red-500/30 text-white hover:text-red-400 flex items-center justify-center transition-all"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                {isTranscribing && (
-                  <div className="bg-purple-500/20 border border-purple-500/30 text-purple-300 px-4 py-3 rounded-xl text-sm text-center animate-pulse flex items-center justify-center gap-2">
-                    <svg
-                      className="w-4 h-4 animate-spin"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    Convertendo voz em texto...
-                  </div>
-                )}
-
-                {error && (
-                  <div className="bg-red-500/20 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm text-center">
-                    {error}
-                  </div>
-                )}
-
-                {!showInterpretation && (
-                  <button
-                    onClick={handleInterpret}
-                    disabled={isLoading}
-                    className="w-full py-4 rounded-xl font-semibold text-base bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    {isLoading ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <svg
-                          className="w-5 h-5 animate-spin"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                        </svg>
-                        Processando...
-                      </span>
-                    ) : (
-                      "Interpretar sonho"
-                    )}
-                  </button>
-                )}
-              </div>
-            )}
-
-            {audioUrl && showInterpretation && (
-              <div className="w-full space-y-4">
-                <div className="bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl p-5 sm:p-6 border border-purple-500/20 animate-fade-in">
-                  <h2 className="text-lg sm:text-xl font-semibold text-white mb-3">
-                    Interpretação do sonho
-                  </h2>
-                  <p className="text-purple-100 text-sm sm:text-base leading-relaxed">
-                    {interpretation}
-                  </p>
-                  <button
-                    onClick={speakInterpretation}
-                    className="mt-4 self-end w-12 h-12 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-purple-300 flex items-center justify-center transition-all"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-                    </svg>
-                  </button>
-                </div>
-
-                {!showNumerology && (
-                  <>
-                    <div className="bg-white/5 rounded-2xl p-4 sm:p-5 border border-white/10 animate-fade-in">
-                      <div className="flex gap-4">
-                        <div className="flex-1">
-                          <label className="block text-slate-300 text-xs sm:text-sm mb-2">
-                            Que horas você dormiu?
-                          </label>
-                          <input
-                            type="time"
-                            value={sleepTime}
-                            onChange={(e) => setSleepTime(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <label className="block text-slate-300 text-xs sm:text-sm mb-2">
-                            Que horas acordou?
-                          </label>
-                          <input
-                            type="time"
-                            value={wakeTime}
-                            onChange={(e) => setWakeTime(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
-                          />
-                        </div>
-                      </div>
-                      <p className="text-slate-400 text-xs sm:text-sm mt-2">
-                        Quer melhorar a análise? Informe seu horário de sono
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={handleSaveToTimeline}
-                      disabled={isLoading}
-                      className="w-full py-4 rounded-xl font-semibold text-base bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-[1.02] active:scale-[0.98]"
-                    >
-                      {isLoading ? "Salvando..." : "Salvar Timeline"}
-                    </button>
-                  </>
-                )}
-              </div>
-            )}
-
-            {showNumerology && savedDreamNumerology && (
-              <div className="w-full space-y-4 animate-fade-in">
-                <DreamNumerologyPanel numerology={savedDreamNumerology} />
-                {savedDreamNumerology.luckyNumbers && (
-                  <LuckyNumbersCard luckyNumbers={savedDreamNumerology.luckyNumbers} />
-                )}
-                <button
-                  onClick={() => {
-                    setShowNumerology(false);
-        setDailyDreamCount((prev) => prev + 1);
-                    deleteAudio();
-                    navigate("/timeline");
-                  }}
-                  className="w-full py-4 rounded-xl font-semibold text-base bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  Ver na Timeline
-                </button>
-              </div>
-            )}
-          </div>
         </GlassCard>
       </div>
 
@@ -1260,16 +266,6 @@ export default function Dashboard() {
           setTimeout(() => setCheckinMessage(null), 5000);
         }}
         onClose={() => setShowCheckin(false)}
-      />
-
-      <AIStepsOverlay
-        steps={aiSteps}
-        currentStep={aiCurrentStep}
-        isVisible={showAiOverlay}
-        onCancel={() => {
-          setShowAiOverlay(false);
-          setIsLoading(false);
-        }}
       />
 
       {showUpgradeModal && (
@@ -1442,4 +438,3 @@ export default function Dashboard() {
     </AppContainer>
   );
 }
-
