@@ -77,6 +77,15 @@ export default function DreamCoach() {
     <AppContainer>
       <AppHeader title="Dream Coach" onBack={() => navigate("/dashboard")} />
 
+      <div className="px-4 pt-2">
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="text-sm text-purple-300 hover:text-white transition-colors"
+        >
+          ← Voltar para Dashboard
+        </button>
+      </div>
+
       {loading && (
         <div className="flex justify-center pt-20">
           <LoadingSpinner />

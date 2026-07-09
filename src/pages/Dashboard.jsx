@@ -872,7 +872,7 @@ export default function Dashboard() {
             </MorningCompanion>
           )}
 
-          <GlassCard className="mb-6">
+          <div className="mb-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <button
                 onClick={() => navigate("/timeline")}
@@ -931,7 +931,7 @@ export default function Dashboard() {
                 <span className="text-xs font-semibold text-purple-200/80">Configurações</span>
               </button>
             </div>
-          </GlassCard>
+          </div>
 
           <div className="text-center mb-8">
             <img
@@ -941,7 +941,7 @@ export default function Dashboard() {
             />
             <h1 className="text-3xl font-bold text-white">Dream Line</h1>
             <p className="text-purple-200 text-sm mt-2">
-              Fale sobre seus sonhos
+              Padrões Ocultos da Mente
             </p>
             {userPlan === "free" && (
               <button
