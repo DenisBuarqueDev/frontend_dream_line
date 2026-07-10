@@ -277,8 +277,21 @@ export default function DreamEntryPage() {
             />
             <h1 className="text-3xl font-bold text-white">Dream Line</h1>
             <p className="text-purple-200 text-sm mt-2">
-              Padrões Ocultos da Mente
+              Fale sobre seus sonhos
             </p>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold shadow-lg shadow-purple-500/20 transition-all">
+              🌙 Sonho
+            </button>
+            <span className="text-white/30 text-sm">ou</span>
+            <button
+              onClick={() => navigate("/emotions/new")}
+              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              ❤️ Emoção
+            </button>
           </div>
 
           {!showInterpretation && (

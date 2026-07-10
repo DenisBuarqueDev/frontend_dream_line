@@ -245,7 +245,7 @@ export default function EmotionEntryPage() {
 
           <div className="flex items-center justify-center gap-3 mb-6">
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/dreams/new")}
               className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               🌙 Sonho
