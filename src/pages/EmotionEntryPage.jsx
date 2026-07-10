@@ -8,16 +8,22 @@ import { triggerInstall, isPWAInstalled } from "../services/pwaInstall";
 import IonIcon from "../components/ui/IonIcon";
 import {
   clipboardOutline,
+  moonOutline,
   happyOutline,
+  bookOutline,
+  timeOutline,
   analyticsOutline,
   gitNetworkOutline,
+  bulbOutline,
+  starOutline,
+  planetOutline,
   calculatorOutline,
-  diamondOutline,
-  downloadOutline,
+  bedOutline,
   notificationsOutline,
   helpCircleOutline,
+  diamondOutline,
   logOutOutline,
-  moonOutline,
+  downloadOutline,
   heartOutline,
 } from "ionicons/icons";
 import logotipo from "../assets/logotipo-white.png";
@@ -427,7 +433,7 @@ export default function EmotionEntryPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={clipboardOutline} className="w-5 h-5" />
-                <span className="font-medium">Sonhos</span>
+                <span className="font-medium">Dashboard</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}

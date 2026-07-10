@@ -380,11 +380,32 @@ export default function Dashboard() {
                 <span className="font-medium">Dashboard</span>
               </button>
               <button
+                onClick={() => { navigate("/dreams/new"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={moonOutline} className="w-5 h-5" />
+                <span className="font-medium">Sonhos</span>
+              </button>
+              <button
                 onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={happyOutline} className="w-5 h-5" />
                 <span className="font-medium">Emoções</span>
+              </button>
+              <button
+                onClick={() => { navigate("/emotions/new"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={bookOutline} className="w-5 h-5" />
+                <span className="font-medium">Diário</span>
+              </button>
+              <button
+                onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={timeOutline} className="w-5 h-5" />
+                <span className="font-medium">Timeline</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
@@ -401,13 +422,6 @@ export default function Dashboard() {
                 <span className="font-medium">Correlações</span>
               </button>
               <button
-                onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={timeOutline} className="w-5 h-5" />
-                <span className="font-medium">Timeline</span>
-              </button>
-              <button
                 onClick={() => { navigate("/life-insights"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
@@ -422,6 +436,13 @@ export default function Dashboard() {
                 <span className="font-medium">Dream Coach</span>
               </button>
               <button
+                onClick={() => { navigate("/astrology"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={planetOutline} className="w-5 h-5" />
+                <span className="font-medium">Mapa Astral</span>
+              </button>
+              <button
                 onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
@@ -429,24 +450,12 @@ export default function Dashboard() {
                 <span className="font-medium">Numerologia</span>
               </button>
               <button
-                onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
+                onClick={() => { navigate("/sleep"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <IonIcon icon={diamondOutline} className="w-5 h-5" />
-                <span className="font-medium">Planos</span>
+                <IonIcon icon={bedOutline} className="w-5 h-5" />
+                <span className="font-medium">Sono</span>
               </button>
-
-              <div className="border-t border-white/10 my-3" />
-
-              {!isPWAInstalled() && (
-                <button
-                  onClick={handleInstallClick}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-                >
-                  <IonIcon icon={downloadOutline} className="w-5 h-5" />
-                  <span className="font-medium">Instalar App</span>
-                </button>
-              )}
               <button
                 onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
@@ -461,9 +470,25 @@ export default function Dashboard() {
                 <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
                 <span className="font-medium">Suporte</span>
               </button>
+              <button
+                onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={diamondOutline} className="w-5 h-5" />
+                <span className="font-medium">Planos</span>
+              </button>
             </nav>
 
-            <div className="p-4 border-t border-white/10">
+            <div className="p-4 border-t border-white/10 flex flex-col gap-1">
+              {!isPWAInstalled() && (
+                <button
+                  onClick={handleInstallClick}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+                >
+                  <IonIcon icon={downloadOutline} className="w-5 h-5" />
+                  <span className="font-medium">Instalar App</span>
+                </button>
+              )}
               <button
                 onClick={logout}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-left"
