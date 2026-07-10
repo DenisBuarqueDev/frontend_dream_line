@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import IonIcon from "../components/ui/IonIcon";
+import { heartOutline, moonOutline, sunnyOutline } from "ionicons/icons";
 
 const MOOD_OPTIONS = [
   { key: "muito_bem", emoji: "😊", label: "Muito bem" },
@@ -74,7 +76,11 @@ export default function DailyCheckinModal({ visible, onComplete, onClose }) {
 
   if (!visible) return null;
 
-  const stepIcons = ["💜", "🌙", "🌅"];
+  const stepIcons = [
+    <IonIcon icon={heartOutline} />,
+    <IonIcon icon={moonOutline} />,
+    <IonIcon icon={sunnyOutline} />,
+  ];
   const stepQuestions = [
     "Como você está hoje?",
     "Como foi seu sono?",

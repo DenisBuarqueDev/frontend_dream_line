@@ -5,6 +5,21 @@ import { transcribeAudio, createEmotion } from "../services/api";
 import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
 import { triggerInstall, isPWAInstalled } from "../services/pwaInstall";
+import IonIcon from "../components/ui/IonIcon";
+import {
+  clipboardOutline,
+  happyOutline,
+  analyticsOutline,
+  gitNetworkOutline,
+  calculatorOutline,
+  diamondOutline,
+  downloadOutline,
+  notificationsOutline,
+  helpCircleOutline,
+  logOutOutline,
+  moonOutline,
+  heartOutline,
+} from "ionicons/icons";
 import logotipo from "../assets/logotipo-white.png";
 
 const getSupportedMimeType = () => {
@@ -246,13 +261,13 @@ export default function EmotionEntryPage() {
           <div className="flex items-center justify-center gap-3 mb-6">
             <button
               onClick={() => navigate("/dreams/new")}
-              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-1.5"
             >
-              🌙 Sonho
+              <IonIcon icon={moonOutline} className="w-4 h-4" /> Sonho
             </button>
             <span className="text-white/30 text-sm">ou</span>
-            <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold shadow-lg shadow-purple-500/20 transition-all">
-              ❤️ Emoção
+            <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold shadow-lg shadow-purple-500/20 transition-all flex items-center gap-1.5">
+              <IonIcon icon={heartOutline} className="w-4 h-4" /> Emoção
             </button>
           </div>
 
@@ -408,45 +423,45 @@ export default function EmotionEntryPage() {
 
             <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
               <button
-                onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
+                onClick={() => { navigate("/dashboard"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">📋</span>
+                <IonIcon icon={clipboardOutline} className="w-5 h-5" />
                 <span className="font-medium">Sonhos</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">📖</span>
+                <IonIcon icon={happyOutline} className="w-5 h-5" />
                 <span className="font-medium">Emoções</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">📊</span>
+                <IonIcon icon={analyticsOutline} className="w-5 h-5" />
                 <span className="font-medium">Insights</span>
               </button>
               <button
                 onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">🔗</span>
+                <IonIcon icon={gitNetworkOutline} className="w-5 h-5" />
                 <span className="font-medium">Correlações</span>
               </button>
               <button
                 onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">🔢</span>
+                <IonIcon icon={calculatorOutline} className="w-5 h-5" />
                 <span className="font-medium">Numerologia</span>
               </button>
               <button
                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">⭐</span>
+                <IonIcon icon={diamondOutline} className="w-5 h-5" />
                 <span className="font-medium">Planos</span>
               </button>
 
@@ -457,7 +472,7 @@ export default function EmotionEntryPage() {
                   onClick={handleInstallClick}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
                 >
-                  <span className="text-lg">⬇️</span>
+                  <IonIcon icon={downloadOutline} className="w-5 h-5" />
                   <span className="font-medium">Instalar App</span>
                 </button>
               )}
@@ -465,14 +480,14 @@ export default function EmotionEntryPage() {
                 onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">🔔</span>
+                <IonIcon icon={notificationsOutline} className="w-5 h-5" />
                 <span className="font-medium">Notificações</span>
               </button>
               <button
                 onClick={() => { navigate("/support"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">💬</span>
+                <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
                 <span className="font-medium">Suporte</span>
               </button>
             </nav>
@@ -482,7 +497,7 @@ export default function EmotionEntryPage() {
                 onClick={logout}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-left"
               >
-                <span className="text-lg">🚪</span>
+                <IonIcon icon={logOutOutline} className="w-5 h-5" />
                 <span className="font-medium">Sair</span>
               </button>
             </div>

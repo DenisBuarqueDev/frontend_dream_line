@@ -5,6 +5,8 @@ import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
 import AppHeader from "../components/ui/AppHeader";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
+import IonIcon from "../components/ui/IonIcon";
+import { chatbubbleOutline } from "ionicons/icons";
 
 const hasSpeech = typeof window !== "undefined" && "speechSynthesis" in window;
 
@@ -355,7 +357,7 @@ export default function EmotionAnalysisPage() {
               </div>
             ) : messages.length === 0 ? (
               <div className="text-center py-8">
-                <div className="text-4xl mb-3">💬</div>
+                <div className="text-4xl mb-3"><IonIcon icon={chatbubbleOutline} /></div>
                 <p className="text-purple-200/70 text-sm">
                   Nenhuma conversa ainda. Comece a conversar abaixo.
                 </p>

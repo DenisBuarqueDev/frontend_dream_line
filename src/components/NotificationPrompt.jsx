@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { requestFCMPermission } from "../services/firebaseClient";
 import { registerFCMToken, getNotificationSettings, updateNotificationSettings } from "../services/notificationService";
+import IonIcon from "../components/ui/IonIcon";
+import { notificationsOutline } from "ionicons/icons";
 
 const DISMISS_KEY = "pwa_notif_dismissed";
 const RETRY_DAYS = 7;
@@ -72,10 +74,7 @@ export default function NotificationPrompt() {
       <div className="bg-slate-800/95 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-4 shadow-2xl shadow-purple-500/10">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/20 flex items-center justify-center">
-            <svg className="w-5 h-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
+            <IonIcon icon={notificationsOutline} className="w-8 h-8 text-purple-400" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-white">Receber lembretes para registrar sonhos?</p>

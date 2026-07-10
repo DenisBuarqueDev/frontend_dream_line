@@ -1,3 +1,6 @@
+import IonIcon from "../components/ui/IonIcon";
+import { checkmarkCircleOutline } from "ionicons/icons";
+
 function PricingCard({ plan, onSubscribe, disabled }) {
   const isFree = plan.id === "free";
 
@@ -42,15 +45,7 @@ function PricingCard({ plan, onSubscribe, disabled }) {
         <ul className="space-y-3.5 mb-8">
           {plan.benefits.map((benefit, index) => (
             <li key={index} className="flex items-start gap-3">
-              <svg
-                className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                  isFree ? "text-green-400/70" : "text-emerald-400"
-                }`}
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-              </svg>
+              <IonIcon icon={checkmarkCircleOutline} className="w-5 h-5 text-emerald-400 shrink-0" />
               <span className={`text-sm ${isFree ? "text-slate-300" : "text-slate-200"}`}>
                 {benefit.text}
               </span>

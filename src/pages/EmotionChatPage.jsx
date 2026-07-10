@@ -5,6 +5,8 @@ import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
 import AppHeader from "../components/ui/AppHeader";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
+import IonIcon from "../components/ui/IonIcon";
+import { chatbubbleOutline } from "ionicons/icons";
 
 export default function EmotionChatPage() {
   const { id } = useParams();
@@ -81,7 +83,7 @@ export default function EmotionChatPage() {
         <div className="flex-1 overflow-y-auto space-y-3 mb-4 max-w-xl w-full mx-auto">
           {messages.length === 0 && (
             <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
-              <div className="text-5xl mb-4">💬</div>
+              <div className="text-5xl mb-4"><IonIcon icon={chatbubbleOutline} /></div>
               <h3 className="text-white font-semibold text-lg mb-2">
                 Vamos conversar
               </h3>

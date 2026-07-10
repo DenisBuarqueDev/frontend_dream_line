@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
 import { getAIGatewayStatus } from '../services/api';
+import IonIcon from "../components/ui/IonIcon";
+import {
+  bugOutline, analyticsOutline, powerOutline, flaskOutline,
+  imageOutline, micOutline, closeCircleOutline, calculatorOutline,
+  starOutline, bulbOutline, chatboxOutline, clipboardOutline
+} from "ionicons/icons";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
@@ -93,13 +99,13 @@ export default function AIDebug() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 p-4 sm:p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">🐞 AI Debug</h1>
+          <h1 className="text-3xl font-bold text-white"><IonIcon icon={bugOutline} /> AI Debug</h1>
           <p className="text-purple-200/60 text-sm mt-2">Diagnóstico da arquitetura de Inteligência Artificial</p>
         </div>
 
         <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">📊 Status das APIs</h2>
+            <h2 className="text-lg font-semibold text-white"><IonIcon icon={analyticsOutline} /> Status das APIs</h2>
             <button onClick={fetchHealth} className="text-purple-300 hover:text-white text-sm transition-colors">
               ↻ Atualizar
             </button>
@@ -114,7 +120,7 @@ export default function AIDebug() {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {health && Object.entries(health).filter(([k]) => k !== 'timestamp' && k !== 'notes' && k !== 'status' && k !== 'mode').map(([provider, status]) => (
               <div key={provider} className={`bg-white/5 rounded-xl p-4 border border-white/10 text-center transition-all hover:scale-[1.02]`}>
-                <div className="text-2xl mb-2">{PROVIDER_ICONS[provider] || '🔌'}</div>
+                <div className="text-2xl mb-2">{PROVIDER_ICONS[provider] || <IonIcon icon={powerOutline} />}</div>
                 <p className="text-white text-sm font-medium capitalize mb-1">{provider}</p>
                 <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${PROVIDER_COLORS[status] || 'from-slate-500 to-slate-600'} text-white`}>
                   {status}
@@ -142,7 +148,7 @@ export default function AIDebug() {
 
         <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">🧪 Testes</h2>
+            <h2 className="text-lg font-semibold text-white"><IonIcon icon={flaskOutline} /> Testes</h2>
             <div className="flex gap-2">
               {['deepseek', 'flux', 'claude', 'stability', 'whisper', 'gateway'].map(p => (
                 <button
@@ -187,20 +193,20 @@ export default function AIDebug() {
                     <p className="text-purple-200/60 text-xs mt-1">{result.responsePreview}</p>
                   )}
                   {result.imageUrl && (
-                    <p className="text-green-300/60 text-xs mt-1">🖼️ Imagem gerada</p>
+                    <p className="text-green-300/60 text-xs mt-1"><IonIcon icon={imageOutline} /> Imagem gerada</p>
                   )}
                   {result.transcription && (
-                    <p className="text-purple-200/60 text-xs mt-1">🎙️ "{result.transcription}"</p>
+                    <p className="text-purple-200/60 text-xs mt-1"><IonIcon icon={micOutline} /> "{result.transcription}"</p>
                   )}
                   {result.error && (
-                    <p className="text-red-400/60 text-xs mt-1">❌ {result.error}</p>
+                    <p className="text-red-400/60 text-xs mt-1"><IonIcon icon={closeCircleOutline} /> {result.error}</p>
                   )}
                   {result.resultPreview && (
                     <div className="flex gap-2 mt-1 text-xs text-purple-200/40">
-                      {result.resultPreview.hasNumerology && <span>🔢 Numerologia</span>}
-                      {result.resultPreview.hasSpiritualMessage && <span>✨ Mensagem espiritual</span>}
-                      {result.resultPreview.hasPsychologicalAnalysis && <span>🧠 Análise psicológica</span>}
-                      <span>💬 {result.resultPreview.interpretationLength} caracteres</span>
+                      {result.resultPreview.hasNumerology && <span><IonIcon icon={calculatorOutline} /> Numerologia</span>}
+                      {result.resultPreview.hasSpiritualMessage && <span><IonIcon icon={starOutline} /> Mensagem espiritual</span>}
+                      {result.resultPreview.hasPsychologicalAnalysis && <span><IonIcon icon={bulbOutline} /> Análise psicológica</span>}
+                      <span><IonIcon icon={chatboxOutline} /> {result.resultPreview.interpretationLength} caracteres</span>
                     </div>
                   )}
                 </div>
@@ -218,7 +224,7 @@ export default function AIDebug() {
 
         {logs.length > 0 && (
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">📋 Logs</h2>
+            <h2 className="text-lg font-semibold text-white mb-4"><IonIcon icon={clipboardOutline} /> Logs</h2>
             <div className="space-y-1 max-h-96 overflow-y-auto font-mono text-xs">
               {logs.map((entry, i) => (
                 <div key={i} className={`px-3 py-1.5 rounded-lg ${

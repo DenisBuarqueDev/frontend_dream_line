@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
+import IonIcon from "../components/ui/IonIcon";
+import { gridOutline, footballOutline } from "ionicons/icons";
 
 const INTERPRETATIONS = {
   1: { essence: "Início, ação, liderança", traits: ["independência", "originalidade", "coragem"] },
@@ -225,7 +227,7 @@ export default function Numerology() {
         {luckyNumbers && (
           <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-5 mt-6 shadow-xl">
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">🎲</span>
+              <span className="text-2xl"><IonIcon icon={gridOutline} /></span>
               <h2 className="text-white font-bold text-lg">Seus Números da Sorte</h2>
             </div>
             <div className="space-y-3">
@@ -237,7 +239,7 @@ export default function Numerology() {
                     <div className="flex justify-between items-center mb-1">
                       <span className="text-slate-300 text-sm font-medium">{game.name}</span>
                       {game.hasTeam && luckyNumbers.timeDoCoracao && (
-                        <span className="text-slate-400 text-xs">⚽ {luckyNumbers.timeDoCoracao}</span>
+                        <span className="text-slate-400 text-xs"><IonIcon icon={footballOutline} /> {luckyNumbers.timeDoCoracao}</span>
                       )}
                     </div>
                     <div className="text-white font-mono text-lg tracking-wider">{formatNumbers(nums)}</div>

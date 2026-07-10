@@ -1,4 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import IonIcon from "../components/ui/IonIcon";
+import {
+  flaskOutline, analyticsOutline, powerOutline, checkmarkCircleOutline,
+  warningOutline, bulbOutline, imageOutline, micOutline,
+  documentTextOutline, musicalNotesOutline, closeCircleOutline,
+  clipboardOutline, settingsOutline
+} from "ionicons/icons";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
@@ -30,7 +37,7 @@ function StatusBadge({ status }) {
 function StatusCard({ provider, status, icon }) {
   return (
     <div className="bg-white/5 rounded-xl p-4 border border-white/10 text-center transition-all hover:scale-[1.02] hover:bg-white/10">
-      <div className="text-2xl mb-2">{icon || PROVIDER_ICONS[provider] || '🔌'}</div>
+      <div className="text-2xl mb-2">{icon || PROVIDER_ICONS[provider] || <IonIcon icon={powerOutline} />}</div>
       <p className="text-white text-sm font-medium capitalize mb-2">{provider.replace(/_/g, ' ')}</p>
       <StatusBadge status={status} />
     </div>
@@ -246,7 +253,7 @@ export default function AITestPanel() {
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white">🧪 Painel IA / Diagnóstico</h1>
+            <h1 className="text-3xl font-bold text-white"><IonIcon icon={flaskOutline} className="w-5 h-5" /> Painel IA / Diagnóstico</h1>
             <p className="text-purple-200/60 text-sm mt-1">Teste e monitore todas as APIs de inteligência artificial</p>
           </div>
           <button
@@ -258,7 +265,7 @@ export default function AITestPanel() {
         </div>
 
         <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">📊 Status IA</h2>
+          <h2 className="text-lg font-semibold text-white mb-4"><IonIcon icon={analyticsOutline} /> Status IA</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {status ? (
               <>
@@ -286,7 +293,7 @@ export default function AITestPanel() {
                 Modo: {status.mode === 'gateway' ? 'Gateway IA' : 'Legado'}
               </span>
               <span className={`px-2 py-1 rounded-full ${status.status === 'online' ? 'bg-green-500/20 text-green-300' : 'bg-amber-500/20 text-amber-300'}`}>
-                Geral: {status.status === 'online' ? '✅ Todas online' : '⚠️ Parcial'}
+                Geral: {status.status === 'online' ? <><IonIcon icon={checkmarkCircleOutline} /> Todas online</> : <><IonIcon icon={warningOutline} /> Parcial</>}
               </span>
               {status.notes?.map((note, i) => (
                 <span key={i} className="px-2 py-1 rounded-full bg-white/5 text-slate-400">{note}</span>
@@ -311,7 +318,7 @@ export default function AITestPanel() {
               disabled={textTesting}
               className="w-full px-4 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white disabled:opacity-50 transition-all flex items-center justify-center gap-2"
             >
-              {textTesting ? <><Spinner /> Testando...</> : '🧠 Testar DeepSeek'}
+              {textTesting ? <><Spinner /> Testando...</> : <><IonIcon icon={bulbOutline} /> Testar DeepSeek</>}
             </button>
 
             {textTestResult && (
@@ -346,7 +353,7 @@ export default function AITestPanel() {
               disabled={imageTesting}
               className="w-full px-4 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white disabled:opacity-50 transition-all flex items-center justify-center gap-2"
             >
-              {imageTesting ? <><Spinner /> Gerando...</> : '🎨 Gerar Imagem Teste'}
+              {imageTesting ? <><Spinner /> Gerando...</> : <><IonIcon icon={imageOutline} /> Gerar Imagem Teste</>}
             </button>
 
             {imageTestResult && (
@@ -392,7 +399,7 @@ export default function AITestPanel() {
                   : 'bg-white/10 hover:bg-white/20 border border-white/10 text-white'
               }`}
             >
-              {recording ? '⏹ Parar Gravação' : '🎤 Gravar Áudio'}
+              {recording ? <><IonIcon icon={micOutline} /> Parar Gravação</> : <><IonIcon icon={micOutline} /> Gravar Áudio</>}
             </button>
 
             {audioBlob && (
@@ -401,7 +408,7 @@ export default function AITestPanel() {
                 disabled={audioTesting}
                 className="px-5 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white disabled:opacity-50 transition-all flex items-center gap-2"
               >
-                {audioTesting ? <><Spinner /> Transcrevendo...</> : '📝 Transcrever'}
+                {audioTesting ? <><Spinner /> Transcrevendo...</> : <><IonIcon icon={documentTextOutline} /> Transcrever</>}
               </button>
             )}
 
@@ -418,7 +425,7 @@ export default function AITestPanel() {
           {audioBlob && (
             <div className="bg-white/5 rounded-xl p-3 border border-white/5 mb-4">
               <div className="flex items-center gap-3">
-                <span className="text-purple-200/60 text-xs">🎵 Áudio capturado</span>
+                <span className="text-purple-200/60 text-xs"><IonIcon icon={musicalNotesOutline} /> Áudio capturado</span>
                 <span className="text-purple-200/40 text-xs">{(audioBlob.size / 1024).toFixed(1)} KB</span>
                 <audio controls src={URL.createObjectURL(audioBlob)} className="h-8 flex-1 max-w-[200px]" />
               </div>
@@ -429,7 +436,7 @@ export default function AITestPanel() {
             <p className="text-xs text-purple-200/40">
               Web Speech API:{' '}
               <span className={webSpeechAvailable ? 'text-green-400' : 'text-red-400'}>
-                {webSpeechAvailable ? '✅ Disponível' : '❌ Indisponível'}
+                {webSpeechAvailable ? <><IonIcon icon={checkmarkCircleOutline} /> Disponível</> : <><IonIcon icon={closeCircleOutline} /> Indisponível</>}
               </span>
             </p>
           </div>
@@ -456,7 +463,7 @@ export default function AITestPanel() {
 
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-white">📋 Logs Detalhados</h2>
+            <h2 className="text-lg font-semibold text-white"><IonIcon icon={clipboardOutline} /> Logs Detalhados</h2>
             {testLogs.length > 0 && (
               <button
                 onClick={() => setTestLogs([])}
@@ -490,7 +497,7 @@ export default function AITestPanel() {
 
         <div className="text-center">
           <a href="/admin/ai-debug" className="text-purple-300 hover:text-white text-sm transition-colors mr-4">
-            🔧 Debug Completo →
+            <IonIcon icon={settingsOutline} /> Debug Completo →
           </a>
           <a href="/dashboard" className="text-purple-300 hover:text-white text-sm transition-colors">
             ← Voltar ao Dashboard

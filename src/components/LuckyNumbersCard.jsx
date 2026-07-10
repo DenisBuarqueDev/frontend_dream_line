@@ -1,3 +1,6 @@
+import IonIcon from "../components/ui/IonIcon";
+import { starOutline } from "ionicons/icons";
+
 function NumberBall({ num, color = "purple" }) {
   const colorMap = {
     purple: "bg-purple-500/30 text-purple-200 border-purple-500/40",
@@ -44,9 +47,7 @@ export default function LuckyNumbersCard({ luckyNumbers }) {
   return (
     <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl p-5 sm:p-6 animate-fade-in">
       <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-        <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
+        <IonIcon icon={starOutline} className="w-5 h-5 text-yellow-400" />
         Números da Sorte
       </h3>
 

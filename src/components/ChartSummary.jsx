@@ -1,4 +1,6 @@
 import { getElementColor, SIGN_INTERPRETATIONS } from '../services/interpretations';
+import IonIcon from "../components/ui/IonIcon";
+import { sunnyOutline, moonOutline, arrowUpOutline } from "ionicons/icons";
 
 export default function ChartSummary({ chartData }) {
   if (!chartData) return null;
@@ -54,7 +56,7 @@ export default function ChartSummary({ chartData }) {
   
   const items = [
     {
-      icon: '☀️',
+      icon: <IonIcon icon={sunnyOutline} className="w-4 h-4" />,
       label: 'Essência',
       title: chartData.sunSign,
       subtitle: getInterpretation(chartData.sunSign, 'sun'),
@@ -62,7 +64,7 @@ export default function ChartSummary({ chartData }) {
       borderGlow: 'rgba(251, 191, 36, 0.5)'
     },
     {
-      icon: '🌙',
+      icon: <IonIcon icon={moonOutline} className="w-4 h-4" />,
       label: 'Emoções',
       title: chartData.moonSign,
       subtitle: getInterpretation(chartData.moonSign, 'moon'),
@@ -70,7 +72,7 @@ export default function ChartSummary({ chartData }) {
       borderGlow: 'rgba(139, 92, 246, 0.5)'
     },
     {
-      icon: '⬆️',
+      icon: <IonIcon icon={arrowUpOutline} className="w-4 h-4" />,
       label: 'Máscara',
       title: chartData.ascendant,
       subtitle: getInterpretation(chartData.ascendant, 'ascendant'),
@@ -95,7 +97,7 @@ export default function ChartSummary({ chartData }) {
               className="astral-planet-icon"
               style={{ background: `${item.borderGlow}` }}
             >
-              <span className="text-2xl">{item.icon}</span>
+              <span className="text-2xl flex items-center">{item.icon}</span>
             </div>
             <div>
               <p className="text-xs uppercase tracking-wider text-white/50 mb-1">{item.label}</p>

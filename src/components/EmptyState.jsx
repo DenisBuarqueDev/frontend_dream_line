@@ -1,7 +1,10 @@
-export default function EmptyState({ icon = '✨', title, subtitle, features = [] }) {
+import IonIcon from "../components/ui/IonIcon";
+import { starOutline } from "ionicons/icons";
+
+export default function EmptyState({ icon, title, subtitle, features = [] }) {
   return (
     <div className="astral-empty-state">
-      <div className="astral-empty-icon astral-animate-float">{icon}</div>
+      <div className="astral-empty-icon astral-animate-float"><IonIcon icon={icon === "✨" ? starOutline : starOutline} /></div>
       <h2 className="astral-empty-title text-white font-display">{title}</h2>
       <p className="astral-empty-text">{subtitle}</p>
       

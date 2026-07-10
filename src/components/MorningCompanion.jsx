@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import IonIcon from "../components/ui/IonIcon";
+import { sunnyOutline } from "ionicons/icons";
 
 export default function MorningCompanion({ greeting, children, userPlan }) {
   const [animClass, setAnimClass] = useState("opacity-0 translate-y-4");
@@ -12,7 +14,7 @@ export default function MorningCompanion({ greeting, children, userPlan }) {
     <div className={`mb-8 transition-all duration-700 ease-out ${animClass}`}>
       <div className="flex items-center gap-3 mb-5">
         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400/20 to-amber-600/20 flex items-center justify-center text-base shadow-inner shadow-amber-500/10">
-          ☀️
+          <IonIcon icon={sunnyOutline} />
         </div>
         <div className="flex-1">
           <p className="text-[11px] font-bold text-amber-400/90 tracking-[0.15em] uppercase">

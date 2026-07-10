@@ -10,6 +10,13 @@ import { PlanetGrid, getPlanetsByCategory } from '../components/PlanetCardInterp
 import InsightsPanel from '../components/InsightsPanel';
 import EmptyState from '../components/EmptyState';
 import { generateCombinedInterpretation, PLANET_IN_SIGN_INTERPRETATIONS } from '../services/interpretations';
+import IonIcon from "../components/ui/IonIcon";
+import {
+  sunnyOutline, moonOutline, arrowUpOutline, planetOutline, homeOutline,
+  starOutline, bulbOutline, heartOutline, sparklesOutline,
+  bookOutline, ribbonOutline, businessOutline, chatboxOutline,
+  documentOutline, locationOutline,
+} from "ionicons/icons";
 import '../styles/astrology.css';
 
 const SIGNS = [
@@ -212,11 +219,11 @@ function NatalChartModal({ chartData, width = 380, height = 380 }) {
 
 function ChartExplanation({ onClose }) {
   const explanations = [
-    { icon: '☀️', title: 'O Sol', desc: 'Sua essência e propósito de vida. O signo mais importante do seu mapa.', color: 'amber' },
-    { icon: '🌙', title: 'A Lua', desc: 'Suas emoções e intuição. Como você sente e processa sentimentos.', color: 'violet' },
-    { icon: '⬆️', title: 'Ascendente', desc: 'Como você se apresenta ao mundo. Sua primeira impressão.', color: 'pink' },
-    { icon: '🪐', title: 'Planetas', desc: 'Cada um representa diferentes áreas da sua vida.', color: 'blue' },
-    { icon: '🏠', title: 'Casas', desc: 'As 12 casas representam diferentes áreas da sua vida.', color: 'green' }
+    { icon: <IonIcon icon={sunnyOutline} className="w-4 h-4" />, title: 'O Sol', desc: 'Sua essência e propósito de vida. O signo mais importante do seu mapa.', color: 'amber' },
+    { icon: <IonIcon icon={moonOutline} className="w-4 h-4" />, title: 'A Lua', desc: 'Suas emoções e intuição. Como você sente e processa sentimentos.', color: 'violet' },
+    { icon: <IonIcon icon={arrowUpOutline} className="w-4 h-4" />, title: 'Ascendente', desc: 'Como você se apresenta ao mundo. Sua primeira impressão.', color: 'pink' },
+    { icon: <IonIcon icon={planetOutline} className="w-4 h-4" />, title: 'Planetas', desc: 'Cada um representa diferentes áreas da sua vida.', color: 'blue' },
+    { icon: <IonIcon icon={homeOutline} className="w-4 h-4" />, title: 'Casas', desc: 'As 12 casas representam diferentes áreas da sua vida.', color: 'green' }
   ];
   
   return (
@@ -434,11 +441,11 @@ export default function AstrologyChart() {
   const combinedInterpretation = generateCombinedInterpretation(chartData);
 
   const TABS_CONFIG = [
-    { id: 'overview', label: 'Visão Geral', icon: '✨' },
-    { id: 'personality', label: 'Personalidade', icon: '🧠' },
-    { id: 'love', label: 'Amor', icon: '❤️' },
-    { id: 'career', label: 'Carreira', icon: '💫' },
-    { id: 'details', label: 'Detalhes', icon: '🌙' }
+    { id: 'overview', label: 'Visão Geral', icon: <IonIcon icon={starOutline} className="w-4 h-4" /> },
+    { id: 'personality', label: 'Personalidade', icon: <IonIcon icon={bulbOutline} className="w-4 h-4" /> },
+    { id: 'love', label: 'Amor', icon: <IonIcon icon={heartOutline} className="w-4 h-4" /> },
+    { id: 'career', label: 'Carreira', icon: <IonIcon icon={sparklesOutline} className="w-4 h-4" /> },
+    { id: 'details', label: 'Detalhes', icon: <IonIcon icon={moonOutline} className="w-4 h-4" /> }
   ];
 
   const renderTabContent = () => {
@@ -456,7 +463,7 @@ export default function AstrologyChart() {
                 onClick={() => setShowExplanation(true)}
                 className="mt-6 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-2"
               >
-                <span>📖</span> Entender o gráfico
+                <IonIcon icon={bookOutline} className="w-4 h-4" /> Entender o gráfico
               </button>
             </div>
             <div className="space-y-4">
@@ -470,9 +477,9 @@ export default function AstrologyChart() {
         return (
           <div className="space-y-6">
             {[
-              { planet: 'sun', icon: '☀️', sign: chartData.sunSign, color: 'amber' },
-              { planet: 'moon', icon: '🌙', sign: chartData.moonSign, color: 'violet' },
-              { planet: 'ascendant', icon: '⬆️', sign: chartData.ascendant, color: 'pink' }
+              { planet: 'sun', icon: <IonIcon icon={sunnyOutline} className="w-4 h-4" />, sign: chartData.sunSign, color: 'amber' },
+              { planet: 'moon', icon: <IonIcon icon={moonOutline} className="w-4 h-4" />, sign: chartData.moonSign, color: 'violet' },
+              { planet: 'ascendant', icon: <IonIcon icon={arrowUpOutline} className="w-4 h-4" />, sign: chartData.ascendant, color: 'pink' }
             ].map((item, idx) => (
               <div key={idx} className="astral-glass-card p-6">
                 <h3 className={`font-semibold text-${item.color}-400 mb-3 flex items-center gap-2 text-lg`}>
@@ -494,7 +501,7 @@ export default function AstrologyChart() {
           <div className="space-y-6">
             <div className="astral-glass-card p-6 border-l-4 border-l-pink-500">
               <h3 className="font-semibold text-pink-400 mb-3 flex items-center gap-2 text-lg">
-                <span>❤️</span> Vênus: O Planeta do Amor
+                <IonIcon icon={heartOutline} className="w-4 h-4" /> Vênus: O Planeta do Amor
               </h3>
               {chartData.planets.find(p => p.planet === 'venus') ? (
                 <div>
@@ -514,7 +521,7 @@ export default function AstrologyChart() {
             
             <div className="astral-glass-card p-6 border-l-4 border-l-violet-500">
               <h3 className="font-semibold text-violet-400 mb-3 flex items-center gap-2 text-lg">
-                <span>🌙</span> A Lua: Emoções no Amor
+                <IonIcon icon={moonOutline} className="w-4 h-4" /> A Lua: Emoções no Amor
               </h3>
               <p className="text-white/70 leading-relaxed">
                 {PLANET_IN_SIGN_INTERPRETATIONS.moon?.[chartData.moonSign]}
@@ -530,7 +537,7 @@ export default function AstrologyChart() {
           <div className="space-y-6">
             <div className="astral-glass-card p-6 border-l-4 border-l-amber-500">
               <h3 className="font-semibold text-amber-400 mb-3 flex items-center gap-2 text-lg">
-                <span>🎯</span> Júpiter: Crescimento
+                <IonIcon icon={ribbonOutline} className="w-4 h-4" /> Júpiter: Crescimento
               </h3>
               {chartData.planets.find(p => p.planet === 'jupiter') ? (
                 <div>
@@ -550,7 +557,7 @@ export default function AstrologyChart() {
             
             <div className="astral-glass-card p-6 border-l-4 border-l-slate-500">
               <h3 className="font-semibold text-slate-400 mb-3 flex items-center gap-2 text-lg">
-                <span>🏛️</span> Saturno: Estrutura
+                <IonIcon icon={businessOutline} className="w-4 h-4" /> Saturno: Estrutura
               </h3>
               {chartData.planets.find(p => p.planet === 'saturn') ? (
                 <div>
@@ -612,7 +619,7 @@ export default function AstrologyChart() {
                     {combinedInterpretation && activeTab === 'overview' && (
                       <div className="astral-glass-card p-6 mb-6 border-l-4 border-l-purple-500">
                         <h3 className="font-semibold text-white mb-3 flex items-center gap-2">
-                          <span>✨</span> Sua Análise
+                          <IonIcon icon={starOutline} className="w-4 h-4" /> Sua Análise
                         </h3>
                         <p className="text-white/70 leading-relaxed font-light">{combinedInterpretation}</p>
                       </div>
@@ -627,7 +634,7 @@ export default function AstrologyChart() {
                 icon=""
                 title=""
                 subtitle="Preencha seus dados de nascimento e descubra uma análise única do seu céu natal, feita especialmente para você."
-                features={['☀️ Sol, Lua e Ascendente', '🗣️ Comunicação e Amor', '💫 Carreira e Crescimento']}
+                features={[<><IonIcon icon={sunnyOutline} className="w-4 h-4" /> Sol, Lua e Ascendente</>, <><IonIcon icon={chatboxOutline} className="w-4 h-4" /> Comunicação e Amor</>, <><IonIcon icon={sparklesOutline} className="w-4 h-4" /> Carreira e Crescimento</>]}
               />
             )}
           </div>
@@ -717,7 +724,7 @@ export default function AstrologyChart() {
 
                 {formData.city && (
                   <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3 text-sm">
-                    <p className="text-purple-400">📍 {formData.city}, {formData.country}</p>
+                    <p className="text-purple-400"><IonIcon icon={locationOutline} className="w-4 h-4" /> {formData.city}, {formData.country}</p>
                   </div>
                 )}
 
@@ -742,7 +749,7 @@ export default function AstrologyChart() {
               {history.length > 0 && (
                 <div className="mt-6 pt-6 border-t border-white/10">
                   <h3 className="text-sm font-semibold text-white/80 mb-4 flex items-center gap-2">
-                    <span>📜</span> Meus Mapas
+                    <IonIcon icon={documentOutline} className="w-4 h-4" /> Meus Mapas
                   </h3>
                   <div className="space-y-3 max-h-64 overflow-y-auto astral-scroll-hide">
                     {history.map(chart => (
@@ -758,7 +765,7 @@ export default function AstrologyChart() {
                               {new Date(chart.createdAt).toLocaleDateString('pt-BR')}
                             </p>
                             <p className="text-xs text-white/60 mt-1">
-                              ☀️ {chart.sunSign} • 🌙 {chart.moonSign} • ⬆️ {chart.ascendant}
+                              <IonIcon icon={sunnyOutline} className="w-4 h-4" /> {chart.sunSign} • <IonIcon icon={moonOutline} className="w-4 h-4" /> {chart.moonSign} • <IonIcon icon={arrowUpOutline} className="w-4 h-4" /> {chart.ascendant}
                             </p>
                           </div>
                           {isPremium && (

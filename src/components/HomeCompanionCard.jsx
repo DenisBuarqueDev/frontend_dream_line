@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 import GlassCard from "./ui/GlassCard";
+import IonIcon from "../components/ui/IonIcon";
+import { starOutline, moonOutline, eyeOutline, heartOutline, checkmarkCircleOutline, flagOutline, trophyOutline, peopleOutline, bulbOutline, chatbubbleOutline } from "ionicons/icons";
 
 const CATEGORY_ICONS = {
-  encouragement: "🌟",
-  sleep: "🌙",
-  dreams: "👁️",
-  emotions: "💜",
-  habits: "✅",
-  goals: "🚩",
-  achievements: "🏆",
-  relationships: "👥",
-  reflection: "💡",
-  motivation: "✨",
+  encouragement: <IonIcon icon={starOutline} />,
+  sleep: <IonIcon icon={moonOutline} />,
+  dreams: <IonIcon icon={eyeOutline} />,
+  emotions: <IonIcon icon={heartOutline} />,
+  habits: <IonIcon icon={checkmarkCircleOutline} />,
+  goals: <IonIcon icon={flagOutline} />,
+  achievements: <IonIcon icon={trophyOutline} />,
+  relationships: <IonIcon icon={peopleOutline} />,
+  reflection: <IonIcon icon={bulbOutline} />,
+  motivation: <IonIcon icon={starOutline} />,
 };
 
 export default function HomeCompanionCard({ message, onViewed }) {
@@ -25,7 +27,7 @@ export default function HomeCompanionCard({ message, onViewed }) {
 
   if (!message) return null;
 
-  const icon = CATEGORY_ICONS[message.category] || "💬";
+  const icon = CATEGORY_ICONS[message.category] || <IonIcon icon={chatbubbleOutline} />;
   const catLabel = {
     encouragement: "Incentivo",
     sleep: "Sono",

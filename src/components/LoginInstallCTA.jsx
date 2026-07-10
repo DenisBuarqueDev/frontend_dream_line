@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { subscribe, triggerInstall, isMobile, isInstallAvailable, waitForInstallPrompt } from "../services/pwaInstall";
+import IonIcon from "../components/ui/IonIcon";
+import { downloadOutline } from "ionicons/icons";
 
 export default function LoginInstallCTA() {
   const [show, setShow] = useState(false);
@@ -40,11 +42,7 @@ export default function LoginInstallCTA() {
       <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-500/20 flex items-center justify-center">
-            <svg className="w-5 h-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
+            <IonIcon icon={downloadOutline} className="w-6 h-6" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-white">Instale o Dream Line</p>

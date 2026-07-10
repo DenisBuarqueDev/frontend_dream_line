@@ -6,8 +6,26 @@ import GlassCard from "../components/ui/GlassCard";
 import AppHeader from "../components/ui/AppHeader";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import PremiumModal from "../components/PremiumModal";
+import IonIcon from "../components/ui/IonIcon";
+import {
+  bulbOutline,
+  checkmarkCircleOutline,
+  warningOutline,
+  syncOutline,
+  gitNetworkOutline,
+  analyticsOutline,
+  moonOutline,
+  trophyOutline,
+  starOutline,
+} from "ionicons/icons";
 
-function SectionCard({ icon, title, items, color = "text-indigo-300", borderColor = "border-indigo-500/20" }) {
+function SectionCard({
+  icon,
+  title,
+  items,
+  color = "text-indigo-300",
+  borderColor = "border-indigo-500/20",
+}) {
   if (!items || items.length === 0) return null;
   return (
     <GlassCard className={`p-5 mb-4 border ${borderColor}`}>
@@ -19,8 +37,13 @@ function SectionCard({ icon, title, items, color = "text-indigo-300", borderColo
         {items.map((item, i) => {
           const text = typeof item === "string" ? item : item.title;
           return (
-            <li key={i} className="flex items-start gap-2 text-slate-300 text-sm leading-relaxed">
-              <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${color.replace("text", "bg")}`} />
+            <li
+              key={i}
+              className="flex items-start gap-2 text-slate-300 text-sm leading-relaxed"
+            >
+              <span
+                className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${color.replace("text", "bg")}`}
+              />
               <span>{text}</span>
             </li>
           );
@@ -37,7 +60,9 @@ function PatternCard({ pattern }) {
         {pattern.category}
       </span>
       <p className="text-white text-sm font-medium mt-1">{pattern.pattern}</p>
-      <p className="text-slate-500 text-xs mt-0.5">Ocorrências: {pattern.count}</p>
+      <p className="text-slate-500 text-xs mt-0.5">
+        Ocorrências: {pattern.count}
+      </p>
     </div>
   );
 }
@@ -65,9 +90,12 @@ export default function LifeInsights() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/life-insights`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || ""}/api/life-insights`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (res.status === 403) {
         setShowPremium(true);
         return;
@@ -88,16 +116,6 @@ export default function LifeInsights() {
   return (
     <AppContainer>
       <AppHeader title="Life Insights" onBack={() => navigate("/dashboard")} />
-
-      <div className="px-4 pt-2">
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="text-sm text-purple-300 hover:text-white transition-colors"
-        >
-          ← Voltar para Dashboard
-        </button>
-      </div>
-
       {loading && (
         <div className="flex justify-center pt-20">
           <LoadingSpinner />
@@ -106,7 +124,7 @@ export default function LifeInsights() {
 
       {!loading && showPremium && (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
-          <span className="text-6xl mb-4">💡</span>
+          <span className="text-6xl mb-4"><IonIcon icon={bulbOutline} /></span>
           <h2 className="text-2xl font-bold text-white mb-2">Life Insights</h2>
           <p className="text-slate-400 max-w-md mb-6">
             Descubra os maiores aprendizados que o Dream Line tem sobre você.
@@ -129,7 +147,9 @@ export default function LifeInsights() {
               {data.profile.dreamScore?.score != null && (
                 <p className="text-purple-400 font-semibold mb-2">
                   Dream Score: {data.profile.dreamScore.score}
-                  {data.profile.dreamScore.label ? ` — ${data.profile.dreamScore.label}` : ""}
+                  {data.profile.dreamScore.label
+                    ? ` — ${data.profile.dreamScore.label}`
+                    : ""}
                 </p>
               )}
               <div className="flex justify-center gap-6 text-sm text-slate-400">
@@ -140,14 +160,32 @@ export default function LifeInsights() {
             </GlassCard>
           )}
 
-          <SectionCard icon="✅" title="Pontos Fortes" items={data.strengths} color="text-green-400" borderColor="border-green-500/20" />
-          <SectionCard icon="⚠️" title="Pontos de Atenção" items={data.attentionPoints} color="text-orange-400" borderColor="border-orange-500/20" />
-          <SectionCard icon="🔄" title="Hábitos Identificados" items={data.habits} color="text-yellow-400" borderColor="border-yellow-500/20" />
+          <SectionCard
+            icon={<IonIcon icon={checkmarkCircleOutline} />}
+            title="Pontos Fortes"
+            items={data.strengths}
+            color="text-green-400"
+            borderColor="border-green-500/20"
+          />
+          <SectionCard
+            icon={<IonIcon icon={warningOutline} />}
+            title="Pontos de Atenção"
+            items={data.attentionPoints}
+            color="text-orange-400"
+            borderColor="border-orange-500/20"
+          />
+          <SectionCard
+            icon={<IonIcon icon={syncOutline} />}
+            title="Hábitos Identificados"
+            items={data.habits}
+            color="text-yellow-400"
+            borderColor="border-yellow-500/20"
+          />
 
           {data.recurringPatterns && data.recurringPatterns.length > 0 && (
             <GlassCard className="p-5 mb-4 border border-blue-500/20">
               <h3 className="text-lg font-semibold text-blue-400 mb-3 flex items-center gap-2">
-                <span>🔗</span>
+                <span><IonIcon icon={gitNetworkOutline} /></span>
                 <span>Padrões Recorrentes</span>
               </h3>
               <div className="grid grid-cols-2 gap-2">
@@ -158,13 +196,25 @@ export default function LifeInsights() {
             </GlassCard>
           )}
 
-          <SectionCard icon="📊" title="Evolução Emocional" items={data.emotionalEvolution} color="text-pink-400" borderColor="border-pink-500/20" />
-          <SectionCard icon="🌙" title="Evolução do Sono" items={data.sleepEvolution} color="text-violet-400" borderColor="border-violet-500/20" />
+          <SectionCard
+            icon={<IonIcon icon={analyticsOutline} />}
+            title="Evolução Emocional"
+            items={data.emotionalEvolution}
+            color="text-pink-400"
+            borderColor="border-pink-500/20"
+          />
+          <SectionCard
+            icon={<IonIcon icon={moonOutline} />}
+            title="Evolução do Sono"
+            items={data.sleepEvolution}
+            color="text-violet-400"
+            borderColor="border-violet-500/20"
+          />
 
           {data.achievements && data.achievements.length > 0 && (
             <GlassCard className="p-5 mb-4 border border-yellow-500/20">
               <h3 className="text-lg font-semibold text-yellow-400 mb-3 flex items-center gap-2">
-                <span>🏆</span>
+                <span><IonIcon icon={trophyOutline} /></span>
                 <span>Conquistas</span>
               </h3>
               {data.achievements.map((a, i) => (
@@ -173,12 +223,20 @@ export default function LifeInsights() {
             </GlassCard>
           )}
 
-          <SectionCard icon="💡" title="Recomendações" items={data.recommendations} color="text-yellow-400" borderColor="border-yellow-500/20" />
+          <SectionCard
+            icon={<IonIcon icon={bulbOutline} />}
+            title="Recomendações"
+            items={data.recommendations}
+            color="text-yellow-400"
+            borderColor="border-yellow-500/20"
+          />
 
           {data.motivation && (
             <GlassCard className="p-5 mb-6 text-center border border-purple-500/20">
-              <span className="text-2xl mb-2 block">✨</span>
-              <p className="text-slate-300 italic text-sm leading-relaxed">"{data.motivation}"</p>
+              <span className="text-2xl mb-2 block"><IonIcon icon={starOutline} /></span>
+              <p className="text-slate-300 italic text-sm leading-relaxed">
+                "{data.motivation}"
+              </p>
             </GlassCard>
           )}
         </div>

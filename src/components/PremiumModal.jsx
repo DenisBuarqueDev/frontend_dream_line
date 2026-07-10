@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import IonIcon from "../components/ui/IonIcon";
+import { shieldCheckmarkOutline } from "ionicons/icons";
 
 export default function PremiumModal({ isOpen, onClose, featureName = 'Este recurso' }) {
   const navigate = useNavigate();
@@ -20,9 +22,7 @@ export default function PremiumModal({ isOpen, onClose, featureName = 'Este recu
 
         <div className="flex flex-col items-center text-center">
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center mb-4">
-            <svg className="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
+            <IonIcon icon={shieldCheckmarkOutline} className="w-8 h-8 text-purple-400" />
           </div>
 
           <p className="text-white font-semibold text-lg mb-1">Plano Premium</p>

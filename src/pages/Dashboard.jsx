@@ -16,7 +16,13 @@ import {
   notificationsOutline,
   helpCircleOutline,
   diamondOutline,
+  clipboardOutline,
+  downloadOutline,
+  logOutOutline,
+  lockClosedOutline,
+  heartOutline,
 } from "ionicons/icons";
+import IonIcon from "../components/ui/IonIcon";
 import HomeCompanionCard from "../components/HomeCompanionCard";
 import QuickSummaryBar from "../components/QuickSummaryBar";
 import NextStepCard from "../components/NextStepCard";
@@ -28,18 +34,6 @@ import GlassCard from "../components/ui/GlassCard";
 import AppContainer from "../components/ui/AppContainer";
 import logotipo from "../assets/logotipo-white.png";
 import { triggerInstall, isPWAInstalled } from "../services/pwaInstall";
-
-function IonIcon({ icon, className = "w-5 h-5" }) {
-  const svg = decodeURIComponent(icon.split(",")[1])
-    .replace(/class="[^"]*"/g, "")
-    .replace("<svg", '<svg fill="none" stroke="currentColor" stroke-width="32"');
-  return (
-    <span
-      className={`${className} inline-flex items-center justify-center`}
-      dangerouslySetInnerHTML={{ __html: svg }}
-    />
-  );
-}
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -207,14 +201,14 @@ export default function Dashboard() {
                 <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Sonhos</span>
               </button>
               <button
-                onClick={() => navigate("/emotions/timeline")}
+                onClick={() => navigate("/emotions/new")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={happyOutline} className="w-5 h-5" />
                 <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Emoções</span>
               </button>
               <button
-                onClick={() => navigate("/emotions/new")}
+                onClick={() => navigate("/emotions/timeline")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={bookOutline} className="w-5 h-5" />
@@ -305,7 +299,7 @@ export default function Dashboard() {
       {checkinMessage && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-green-500/15 border border-green-500/30 rounded-2xl px-6 py-3 shadow-lg animate-fade-in">
           <p className="text-sm text-green-300 font-medium text-center">
-            💜 {checkinMessage}
+            <span className="text-green-300"><IonIcon icon={heartOutline} className="w-4 h-4" /></span> {checkinMessage}
           </p>
         </div>
       )}
@@ -331,13 +325,7 @@ export default function Dashboard() {
           >
             <div className="text-center mb-6">
               <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-purple-500/20 flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 text-purple-400"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-                </svg>
+                <IonIcon icon={lockClosedOutline} className="w-8 h-8 text-purple-400" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
                 Desbloqueie essa função
@@ -385,66 +373,66 @@ export default function Dashboard() {
 
             <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
               <button
-                onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
+                onClick={() => { navigate("/dashboard"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">📋</span>
-                <span className="font-medium">Sonhos</span>
+                <IonIcon icon={clipboardOutline} className="w-5 h-5" />
+                <span className="font-medium">Dashboard</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">📖</span>
+                <IonIcon icon={happyOutline} className="w-5 h-5" />
                 <span className="font-medium">Emoções</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">📊</span>
+                <IonIcon icon={analyticsOutline} className="w-5 h-5" />
                 <span className="font-medium">Insights</span>
               </button>
               <button
                 onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">🔗</span>
+                <IonIcon icon={gitNetworkOutline} className="w-5 h-5" />
                 <span className="font-medium">Correlações</span>
               </button>
               <button
                 onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">⏳</span>
+                <IonIcon icon={timeOutline} className="w-5 h-5" />
                 <span className="font-medium">Timeline</span>
               </button>
               <button
                 onClick={() => { navigate("/life-insights"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">💡</span>
+                <IonIcon icon={bulbOutline} className="w-5 h-5" />
                 <span className="font-medium">Life Insights</span>
               </button>
               <button
                 onClick={() => { navigate("/dream-coach"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">🧘</span>
+                <IonIcon icon={starOutline} className="w-5 h-5" />
                 <span className="font-medium">Dream Coach</span>
               </button>
               <button
                 onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">🔢</span>
+                <IonIcon icon={calculatorOutline} className="w-5 h-5" />
                 <span className="font-medium">Numerologia</span>
               </button>
               <button
                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">⭐</span>
+                <IonIcon icon={diamondOutline} className="w-5 h-5" />
                 <span className="font-medium">Planos</span>
               </button>
 
@@ -455,7 +443,7 @@ export default function Dashboard() {
                   onClick={handleInstallClick}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
                 >
-                  <span className="text-lg">⬇️</span>
+                  <IonIcon icon={downloadOutline} className="w-5 h-5" />
                   <span className="font-medium">Instalar App</span>
                 </button>
               )}
@@ -463,14 +451,14 @@ export default function Dashboard() {
                 onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">🔔</span>
+                <IonIcon icon={notificationsOutline} className="w-5 h-5" />
                 <span className="font-medium">Notificações</span>
               </button>
               <button
                 onClick={() => { navigate("/support"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
-                <span className="text-lg">💬</span>
+                <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
                 <span className="font-medium">Suporte</span>
               </button>
             </nav>
@@ -480,7 +468,7 @@ export default function Dashboard() {
                 onClick={logout}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-left"
               >
-                <span className="text-lg">🚪</span>
+                <IonIcon icon={logOutOutline} className="w-5 h-5" />
                 <span className="font-medium">Sair</span>
               </button>
             </div>

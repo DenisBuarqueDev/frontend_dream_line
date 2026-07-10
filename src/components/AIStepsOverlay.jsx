@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
+import IonIcon from "../components/ui/IonIcon";
+import { micOutline, starOutline, sparklesOutline, calculatorOutline, imageOutline, checkmarkCircleOutline, closeCircleOutline } from "ionicons/icons";
 
 const STEP_META = {
-  transcribing: { label: 'Transcrevendo áudio...', icon: '🎙️', color: 'from-cyan-500 to-blue-500' },
-  interpreting: { label: 'Interpretando seu sonho...', icon: '🔮', color: 'from-purple-500 to-indigo-500' },
-  analyzing: { label: 'Analisando emoções e padrões...', icon: '💫', color: 'from-pink-500 to-rose-500' },
-  numerology: { label: 'Calculando numerologia...', icon: '🔢', color: 'from-amber-500 to-yellow-500' },
-  image: { label: 'Gerando imagem do sonho...', icon: '🎨', color: 'from-emerald-500 to-teal-500' },
-  spiritual: { label: 'Conectando mensagem espiritual...', icon: '✨', color: 'from-violet-500 to-purple-500' },
-  complete: { label: 'Sonho interpretado!', icon: '✅', color: 'from-green-500 to-emerald-500' },
-  error: { label: 'Erro na interpretação', icon: '❌', color: 'from-red-500 to-rose-500' },
+  transcribing: { label: 'Transcrevendo áudio...', icon: <IonIcon icon={micOutline} className="w-4 h-4" />, color: 'from-cyan-500 to-blue-500' },
+  interpreting: { label: 'Interpretando seu sonho...', icon: <IonIcon icon={starOutline} className="w-4 h-4" />, color: 'from-purple-500 to-indigo-500' },
+  analyzing: { label: 'Analisando emoções e padrões...', icon: <IonIcon icon={sparklesOutline} className="w-4 h-4" />, color: 'from-pink-500 to-rose-500' },
+  numerology: { label: 'Calculando numerologia...', icon: <IonIcon icon={calculatorOutline} className="w-4 h-4" />, color: 'from-amber-500 to-yellow-500' },
+  image: { label: 'Gerando imagem do sonho...', icon: <IonIcon icon={imageOutline} className="w-4 h-4" />, color: 'from-emerald-500 to-teal-500' },
+  spiritual: { label: 'Conectando mensagem espiritual...', icon: <IonIcon icon={starOutline} className="w-4 h-4" />, color: 'from-violet-500 to-purple-500' },
+  complete: { label: 'Sonho interpretado!', icon: <IonIcon icon={checkmarkCircleOutline} className="w-4 h-4" />, color: 'from-green-500 to-emerald-500' },
+  error: { label: 'Erro na interpretação', icon: <IonIcon icon={closeCircleOutline} className="w-4 h-4" />, color: 'from-red-500 to-rose-500' },
 };
 
 export default function AIStepsOverlay({ steps, currentStep, isVisible, onCancel }) {
@@ -50,7 +52,7 @@ export default function AIStepsOverlay({ steps, currentStep, isVisible, onCancel
               <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${currentMeta.color} animate-ping opacity-20`} />
             )}
             <div className={`relative w-20 h-20 rounded-full bg-gradient-to-br ${currentMeta.color} flex items-center justify-center shadow-lg ${!isComplete && !isError ? 'animate-pulse' : ''}`}>
-              <span className="text-3xl">{currentMeta.icon}</span>
+              <span className="text-3xl flex items-center">{currentMeta.icon}</span>
             </div>
           </div>
 

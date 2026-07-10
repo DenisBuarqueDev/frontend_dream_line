@@ -1,3 +1,6 @@
+import IonIcon from "../components/ui/IonIcon";
+import { sparklesOutline } from "ionicons/icons";
+
 export default function DreamNumerologyPanel({ numerology }) {
   if (!numerology) return null;
 
@@ -15,10 +18,7 @@ export default function DreamNumerologyPanel({ numerology }) {
     <div className="space-y-4 animate-fade-in">
       <div className="bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl p-5 sm:p-6 border border-purple-500/20">
         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <svg className="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/>
-            <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
-          </svg>
+          <IonIcon icon={sparklesOutline} className="w-5 h-5 text-purple-400" />
           Energia do Sonho
         </h3>
 

@@ -14,6 +14,12 @@ import GlassCard from "../components/ui/GlassCard";
 import AppContainer from "../components/ui/AppContainer";
 import AppHeader from "../components/ui/AppHeader";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import IonIcon from "../components/ui/IonIcon";
+import {
+  checkmarkCircleOutline,
+  closeCircleOutline,
+  alarmOutline,
+} from "ionicons/icons";
 
 const TIME_OPTIONS = [
   { label: "07:00", value: "07:00" },
@@ -153,14 +159,14 @@ export default function NotificationSettings() {
     try {
       const result = await sendTestNotification();
       if (result.success) {
-        showFeedback("✅ Notificação enviada com sucesso");
+        showFeedback(<><IonIcon icon={checkmarkCircleOutline} className="w-4 h-4 text-green-400" /> Notificação enviada com sucesso</>);
       } else {
         console.error("[Notificações] Falha no teste:", result.reason, result.error);
-        showFeedback("❌ Não foi possível enviar a notificação", "error");
+        showFeedback(<><IonIcon icon={closeCircleOutline} className="w-4 h-4 text-red-400" /> Não foi possível enviar a notificação</>, "error");
       }
     } catch (e) {
       console.error("[Notificações] Erro no teste:", e);
-      showFeedback("❌ Não foi possível enviar a notificação", "error");
+      showFeedback(<><IonIcon icon={closeCircleOutline} className="w-4 h-4 text-red-400" /> Não foi possível enviar a notificação</>, "error");
     } finally {
       setTesting(false);
     }
@@ -300,7 +306,7 @@ export default function NotificationSettings() {
             {nextNotif && (
               <div className="flex justify-between items-center text-sm">
                 <span className="text-slate-400">Próximo lembrete</span>
-                <span className="text-purple-400">⏰ {nextNotif.label}</span>
+                <span className="text-purple-400"><IonIcon icon={alarmOutline} className="w-5 h-5" /> {nextNotif.label}</span>
               </div>
             )}
 

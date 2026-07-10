@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import IonIcon from "../components/ui/IonIcon";
+import { gridOutline, ribbonOutline, diamondOutline, footballOutline } from "ionicons/icons";
 
 const GAMES = {
-  megaSena: { name: "Mega-Sena", icon: "🎰", color: "from-green-500 to-emerald-600" },
-  lotofacil: { name: "Lotofácil", icon: "🎯", color: "from-purple-500 to-violet-600" },
-  quina: { name: "Quina", icon: "💎", color: "from-blue-500 to-cyan-600" },
-  duplaSena: { name: "Dupla Sena", icon: "🎲", color: "from-orange-500 to-amber-600" },
-  timemania: { name: "Timemania", icon: "⚽", color: "from-red-500 to-rose-600" }
+  megaSena: { name: "Mega-Sena", icon: <IonIcon icon={gridOutline} />, color: "from-green-500 to-emerald-600" },
+  lotofacil: { name: "Lotofácil", icon: <IonIcon icon={ribbonOutline} />, color: "from-purple-500 to-violet-600" },
+  quina: { name: "Quina", icon: <IonIcon icon={diamondOutline} />, color: "from-blue-500 to-cyan-600" },
+  duplaSena: { name: "Dupla Sena", icon: <IonIcon icon={gridOutline} />, color: "from-orange-500 to-amber-600" },
+  timemania: { name: "Timemania", icon: <IonIcon icon={footballOutline} />, color: "from-red-500 to-rose-600" }
 };
 
 const DISCLAIMER = "Números gerados para entretenimento apenas. Não garantem ganhos.";
@@ -109,7 +111,7 @@ export default function LuckyNumbers() {
 
         <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 shadow-xl mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl">🎲</span>
+            <span className="text-3xl"><IonIcon icon={gridOutline} /></span>
             <div>
               <h2 className="text-slate-800 font-bold text-lg">Seus números da sorte</h2>
               {data?.personalNumber && (

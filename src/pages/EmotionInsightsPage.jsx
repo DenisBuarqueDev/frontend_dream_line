@@ -11,6 +11,13 @@ import AppContainer from "../components/ui/AppContainer";
 import GlassCard from "../components/ui/GlassCard";
 import AppHeader from "../components/ui/AppHeader";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
+import IonIcon from "../components/ui/IonIcon";
+import {
+  analyticsOutline,
+  calendarOutline,
+  trendingUpOutline,
+  removeCircleOutline,
+} from "ionicons/icons";
 
 const PIE_COLORS = [
   "#8B5CF6", "#EC4899", "#F59E0B", "#10B981",
@@ -195,7 +202,7 @@ export default function EmotionInsightsPage() {
         <AppHeader title="Insights Emocionais" onBack={() => navigate("/dashboard")} />
         <div className="flex-1 flex items-center justify-center px-4">
           <div className="text-center">
-            <div className="text-6xl mb-4">📊</div>
+            <div className="text-6xl mb-4"><IonIcon icon={analyticsOutline} /></div>
             <h3 className="text-white font-semibold text-lg mb-2">
               {error ? "Erro ao carregar" : "Nenhum dado ainda"}
             </h3>
@@ -233,7 +240,7 @@ export default function EmotionInsightsPage() {
   }));
   const otherCount = distribution.slice(8).reduce((s, e) => s + (e.count || 0), 0);
   if (otherCount > 0) {
-    distData.push({ name: "Outros", value: otherCount, percentage: 0, emoji: "📌" });
+    distData.push({ name: "Outros", value: otherCount, percentage: 0, emoji: <IonIcon icon={removeCircleOutline} /> });
   }
 
   const weeklyData = [...weeklyFreq].reverse().map((w) => ({
@@ -264,13 +271,13 @@ export default function EmotionInsightsPage() {
               <p className="text-purple-300 text-xs">{raw.predominantPct || 0}% dos registros</p>
             </GlassCard>
             <GlassCard className="p-4 border-white/10 text-center">
-              <div className="text-3xl mb-2">📈</div>
+              <div className="text-3xl mb-2"><IonIcon icon={trendingUpOutline} /></div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Intensidade média</p>
               <p className="text-white font-bold text-lg">{raw.avgIntensity ?? 0}</p>
               <p className="text-purple-300 text-xs">de 10</p>
             </GlassCard>
             <GlassCard className="p-4 border-white/10 text-center">
-              <div className="text-3xl mb-2">📅</div>
+              <div className="text-3xl mb-2"><IonIcon icon={calendarOutline} /></div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Registros no mês</p>
               <p className="text-white font-bold text-lg">
                 {monthlyFreq.length > 0 ? monthlyFreq[0].count : 0}
@@ -280,7 +287,7 @@ export default function EmotionInsightsPage() {
               </p>
             </GlassCard>
             <GlassCard className="p-4 border-white/10 text-center">
-              <div className="text-3xl mb-2">📊</div>
+              <div className="text-3xl mb-2"><IonIcon icon={analyticsOutline} /></div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Total</p>
               <p className="text-white font-bold text-lg">{raw.totalCount}</p>
               <p className="text-purple-300 text-xs">registros</p>

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import IonIcon from "../components/ui/IonIcon";
+import { compassOutline } from "ionicons/icons";
 
 export default function CurrentJourneyCard({ journey }) {
   const [animClass, setAnimClass] = useState("opacity-0 translate-y-4");
@@ -18,7 +20,7 @@ export default function CurrentJourneyCard({ journey }) {
     >
       <div className="flex items-center gap-3 mb-3">
         <div className="w-9 h-9 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-          <span className="text-sm">🧭</span>
+          <IonIcon icon={compassOutline} />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[10px] uppercase tracking-wider text-purple-200/60">

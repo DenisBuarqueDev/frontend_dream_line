@@ -1,4 +1,6 @@
 import { getElementColor, PLANET_MEANINGS, PLANET_IN_SIGN_INTERPRETATIONS, SIGN_SYMBOLS } from '../services/interpretations';
+import IonIcon from "../components/ui/IonIcon";
+import { sunnyOutline, moonOutline, chatboxOutline, heartOutline, flashOutline, ribbonOutline, businessOutline, starOutline } from "ionicons/icons";
 
 export function getPlanetsByCategory(planets, category) {
   const categories = {
@@ -15,16 +17,16 @@ export function getPlanetsByCategory(planets, category) {
 }
 
 const PLANET_ICONS = {
-  sun: '☀️',
-  moon: '🌙',
-  mercury: '🗣️',
-  venus: '❤️',
-  mars: '⚡',
-  jupiter: '🎯',
-  saturn: '🏛️',
-  uranus: '⚡',
-  neptune: '✨',
-  pluto: '🌑'
+  sun: <IonIcon icon={sunnyOutline} className="w-4 h-4" />,
+  moon: <IonIcon icon={moonOutline} className="w-4 h-4" />,
+  mercury: <IonIcon icon={chatboxOutline} className="w-4 h-4" />,
+  venus: <IonIcon icon={heartOutline} className="w-4 h-4" />,
+  mars: <IonIcon icon={flashOutline} className="w-4 h-4" />,
+  jupiter: <IonIcon icon={ribbonOutline} className="w-4 h-4" />,
+  saturn: <IonIcon icon={businessOutline} className="w-4 h-4" />,
+  uranus: <IonIcon icon={ribbonOutline} className="w-4 h-4" />,
+  neptune: <IonIcon icon={starOutline} className="w-4 h-4" />,
+  pluto: <IonIcon icon={moonOutline} className="w-4 h-4" />
 };
 
 const ELEMENT_GRADIENTS = {
@@ -42,7 +44,7 @@ function PlanetCardInterpretiveInner({ planet, index = 0 }) {
     )
   ) : null;
   
-  const planetMeaning = PLANET_MEANINGS[planet.planet] || { icon: '⭐', name: planet.planet, description: '' };
+  const planetMeaning = PLANET_MEANINGS[planet.planet] || { icon: <IonIcon icon={starOutline} className="w-4 h-4" />, name: planet.planet, description: '' };
   const interpretation = PLANET_IN_SIGN_INTERPRETATIONS[planet.planet]?.[planet.sign];
   
   const gradient = element ? ELEMENT_GRADIENTS[element] : { from: 'from-purple-500/20', to: 'to-violet-500/10' };
@@ -64,7 +66,7 @@ function PlanetCardInterpretiveInner({ planet, index = 0 }) {
             background: `linear-gradient(135deg, ${gradient.from.replace('from-', '')}30, ${gradient.to.replace('to-', '')}20)`
           }}
         >
-          <span className="text-xl">{PLANET_ICONS[planet.planet] || '⭐'}</span>
+          <span className="text-xl flex items-center">{PLANET_ICONS[planet.planet] || <IonIcon icon={starOutline} className="w-4 h-4" />}</span>
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs uppercase tracking-wider text-white/40 mb-1">

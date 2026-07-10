@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import GlassCard from '../ui/GlassCard';
+import IonIcon from "../components/ui/IonIcon";
+import { bedOutline } from "ionicons/icons";
 
 function DreamListCard({ dream }) {
   const navigate = useNavigate();
@@ -50,7 +52,7 @@ function DreamListCard({ dream }) {
       <div className="flex items-center gap-2 mt-3">
         {dream.sono && (
           <span className="text-xs text-slate-400">
-            😴 {dream.sono.duracaoHoras}h
+            <IonIcon icon={bedOutline} className="w-4 h-4 inline" /> {dream.sono.duracaoHoras}h
           </span>
         )}
       </div>

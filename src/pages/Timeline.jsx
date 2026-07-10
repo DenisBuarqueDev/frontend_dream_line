@@ -8,6 +8,14 @@ import logotipo from "../assets/logotipo-white.png";
 import LuckyNumbersCard from "../components/LuckyNumbersCard";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
+import IonIcon from "../components/ui/IonIcon";
+import {
+  bedOutline,
+  sunnyOutline,
+  ribbonOutline,
+  starOutline,
+  fitnessOutline,
+} from "ionicons/icons";
 
 const MOCK_DREAMS = [
   {
@@ -295,7 +303,7 @@ function TimelineItem({
             {dream.sono && (
               <div className="flex items-center gap-2 text-xs text-slate-300">
                 <span>
-                  😴 {dream.sono.horaDormir} → ☀️ {dream.sono.horaAcordar}
+                  <IonIcon icon={bedOutline} className="w-4 h-4" /> {dream.sono.horaDormir} → <IonIcon icon={sunnyOutline} className="w-4 h-4" /> {dream.sono.horaAcordar}
                 </span>
                 <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded-full">
                   {dream.sono.duracaoHoras}h
@@ -347,7 +355,7 @@ function TimelineItem({
                       key={`tem-${i}`}
                       className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full"
                     >
-                      🎯 {p}
+                       <IonIcon icon={ribbonOutline} className="w-4 h-4" /> {p}
                     </span>
                   ))}
                 {dream.padroes.espirituais &&
@@ -357,7 +365,7 @@ function TimelineItem({
                       key={`esp-${i}`}
                       className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full"
                     >
-                      ✨ {p}
+                       <IonIcon icon={starOutline} className="w-4 h-4" /> {p}
                     </span>
                   ))}
                 {dream.padroes.biologicos &&
@@ -367,7 +375,7 @@ function TimelineItem({
                       key={`bio-${i}`}
                       className="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full"
                     >
-                      🧬 {p}
+                       <IonIcon icon={fitnessOutline} className="w-4 h-4" /> {p}
                     </span>
                   ))}
               </div>

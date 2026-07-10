@@ -5,6 +5,17 @@ import { getDreamEmotionCorrelations } from "../services/api";
 import { usePermissions } from "../hooks/usePermissions";
 import PremiumModal from "../components/PremiumModal";
 import AppContainer from "../components/ui/AppContainer";
+import IonIcon from "../components/ui/IonIcon";
+import {
+  gitNetworkOutline,
+  chatbubbleEllipsesOutline,
+  happyOutline,
+  moonOutline,
+  ellipsisHorizontalOutline,
+  analyticsOutline,
+  flameOutline,
+  clipboardOutline,
+} from "ionicons/icons";
 import GlassCard from "../components/ui/GlassCard";
 import AppHeader from "../components/ui/AppHeader";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
@@ -103,7 +114,7 @@ export default function DreamEmotionInsightsPage() {
         <AppHeader title="Correlações" onBack={() => navigate("/dashboard")} />
         <div className="flex-1 flex items-center justify-center px-4">
           <div className="text-center">
-            <div className="text-6xl mb-4">🔗</div>
+            <div className="text-6xl mb-4"><IonIcon icon={gitNetworkOutline} className="w-5 h-5" /></div>
             <h3 className="text-white font-semibold text-lg mb-2">
               {error ? "Erro ao carregar" : "Nenhum dado ainda"}
             </h3>
@@ -175,7 +186,7 @@ export default function DreamEmotionInsightsPage() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <GlassCard className="p-4 border-white/10 text-center">
-              <div className="text-3xl mb-2">🔗</div>
+              <div className="text-3xl mb-2"><IonIcon icon={gitNetworkOutline} className="w-5 h-5" /></div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Principal</p>
               <p className="text-white font-bold text-sm truncate">
                 {topCorrelation
@@ -186,21 +197,21 @@ export default function DreamEmotionInsightsPage() {
             </GlassCard>
 
             <GlassCard className="p-4 border-white/10 text-center">
-              <div className="text-3xl mb-2">{topCatEntry ? getCatEmoji(topCatEntry.name) : "💭"}</div>
+              <div className="text-3xl mb-2">{topCatEntry ? getCatEmoji(topCatEntry.name) : <IonIcon icon={chatbubbleEllipsesOutline} className="w-5 h-5" />}</div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Categoria</p>
               <p className="text-white font-bold text-sm truncate">{topCatEntry?.name || "—"}</p>
               <p className="text-purple-300 text-xs">{topCatEntry?.count || 0} sonhos</p>
             </GlassCard>
 
             <GlassCard className="p-4 border-white/10 text-center">
-              <div className="text-3xl mb-2">{totalEmotions > 0 ? "😊" : "—"}</div>
+              <div className="text-3xl mb-2">{totalEmotions > 0 ? <IonIcon icon={happyOutline} className="w-5 h-5" /> : "—"}</div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Emoções</p>
               <p className="text-white font-bold text-lg">{totalEmotions}</p>
               <p className="text-purple-300 text-xs">registradas</p>
             </GlassCard>
 
             <GlassCard className="p-4 border-white/10 text-center">
-              <div className="text-3xl mb-2">{totalDreams > 0 ? "🌙" : "—"}</div>
+              <div className="text-3xl mb-2">{totalDreams > 0 ? <IonIcon icon={moonOutline} className="w-5 h-5" /> : "—"}</div>
               <p className="text-white/50 text-xs uppercase tracking-wide mb-1">Sonhos</p>
               <p className="text-white font-bold text-lg">{totalDreams}</p>
               <p className="text-purple-300 text-xs">{correlatedCount} correlacionados</p>
@@ -209,7 +220,7 @@ export default function DreamEmotionInsightsPage() {
 
           {insights.length > 0 && (
             <GlassCard className="p-4 border-white/10">
-              <h3 className="text-white font-semibold mb-3">📌 Insights</h3>
+              <h3 className="text-white font-semibold mb-3"><IonIcon icon={ellipsisHorizontalOutline} className="w-5 h-5" /> Insights</h3>
               <div className="space-y-2">
                 {insights.map((insight, i) => (
                   <p key={i} className="text-purple-200 text-sm leading-relaxed">{insight}</p>
@@ -220,7 +231,7 @@ export default function DreamEmotionInsightsPage() {
 
           {catChartData.length > 0 && (
             <GlassCard className="p-4 border-white/10">
-              <h3 className="text-white font-semibold mb-3">📊 Distribuição por Categoria</h3>
+              <h3 className="text-white font-semibold mb-3"><IonIcon icon={analyticsOutline} className="w-5 h-5" /> Distribuição por Categoria</h3>
               <div style={{ minHeight: 300 }}>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={catChartData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
@@ -237,7 +248,7 @@ export default function DreamEmotionInsightsPage() {
 
           {correlationTable.length > 0 && (
             <GlassCard className="p-4 border-white/10">
-              <h3 className="text-white font-semibold mb-3">🔥 Mapa de Calor: Emoção × Categoria</h3>
+              <h3 className="text-white font-semibold mb-3"><IonIcon icon={flameOutline} className="w-5 h-5" /> Mapa de Calor: Emoção × Categoria</h3>
               <p className="text-purple-300 text-xs mb-3">
                 Percentual de sonhos correlacionados por emoção e categoria
               </p>
@@ -278,7 +289,7 @@ export default function DreamEmotionInsightsPage() {
 
           {correlations.length > 0 && (
             <GlassCard className="p-4 border-white/10">
-              <h3 className="text-white font-semibold mb-3">📋 Correlações Detalhadas</h3>
+              <h3 className="text-white font-semibold mb-3"><IonIcon icon={clipboardOutline} className="w-5 h-5" /> Correlações Detalhadas</h3>
               <div className="space-y-2">
                 {correlations.map((c, i) => (
                   <div
