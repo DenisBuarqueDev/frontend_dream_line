@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { getElementColor, PLANET_MEANINGS, PLANET_IN_SIGN_INTERPRETATIONS, SIGN_SYMBOLS } from '../services/interpretations';
 import IonIcon from "../components/ui/IonIcon";
 import { sunnyOutline, moonOutline, chatboxOutline, heartOutline, flashOutline, ribbonOutline, businessOutline, starOutline } from "ionicons/icons";
@@ -37,6 +38,7 @@ const ELEMENT_GRADIENTS = {
 };
 
 function PlanetCardInterpretiveInner({ planet, index = 0 }) {
+  const { t } = useTranslation();
   const elementColors = getElementColor(planet.sign);
   const element = elementColors ? Object.keys(ELEMENT_GRADIENTS).find(
     key => elementColors.border && elementColors.border.includes(
@@ -81,13 +83,13 @@ function PlanetCardInterpretiveInner({ planet, index = 0 }) {
       </div>
       
       <p className="text-sm text-white/65 leading-relaxed mb-4">
-        {interpretation || `${planetMeaning.description}. Seu ${planetMeaning.name.toLowerCase()} em ${planet.sign} traz características únicas.`}
+        {interpretation || t('planet.defaultInterpretation', { planet: planetMeaning.name.toLowerCase(), sign: planet.sign })}
       </p>
       
       <div className="flex items-center justify-between pt-3 border-t border-white/5">
-        <span className="text-xs text-white/40">Casa {planet.house}</span>
+        <span className="text-xs text-white/40">{t('planet.house', { house: planet.house })}</span>
         {planet.retrograde && (
-          <span className="text-xs text-amber-400/80 font-medium">♑ Retrogrado</span>
+          <span className="text-xs text-amber-400/80 font-medium">{t('planet.retrograde')}</span>
         )}
       </div>
     </div>

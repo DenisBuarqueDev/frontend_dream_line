@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { verifyEmail, resendVerification } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
@@ -6,6 +7,7 @@ import PrimaryButton from "../components/ui/PrimaryButton";
 import logotipo from "../assets/logotipo-white.png";
 
 export default function VerifyEmail() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,11 +26,11 @@ export default function VerifyEmail() {
       verifyEmail(token)
         .then(() => {
           setStatus("success");
-          setMessage("E-mail verificado com sucesso!");
+          setMessage(t('verify.success'));
         })
         .catch((err) => {
           setStatus("error");
-          setMessage(err.message || "Falha ao verificar e-mail.");
+          setMessage(err.message || t('verify.failed'));
         });
     }
   }, [token]);
@@ -41,9 +43,9 @@ export default function VerifyEmail() {
     try {
       await resendVerification(targetEmail);
       setStatus("resent");
-      setMessage("Se o e-mail estiver cadastrado, um novo link será enviado.");
+      setMessage(t('verify.resentMessage'));
     } catch (err) {
-      setMessage(err.message || "Erro ao reenviar e-mail.");
+      setMessage(err.message || t('verify.errorResending'));
     } finally {
       setResending(false);
     }
@@ -61,7 +63,7 @@ export default function VerifyEmail() {
 
           {status === "verifying" && (
             <>
-              <h1 className="text-2xl font-bold text-white mb-4">Verificando...</h1>
+              <h1 className="text-2xl font-bold text-white mb-4">{t('verify.verifying')}</h1>
               <div className="flex justify-center">
                 <svg className="w-10 h-10 text-purple-400 animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -78,10 +80,10 @@ export default function VerifyEmail() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">E-mail verificado!</h1>
-              <p className="text-slate-400 text-sm mb-6">Sua conta está ativada. Faça login para continuar.</p>
+              <h1 className="text-2xl font-bold text-white mb-2">{t('verify.verified')}</h1>
+              <p className="text-slate-400 text-sm mb-6">{t('verify.accountActivated')}</p>
               <PrimaryButton onClick={() => navigate("/login")} fullWidth>
-                Ir para o Login
+                {t('shared.goToLogin')}
               </PrimaryButton>
             </>
           )}
@@ -93,13 +95,13 @@ export default function VerifyEmail() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">Falha na verificação</h1>
+              <h1 className="text-2xl font-bold text-white mb-2">{t('verify.failure')}</h1>
               <p className="text-slate-400 text-sm mb-2">{message}</p>
               <p className="text-slate-500 text-xs mb-6">
-                O link pode ter expirado (válido por 24h). Solicite um novo.
+                {t('verify.linkExpired')}
               </p>
               <PrimaryButton onClick={() => navigate("/login")} fullWidth>
-                Voltar ao Login
+                {t('shared.backToLogin')}
               </PrimaryButton>
             </>
           )}
@@ -111,9 +113,9 @@ export default function VerifyEmail() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">Verifique seu e-mail</h1>
+              <h1 className="text-2xl font-bold text-white mb-2">{t('verify.checkEmail')}</h1>
               <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                Enviamos um link de ativação para seu endereço de e-mail.
+                {t('verify.activationSent')}
               </p>
 
               <div className="space-y-3">
@@ -121,11 +123,11 @@ export default function VerifyEmail() {
                   type="email"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
-                  placeholder="seu@email.com"
+                  placeholder="email@example.com"
                   className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-purple-500/50"
                 />
                 <PrimaryButton onClick={handleResend} disabled={resending || !emailInput} fullWidth>
-                  {resending ? "Enviando..." : "Reenviar e-mail"}
+                  {resending ? t('shared.sending') : t('verify.resendEmail')}
                 </PrimaryButton>
               </div>
 
@@ -133,7 +135,7 @@ export default function VerifyEmail() {
                 onClick={() => navigate("/login")}
                 className="mt-4 text-sm text-purple-300 hover:text-purple-200 underline underline-offset-2 transition-colors"
               >
-                Voltar ao Login
+                {t('shared.backToLogin')}
               </button>
             </>
           )}
@@ -145,10 +147,10 @@ export default function VerifyEmail() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-white mb-2">E-mail reenviado!</h1>
+              <h1 className="text-2xl font-bold text-white mb-2">{t('verify.emailResent')}</h1>
               <p className="text-slate-400 text-sm mb-6">{message}</p>
               <PrimaryButton onClick={() => navigate("/login")} fullWidth>
-                Ir para o Login
+                {t('shared.goToLogin')}
               </PrimaryButton>
             </>
           )}

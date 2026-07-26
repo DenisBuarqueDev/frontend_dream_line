@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { usePermissions } from "../hooks/usePermissions";
 import AppContainer from "../components/ui/AppContainer";
@@ -53,7 +54,7 @@ function SectionCard({
   );
 }
 
-function PatternCard({ pattern }) {
+function PatternCard({ pattern, t }) {
   return (
     <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
       <span className="text-[10px] font-semibold text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded">
@@ -61,7 +62,7 @@ function PatternCard({ pattern }) {
       </span>
       <p className="text-white text-sm font-medium mt-1">{pattern.pattern}</p>
       <p className="text-slate-500 text-xs mt-0.5">
-        Ocorrências: {pattern.count}
+            {t('insights.occurrences', { count: pattern.count })}
       </p>
     </div>
   );
@@ -80,6 +81,7 @@ function AchievementCard({ achievement }) {
 }
 
 export default function LifeInsights() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { isPremium } = usePermissions();
   const [data, setData] = useState(null);
@@ -127,7 +129,7 @@ export default function LifeInsights() {
           <span className="text-6xl mb-4"><IonIcon icon={bulbOutline} /></span>
           <h2 className="text-2xl font-bold text-white mb-2">Life Insights</h2>
           <p className="text-slate-400 max-w-md mb-6">
-            Descubra os maiores aprendizados que o Dream Line tem sobre você.
+            {t('insights.premiumDesc')}
           </p>
           <PremiumModal
             isOpen={showPremium}
@@ -142,7 +144,7 @@ export default function LifeInsights() {
           {data.profile && (
             <GlassCard className="p-5 mb-4 text-center">
               <h3 className="text-xl font-bold text-white mb-1">
-                {data.profile.dreamProfile || "Perfil Onírico"}
+                {data.profile.dreamProfile || t('insights.dreamProfile')}
               </h3>
               {data.profile.dreamScore?.score != null && (
                 <p className="text-purple-400 font-semibold mb-2">
@@ -153,30 +155,30 @@ export default function LifeInsights() {
                 </p>
               )}
               <div className="flex justify-center gap-6 text-sm text-slate-400">
-                <span>{data.profile.totalDreams} sonhos</span>
-                <span>{data.profile.totalEmotions} emoções</span>
-                <span>{data.profile.activeDays} dias ativos</span>
+                <span>{t('insights.dreams', { count: data.profile.totalDreams })}</span>
+                <span>{t('insights.emotions', { count: data.profile.totalEmotions })}</span>
+                <span>{t('insights.activeDays', { count: data.profile.activeDays })}</span>
               </div>
             </GlassCard>
           )}
 
           <SectionCard
             icon={<IonIcon icon={checkmarkCircleOutline} />}
-            title="Pontos Fortes"
+            title={t('insights.strengths')}
             items={data.strengths}
             color="text-green-400"
             borderColor="border-green-500/20"
           />
           <SectionCard
             icon={<IonIcon icon={warningOutline} />}
-            title="Pontos de Atenção"
+            title={t('insights.attention')}
             items={data.attentionPoints}
             color="text-orange-400"
             borderColor="border-orange-500/20"
           />
           <SectionCard
             icon={<IonIcon icon={syncOutline} />}
-            title="Hábitos Identificados"
+            title={t('insights.habits')}
             items={data.habits}
             color="text-yellow-400"
             borderColor="border-yellow-500/20"
@@ -186,11 +188,11 @@ export default function LifeInsights() {
             <GlassCard className="p-5 mb-4 border border-blue-500/20">
               <h3 className="text-lg font-semibold text-blue-400 mb-3 flex items-center gap-2">
                 <span><IonIcon icon={gitNetworkOutline} /></span>
-                <span>Padrões Recorrentes</span>
+                <span>{t('insights.patterns')}</span>
               </h3>
               <div className="grid grid-cols-2 gap-2">
                 {data.recurringPatterns.slice(0, 8).map((p, i) => (
-                  <PatternCard key={i} pattern={p} />
+                  <PatternCard key={i} pattern={p} t={t} />
                 ))}
               </div>
             </GlassCard>
@@ -198,14 +200,14 @@ export default function LifeInsights() {
 
           <SectionCard
             icon={<IonIcon icon={analyticsOutline} />}
-            title="Evolução Emocional"
+            title={t('insights.emotionalEvolution')}
             items={data.emotionalEvolution}
             color="text-pink-400"
             borderColor="border-pink-500/20"
           />
           <SectionCard
             icon={<IonIcon icon={moonOutline} />}
-            title="Evolução do Sono"
+            title={t('insights.sleepEvolution')}
             items={data.sleepEvolution}
             color="text-violet-400"
             borderColor="border-violet-500/20"
@@ -215,7 +217,7 @@ export default function LifeInsights() {
             <GlassCard className="p-5 mb-4 border border-yellow-500/20">
               <h3 className="text-lg font-semibold text-yellow-400 mb-3 flex items-center gap-2">
                 <span><IonIcon icon={trophyOutline} /></span>
-                <span>Conquistas</span>
+                <span>{t('insights.achievements')}</span>
               </h3>
               {data.achievements.map((a, i) => (
                 <AchievementCard key={i} achievement={a} />
@@ -225,7 +227,7 @@ export default function LifeInsights() {
 
           <SectionCard
             icon={<IonIcon icon={bulbOutline} />}
-            title="Recomendações"
+            title={t('insights.recommendations')}
             items={data.recommendations}
             color="text-yellow-400"
             borderColor="border-yellow-500/20"

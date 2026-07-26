@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import IonIcon from "../components/ui/IonIcon";
 import { sunnyOutline } from "ionicons/icons";
+import { useTranslation } from 'react-i18next';
 
 export default function MorningCompanion({ greeting, children, userPlan }) {
+  const { t } = useTranslation();
   const [animClass, setAnimClass] = useState("opacity-0 translate-y-4");
 
   useEffect(() => {
@@ -18,7 +20,7 @@ export default function MorningCompanion({ greeting, children, userPlan }) {
         </div>
         <div className="flex-1">
           <p className="text-[11px] font-bold text-amber-400/90 tracking-[0.15em] uppercase">
-            Companheiro do Dia
+            {t('morning.companionOfDay')}
           </p>
         </div>
         <span
@@ -28,7 +30,7 @@ export default function MorningCompanion({ greeting, children, userPlan }) {
               : "bg-white/10 text-slate-400"
           }`}
         >
-          {userPlan === "premium" ? "Premium" : "Free"}
+          {userPlan === "premium" ? t('shared.premium') : t('shared.free')}
         </span>
       </div>
       <div className="mb-6">
@@ -36,7 +38,7 @@ export default function MorningCompanion({ greeting, children, userPlan }) {
           {greeting}
         </h2>
         <p className="text-purple-300/60 text-sm leading-relaxed">
-          Que bom ter você por aqui.
+          {t('morning.welcomeBack')}
         </p>
       </div>
 

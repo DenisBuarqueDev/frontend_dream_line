@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { transcribeAudio, createEmotion } from "../services/api";
@@ -47,6 +48,7 @@ const getSupportedMimeType = () => {
 const cleanTranscription = (text) => text.replace(/\s+/g, " ").trim();
 
 export default function EmotionEntryPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isRecording, setIsRecording] = useState(false);
@@ -103,7 +105,7 @@ export default function EmotionEntryPage() {
 
     recognition.onerror = (event) => {
       if (event.error === "not-allowed") {
-        setError("Permissão do microfone negada para transcrição.");
+        setError(t('emotion.microphoneDeniedTranscription'));
       }
     };
 
@@ -144,7 +146,7 @@ export default function EmotionEntryPage() {
                 setText((prev) => (prev ? prev + " " : "") + result.text);
               }
             })
-            .catch(() => setError("Erro ao transcrever áudio. Digite manualmente."))
+            .catch(() => setError(t('emotion.transcriptionError')))
             .finally(() => setIsTranscribing(false));
         }
       };
@@ -164,9 +166,9 @@ export default function EmotionEntryPage() {
       }
     } catch (err) {
       if (err.name === "NotAllowedError") {
-        setError("Permita o acesso ao microfone para gravar áudio.");
+        setError(t('emotion.microphoneAccessRequired'));
       } else {
-        setError("Erro ao acessar microfone.");
+        setError(t('emotion.microphoneAccessError'));
       }
     }
   }, [startSpeechRecognition]);
@@ -206,7 +208,7 @@ export default function EmotionEntryPage() {
   const handleSubmit = async () => {
     const cleanedText = cleanTranscription(text);
     if (!cleanedText) {
-      setError("Descreva como você está se sentindo.");
+      setError(t('emotion.describeFeeling'));
       return;
     }
     setIsLoading(true);
@@ -219,7 +221,7 @@ export default function EmotionEntryPage() {
         });
       }
     } catch (err) {
-      setError(err.message || "Erro ao registrar emoção.");
+      setError(err.message || t('emotion.registrationError'));
     } finally {
       setIsLoading(false);
     }
@@ -260,7 +262,7 @@ export default function EmotionEntryPage() {
             />
             <h1 className="text-3xl font-bold text-white">Dream Line</h1>
             <p className="text-purple-200 text-sm mt-2">
-              Fale sobre suas emoções
+              {t('emotion.entry.subtitle')}
             </p>
           </div>
 
@@ -269,11 +271,11 @@ export default function EmotionEntryPage() {
               onClick={() => navigate("/dreams/new")}
               className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-1.5"
             >
-              <IonIcon icon={moonOutline} className="w-4 h-4" /> Sonho
+              <IonIcon icon={moonOutline} className="w-4 h-4" /> {t('emotion.entry.dream')}
             </button>
-            <span className="text-white/30 text-sm">ou</span>
+            <span className="text-white/30 text-sm">{t('shared.or')}</span>
             <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold shadow-lg shadow-purple-500/20 transition-all flex items-center gap-1.5">
-              <IonIcon icon={heartOutline} className="w-4 h-4" /> Emoção
+              <IonIcon icon={heartOutline} className="w-4 h-4" /> {t('emotion.entry.emotion')}
             </button>
           </div>
 
@@ -308,7 +310,7 @@ export default function EmotionEntryPage() {
                     : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/20 hover:scale-[1.02] active:scale-[0.98]"
                 }`}
               >
-                {isRecording ? "Parar gravação" : "Começar gravação"}
+                {isRecording ? t('emotion.recording.stop') : t('emotion.recording.start')}
               </button>
             )}
 
@@ -347,7 +349,7 @@ export default function EmotionEntryPage() {
                         onEnded={() => setIsPlaying(false)}
                         className="hidden"
                       />
-                      <span className="text-slate-300 text-sm font-medium">Áudio gravado</span>
+                      <span className="text-slate-300 text-sm font-medium">{t('emotion.audioRecorded')}</span>
                     </div>
                     <button
                       onClick={deleteAudio}
@@ -364,7 +366,7 @@ export default function EmotionEntryPage() {
                   <textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    placeholder="Digite como você está se sentindo..."
+                    placeholder={t('emotion.placeholder')}
                     rows={3}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all resize-none"
                   />
@@ -376,7 +378,7 @@ export default function EmotionEntryPage() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Convertendo voz em texto...
+                    {t('emotion.convertingVoice')}
                   </div>
                 )}
 
@@ -397,10 +399,10 @@ export default function EmotionEntryPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      Analisando...
+                      {t('emotion.analyzing')}
                     </span>
                   ) : (
-                    "Analisar sentimento"
+                    t('emotion.analyzeSentiment')
                   )}
                 </button>
               </div>
@@ -433,42 +435,42 @@ export default function EmotionEntryPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={clipboardOutline} className="w-5 h-5" />
-                <span className="font-medium">Dashboard</span>
+                <span className="font-medium">{t('nav.dashboard')}</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={happyOutline} className="w-5 h-5" />
-                <span className="font-medium">Emoções</span>
+                <span className="font-medium">{t('nav.emotions')}</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={analyticsOutline} className="w-5 h-5" />
-                <span className="font-medium">Insights</span>
+                <span className="font-medium">{t('nav.insights')}</span>
               </button>
               <button
                 onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={gitNetworkOutline} className="w-5 h-5" />
-                <span className="font-medium">Correlações</span>
+                <span className="font-medium">{t('nav.correlations')}</span>
               </button>
               <button
                 onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={calculatorOutline} className="w-5 h-5" />
-                <span className="font-medium">Numerologia</span>
+                <span className="font-medium">{t('nav.numerology')}</span>
               </button>
               <button
                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={diamondOutline} className="w-5 h-5" />
-                <span className="font-medium">Planos</span>
+                <span className="font-medium">{t('nav.plans')}</span>
               </button>
 
               <div className="border-t border-white/10 my-3" />
@@ -479,7 +481,7 @@ export default function EmotionEntryPage() {
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
                 >
                   <IonIcon icon={downloadOutline} className="w-5 h-5" />
-                  <span className="font-medium">Instalar App</span>
+                  <span className="font-medium">{t('nav.installApp')}</span>
                 </button>
               )}
               <button
@@ -487,14 +489,14 @@ export default function EmotionEntryPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={notificationsOutline} className="w-5 h-5" />
-                <span className="font-medium">Notificações</span>
+                <span className="font-medium">{t('nav.notifications')}</span>
               </button>
               <button
                 onClick={() => { navigate("/support"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
-                <span className="font-medium">Suporte</span>
+                <span className="font-medium">{t('nav.support')}</span>
               </button>
             </nav>
 
@@ -504,7 +506,7 @@ export default function EmotionEntryPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-left"
               >
                 <IonIcon icon={logOutOutline} className="w-5 h-5" />
-                <span className="font-medium">Sair</span>
+                <span className="font-medium">{t('shared.exit')}</span>
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { DreamListCard } from '../../components/dreams/DreamListCard';
 import AppContainer from '../../components/ui/AppContainer';
@@ -8,6 +9,7 @@ import EmptyState from '../../components/EmptyState';
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 function FavoritesScreen() {
+  const { t } = useTranslation();
   const { getToken } = useAuth();
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,13 +38,13 @@ function FavoritesScreen() {
 
   return (
     <AppContainer>
-      <AppHeader title="Favoritos" />
+      <AppHeader title={t('favorites.title')} />
       <div className="px-4 py-6 space-y-4">
         {favorites.length === 0 ? (
           <EmptyState
             icon="⭐"
-            title="Nenhum favorito"
-            subtitle="marque sonhos como favoritos para encontrá-los aqui"
+            title={t('favorites.emptyTitle')}
+            subtitle={t('favorites.emptySubtitle')}
           />
         ) : (
           favorites.map((dream) => (

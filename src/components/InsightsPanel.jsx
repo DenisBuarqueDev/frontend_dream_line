@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { generateInsights } from '../services/interpretations';
 
 export default function InsightsPanel({ chartData }) {
+  const { t } = useTranslation();
   const insights = generateInsights(chartData);
   
   if (!insights || insights.length === 0) return null;

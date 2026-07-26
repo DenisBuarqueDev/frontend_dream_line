@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AppContainer from "../components/ui/AppContainer";
 
 export default function SubscriptionExpired() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -14,18 +16,18 @@ export default function SubscriptionExpired() {
         </div>
 
         <h1 className="text-3xl font-bold text-white mb-3">
-          Assinatura expirada
+          {t('subscription.expired.title')}
         </h1>
 
         <p className="text-lg text-slate-300 mb-8">
-          Sua assinatura expirou. Renove para continuar utilizando recursos Premium.
+          {t('subscription.expired.subtitle')}
         </p>
 
         <button
           onClick={() => navigate("/pricing")}
           className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:scale-[1.02] active:scale-[0.98]"
         >
-          Renovar assinatura
+          {t('subscription.expired.renew')}
         </button>
       </div>
     </AppContainer>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { useAuth } from "../context/AuthContext";
 import {
   moonOutline,
@@ -36,6 +37,7 @@ import logotipo from "../assets/logotipo-white.png";
 import { triggerInstall, isPWAInstalled } from "../services/pwaInstall";
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -113,7 +115,7 @@ export default function Dashboard() {
             <button
               onClick={() => setSidebarOpen(true)}
               className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
-              title="Menu"
+              title={t('dashboard.menu')}
             >
               <svg
                 className="w-5 h-5"
@@ -134,19 +136,19 @@ export default function Dashboard() {
           <div className="text-center mb-10 animate-fade-in">
             <img
               src={logotipo}
-              alt="Dream Line Logo"
+              alt={t('shared.appLogoAlt')}
               className="w-28 h-28 md:w-24 md:h-24 object-contain mx-auto mb-5"
             />
             <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Dream Line</h1>
             <p className="text-purple-300/70 text-sm mt-2.5 tracking-wide">
-              Padrões Ocultos da Mente
+              {t('dashboard.tagline')}
             </p>
             {userPlan === "free" && (
               <button
                 onClick={() => navigate("/pricing")}
                 className="mt-4 px-6 py-2.5 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:scale-[1.02] active:scale-[0.98]"
               >
-                Seja Premium
+                {t('shared.becomePremium')}
               </button>
             )}
           </div>
@@ -159,14 +161,14 @@ export default function Dashboard() {
               <div className="mb-4 mx-4 p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-center">
                 <p className="text-sm text-amber-300">
                   {daysLeft === 1
-                    ? "Sua assinatura expira amanhã. Renove para continuar usando Premium."
-                    : `Sua assinatura expira em ${daysLeft} dias. Renove para continuar usando Premium.`}
+                    ? t('dashboard.subscriptionExpiryTomorrow')
+                    : t('dashboard.subscriptionExpiryDays', { days: daysLeft })}
                 </p>
                 <button
                   onClick={() => navigate("/pricing")}
                   className="mt-2 text-xs font-semibold text-amber-300 underline hover:text-amber-200"
                 >
-                  Renovar agora
+                  {t('dashboard.renewNow')}
                 </button>
               </div>
             );
@@ -190,7 +192,7 @@ export default function Dashboard() {
 
           <div className="animate-fade-in" style={{ animationDelay: "150ms", animationFillMode: "both" }}>
             <p className="text-[10px] font-semibold text-slate-500/60 uppercase tracking-[0.2em] mb-4 text-center">
-              Explorar
+              {t('dashboard.explore')}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
               <button
@@ -198,98 +200,98 @@ export default function Dashboard() {
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={moonOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Sonhos</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.dreams')}</span>
               </button>
               <button
                 onClick={() => navigate("/emotions/new")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={happyOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Emoções</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.emotions')}</span>
               </button>
               <button
                 onClick={() => navigate("/emotions/timeline")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={bookOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Diário</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.diary')}</span>
               </button>
               <button
                 onClick={() => navigate("/timeline")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={timeOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Timeline</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.timeline')}</span>
               </button>
               <button
                 onClick={() => navigate("/emotions/insights")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={analyticsOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Insights</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.insights')}</span>
               </button>
               <button
                 onClick={() => navigate("/insights/correlations")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={gitNetworkOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Correlações</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.correlations')}</span>
               </button>
               <button
                 onClick={() => navigate("/life-insights")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={bulbOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Life</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.life')}</span>
               </button>
               <button
                 onClick={() => navigate("/dream-coach")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={starOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Dream Coach</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.dreamCoach')}</span>
               </button>
               <button
                 onClick={() => navigate("/astrology")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={planetOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Astrologia</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.astrology')}</span>
               </button>
               <button
                 onClick={() => navigate("/numerology/nome")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={calculatorOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Numerologia</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.numerology')}</span>
               </button>
               <button
                 onClick={() => navigate("/sleep")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={bedOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Sono</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.sleep')}</span>
               </button>
               <button
                 onClick={() => navigate("/notifications")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={notificationsOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Notificações</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.notifications')}</span>
               </button>
               <button
                 onClick={() => navigate("/support")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Suporte</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.support')}</span>
               </button>
               <button
                 onClick={() => navigate("/pricing")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={diamondOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">Planos</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.plans')}</span>
               </button>
             </div>
           </div>
@@ -328,7 +330,7 @@ export default function Dashboard() {
                 <IonIcon icon={lockClosedOutline} className="w-8 h-8 text-purple-400" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
-                Desbloqueie essa função
+                 {t('dashboard.unlockFeature')}
               </h3>
               <p className="text-slate-300">{upgradeMessage}</p>
             </div>
@@ -337,7 +339,7 @@ export default function Dashboard() {
                 onClick={() => setShowUpgradeModal(false)}
                 className="flex-1 py-4 px-6 bg-white/10 hover:bg-white/20 border border-white/10 text-white font-semibold rounded-xl transition-all text-lg"
               >
-                Agora não
+                 {t('shared.notNow')}
               </button>
               <button
                 onClick={() => {
@@ -346,7 +348,7 @@ export default function Dashboard() {
                 }}
                 className="flex-1 py-4 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl transition-all text-lg"
               >
-                Ver Planos
+                 {t('shared.viewPlans')}
               </button>
             </div>
           </div>
@@ -359,7 +361,7 @@ export default function Dashboard() {
           <div className="absolute left-0 top-0 bottom-0 w-72 bg-slate-950/95 backdrop-blur-xl border-r border-white/10 shadow-2xl flex flex-col">
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white">Dream Line</h2>
+                 <h2 className="text-xl font-bold text-white">{t('shared.appName')}</h2>
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all"
@@ -377,105 +379,105 @@ export default function Dashboard() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={clipboardOutline} className="w-5 h-5" />
-                <span className="font-medium">Dashboard</span>
+                 <span className="font-medium">{t('nav.dashboard')}</span>
               </button>
               <button
                 onClick={() => { navigate("/dreams/new"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={moonOutline} className="w-5 h-5" />
-                <span className="font-medium">Sonhos</span>
-              </button>
-              <button
-                onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={happyOutline} className="w-5 h-5" />
-                <span className="font-medium">Emoções</span>
-              </button>
-              <button
-                onClick={() => { navigate("/emotions/new"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={bookOutline} className="w-5 h-5" />
-                <span className="font-medium">Diário</span>
+                 <span className="font-medium">{t('nav.dreams')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={happyOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.emotions')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/emotions/new"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={bookOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.diary')}</span>
               </button>
               <button
                 onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={timeOutline} className="w-5 h-5" />
-                <span className="font-medium">Timeline</span>
-              </button>
-              <button
-                onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={analyticsOutline} className="w-5 h-5" />
-                <span className="font-medium">Insights</span>
-              </button>
-              <button
-                onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={gitNetworkOutline} className="w-5 h-5" />
-                <span className="font-medium">Correlações</span>
-              </button>
-              <button
-                onClick={() => { navigate("/life-insights"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={bulbOutline} className="w-5 h-5" />
-                <span className="font-medium">Life Insights</span>
+                 <span className="font-medium">{t('nav.timeline')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={analyticsOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.insights')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={gitNetworkOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.correlations')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/life-insights"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={bulbOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.lifeInsights')}</span>
               </button>
               <button
                 onClick={() => { navigate("/dream-coach"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={starOutline} className="w-5 h-5" />
-                <span className="font-medium">Dream Coach</span>
-              </button>
-              <button
-                onClick={() => { navigate("/astrology"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={planetOutline} className="w-5 h-5" />
-                <span className="font-medium">Mapa Astral</span>
-              </button>
-              <button
-                onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={calculatorOutline} className="w-5 h-5" />
-                <span className="font-medium">Numerologia</span>
+                 <span className="font-medium">{t('nav.dreamCoach')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/astrology"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={planetOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.astrology')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={calculatorOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.numerology')}</span>
               </button>
               <button
                 onClick={() => { navigate("/sleep"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={bedOutline} className="w-5 h-5" />
-                <span className="font-medium">Sono</span>
-              </button>
-              <button
-                onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={notificationsOutline} className="w-5 h-5" />
-                <span className="font-medium">Notificações</span>
-              </button>
-              <button
-                onClick={() => { navigate("/support"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
-                <span className="font-medium">Suporte</span>
-              </button>
-              <button
-                onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={diamondOutline} className="w-5 h-5" />
-                <span className="font-medium">Planos</span>
+                 <span className="font-medium">{t('nav.sleep')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={notificationsOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.notifications')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/support"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.support')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={diamondOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('nav.plans')}</span>
               </button>
             </nav>
 
@@ -486,7 +488,7 @@ export default function Dashboard() {
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
                 >
                   <IonIcon icon={downloadOutline} className="w-5 h-5" />
-                  <span className="font-medium">Instalar App</span>
+                   <span className="font-medium">{t('dashboard.installApp')}</span>
                 </button>
               )}
               <button
@@ -494,7 +496,7 @@ export default function Dashboard() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-left"
               >
                 <IonIcon icon={logOutOutline} className="w-5 h-5" />
-                <span className="font-medium">Sair</span>
+                 <span className="font-medium">{t('dashboard.logout')}</span>
               </button>
             </div>
           </div>

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { subscribe, isPWAInstalled, isInstallAvailable } from "../services/pwaInstall";
 import { isFirebaseReady } from "../services/firebaseClient";
 import IonIcon from "../components/ui/IonIcon";
 import { checkmarkCircleOutline, downloadOutline } from "ionicons/icons";
 
 export default function PWAIndicator() {
+  const { t } = useTranslation();
   const [installed, setInstalled] = useState(false);
   const [installable, setInstallable] = useState(false);
   const [firebaseReady, setFirebaseReady] = useState(false);
@@ -20,7 +22,7 @@ export default function PWAIndicator() {
 
   if (installed) {
     return (
-      <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400" title="Aplicativo instalado">
+      <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400" title={t('pwa.indicator.installed')}>
         <IonIcon icon={checkmarkCircleOutline} className="w-5 h-5" />
       </span>
     );
@@ -28,7 +30,7 @@ export default function PWAIndicator() {
 
   if (installable) {
     return (
-      <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-purple-500/15 border border-purple-500/30 text-purple-400" title="Disponível para instalação">
+      <span className="flex items-center justify-center w-10 h-10 rounded-2xl bg-purple-500/15 border border-purple-500/30 text-purple-400" title={t('pwa.indicator.installable')}>
         <IonIcon icon={downloadOutline} className="w-5 h-5" />
       </span>
     );

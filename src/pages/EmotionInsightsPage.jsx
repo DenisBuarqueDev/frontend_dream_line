@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   PieChart, Pie, Cell, Tooltip,
@@ -64,6 +65,7 @@ function safeArr(arr) {
 }
 
 function PremiumBlock() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   return (
     <AppContainer>
@@ -90,6 +92,7 @@ function PremiumBlock() {
 }
 
 export default function EmotionInsightsPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, isLoading, refreshUser } = useAuth();
   const [raw, setRaw] = useState(null);

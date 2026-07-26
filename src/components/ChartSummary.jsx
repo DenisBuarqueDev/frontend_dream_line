@@ -1,63 +1,65 @@
 import { getElementColor, SIGN_INTERPRETATIONS } from '../services/interpretations';
 import IonIcon from "../components/ui/IonIcon";
 import { sunnyOutline, moonOutline, arrowUpOutline } from "ionicons/icons";
+import { useTranslation } from 'react-i18next';
 
 export default function ChartSummary({ chartData }) {
+  const { t } = useTranslation();
   if (!chartData) return null;
   
   const getInterpretation = (sign, type) => {
     const descriptions = {
       sun: {
-        Áries: 'Você nasceu para brilhar e liderar',
-        Touro: 'Você valoriza estabilidade e prazer',
-        Gêmeos: 'Você é curioso e comunicativo',
-        Câncer: 'Você busca segurança emocional',
-        Leão: 'Você nasceu para brilhar',
-        Virgem: 'Você busca perfeição em tudo',
-        Libra: 'Você busca harmonia e equilíbrio',
-        Escpião: 'Você tem poder de transformação',
-        Sagitário: 'Você busca liberdade e expansão',
-        Capricórnio: 'Você é ambicioso e determinado',
-        Aquário: 'Você é único e original',
-        Peixes: 'Você é intuitivo e sonhador'
+        Áries: t('astrology.sun.aries'),
+        Touro: t('astrology.sun.taurus'),
+        Gêmeos: t('astrology.sun.gemini'),
+        Câncer: t('astrology.sun.cancer'),
+        Leão: t('astrology.sun.leo'),
+        Virgem: t('astrology.sun.virgo'),
+        Libra: t('astrology.sun.libra'),
+        Escpião: t('astrology.sun.scorpio'),
+        Sagitário: t('astrology.sun.sagittarius'),
+        Capricórnio: t('astrology.sun.capricorn'),
+        Aquário: t('astrology.sun.aquarius'),
+        Peixes: t('astrology.sun.pisces')
       },
       moon: {
-        Áries: 'Você sente tudo com intensidade',
-        Touro: 'Você precisa de conforto e segurança',
-        Gêmeos: 'Você processa emoções pela mente',
-        Câncer: 'Você sente com profundidade empatia',
-        Leão: 'Você precisa de amor e reconhecimento',
-        Virgem: 'Você analisa seus próprios sentimentos',
-        Libra: 'Você busca harmonia emocional',
-        Escpião: 'Você sente com intensidade transformadora',
-        Sagitário: 'Você precisa de liberdade emocional',
-        Capricórnio: 'Você é reservado, mas leal',
-        Aquário: 'Você intelectualiza seus sentimentos',
-        Peixes: 'Você absorve as emoções dos outros'
+        Áries: t('astrology.moon.aries'),
+        Touro: t('astrology.moon.taurus'),
+        Gêmeos: t('astrology.moon.gemini'),
+        Câncer: t('astrology.moon.cancer'),
+        Leão: t('astrology.moon.leo'),
+        Virgem: t('astrology.moon.virgo'),
+        Libra: t('astrology.moon.libra'),
+        Escpião: t('astrology.moon.scorpio'),
+        Sagitário: t('astrology.moon.sagittarius'),
+        Capricórnio: t('astrology.moon.capricorn'),
+        Aquário: t('astrology.moon.aquarius'),
+        Peixes: t('astrology.moon.pisces')
       },
       ascendant: {
-        Áries: 'livre e pioneiro',
-        Touro: 'seguro e confiável',
-        Gêmeos: 'curioso e adaptável',
-        Câncer: 'cuidadoso e protetor',
-        Leão: 'carismático e brilhante',
-        Virgem: 'analítico e prestativo',
-        Libra: 'diplomático e harmonioso',
-        Escpião: 'misterioso e intenso',
-        Sagitário: 'otimista e aventureiro',
-        Capricórnio: 'ambicioso e responsável',
-        Aquário: 'independente e inovador',
-        Peixes: 'sonhador e compassivo'
+        Áries: t('astrology.ascendant.aries'),
+        Touro: t('astrology.ascendant.taurus'),
+        Gêmeos: t('astrology.ascendant.gemini'),
+        Câncer: t('astrology.ascendant.cancer'),
+        Leão: t('astrology.ascendant.leo'),
+        Virgem: t('astrology.ascendant.virgo'),
+        Libra: t('astrology.ascendant.libra'),
+        Escpião: t('astrology.ascendant.scorpio'),
+        Sagitário: t('astrology.ascendant.sagittarius'),
+        Capricórnio: t('astrology.ascendant.capricorn'),
+        Aquário: t('astrology.ascendant.aquarius'),
+        Peixes: t('astrology.ascendant.pisces')
       }
     };
     
-    return descriptions[type]?.[sign] || `você é ${sign.toLowerCase()}`;
+    return descriptions[type]?.[sign] || t('astrology.youAre', { sign: sign.toLowerCase() });
   };
   
   const items = [
     {
       icon: <IonIcon icon={sunnyOutline} className="w-4 h-4" />,
-      label: 'Essência',
+      label: t('astrology.essence'),
       title: chartData.sunSign,
       subtitle: getInterpretation(chartData.sunSign, 'sun'),
       gradient: 'from-amber-500/20 to-orange-500/10',
@@ -65,7 +67,7 @@ export default function ChartSummary({ chartData }) {
     },
     {
       icon: <IonIcon icon={moonOutline} className="w-4 h-4" />,
-      label: 'Emoções',
+      label: t('astrology.emotions'),
       title: chartData.moonSign,
       subtitle: getInterpretation(chartData.moonSign, 'moon'),
       gradient: 'from-violet-500/20 to-purple-500/10',
@@ -73,7 +75,7 @@ export default function ChartSummary({ chartData }) {
     },
     {
       icon: <IonIcon icon={arrowUpOutline} className="w-4 h-4" />,
-      label: 'Máscara',
+      label: t('astrology.mask'),
       title: chartData.ascendant,
       subtitle: getInterpretation(chartData.ascendant, 'ascendant'),
       gradient: 'from-pink-500/20 to-rose-500/10',

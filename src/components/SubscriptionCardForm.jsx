@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { createSubscription } from "../services/api";
 
 const MP_PUBLIC_KEY = import.meta.env.VITE_MP_PUBLIC_KEY || "APP_USR-226797f9-370a-4b3f-96f2-c0d58dfd0c21";
 
 export default function SubscriptionCardForm({ userEmail, onSuccess, onError, onCancel }) {
+  const { t } = useTranslation();
   const formRef = useRef(null);
   const mpInstance = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -11,7 +13,7 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
 
   useEffect(() => {
     if (!window.MercadoPago) {
-      setErrorMessage("SDK do Mercado Pago não carregado. Verifique sua conexão.");
+      setErrorMessage(t('subscription.sdkNotLoaded'));
       return;
     }
 
@@ -26,11 +28,11 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
         id: "subscription-card-form",
         cardholderName: {
           id: "mp-cardholderName",
-          placeholder: "Nome do titular",
+          placeholder: t('subscription.cardholderNameLabel'),
         },
         cardNumber: {
           id: "mp-cardNumber",
-          placeholder: "Número do cartão",
+          placeholder: t('subscription.cardNumberLabel'),
         },
         expirationDate: {
           id: "mp-expirationDate",
@@ -38,13 +40,13 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
         },
         securityCode: {
           id: "mp-securityCode",
-          placeholder: "CVV",
+          placeholder: t('subscription.cvv'),
         },
       },
       callbacks: {
         onFormMounted(error) {
           if (error) {
-            setErrorMessage("Erro ao carregar formulário de cartão.");
+            setErrorMessage(t('subscription.formLoadError'));
           }
         },
         onSubmit(event) {
@@ -64,7 +66,7 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
               onSuccess?.(response);
             }
           } catch (err) {
-            setErrorMessage(err.message || "Erro ao processar assinatura.");
+            setErrorMessage(err.message || t('subscription.processError'));
             onError?.(err);
           } finally {
             setLoading(false);
@@ -100,7 +102,7 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
       >
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1.5">
-            Nome do titular
+            {t('subscription.cardholderNameLabel')}
           </label>
           <div
             id="mp-cardholderName"
@@ -110,7 +112,7 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
 
         <div>
           <label className="block text-sm font-medium text-slate-300 mb-1.5">
-            Número do cartão
+            {t('subscription.cardNumberLabel')}
           </label>
           <div
             id="mp-cardNumber"
@@ -121,7 +123,7 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1.5">
-              Validade
+              {t('subscription.expiry')}
             </label>
             <div
               id="mp-expirationDate"
@@ -130,7 +132,7 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1.5">
-              CVV
+              {t('subscription.cvv')}
             </label>
             <div
               id="mp-securityCode"
@@ -140,8 +142,8 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
         </div>
 
         <div className="text-xs text-slate-500 mt-2">
-          Pagamento processado com segurança pelo Mercado Pago.
-          Seus dados de cartão não são armazenados em nossos servidores.
+          {t('subscription.securityNotice')}{' '}
+          {t('subscription.securityDetail')}
         </div>
 
         {errorMessage && (
@@ -157,14 +159,14 @@ export default function SubscriptionCardForm({ userEmail, onSuccess, onError, on
             disabled={loading}
             className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white font-semibold rounded-xl transition-all duration-200"
           >
-            Cancelar
+            {t('shared.cancel')}
           </button>
           <button
             type="submit"
             disabled={loading}
             className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-50 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg"
           >
-            {loading ? "Processando..." : "Assinar Premium"}
+            {loading ? t('subscription.processing') : t('subscription.subscribe')}
           </button>
         </div>
       </form>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import PricingCard from "../components/PricingCard";
 import logotipo from "../assets/logotipo-white.png";
@@ -6,49 +7,51 @@ import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
 import { createCheckout } from "../services/api";
 
-const PLANS = [
+const getPlans = (t) => [
   {
     id: "free",
     name: "Free",
-    description: "Para começar sua jornada",
-    price: "R$ 0,00",
-    buttonText: "Plano Atual",
+    description: t('pricing.freeDescription'),
+    price: t('pricing.freePrice'),
+    buttonText: t('pricing.currentPlan'),
     benefits: [
-      { text: "Registro de até 5 sonhos" },
-      { text: "3 interpretações com IA por dia" },
-      { text: "3 análises emocionais por dia" },
-      { text: "Linha do tempo dos sonhos" },
-      { text: "Músicas para relaxamento" },
-      { text: "Categorização automática dos sonhos" },
-      { text: "Gráficos de emoções" },
+      { text: t('pricing.free.benefit1') },
+      { text: t('pricing.free.benefit2') },
+      { text: t('pricing.free.benefit3') },
+      { text: t('pricing.free.benefit4') },
+      { text: t('pricing.free.benefit5') },
+      { text: t('pricing.free.benefit6') },
+      { text: t('pricing.free.benefit7') },
     ],
   },
   {
     id: "premium",
     name: "Premium",
-    description: "Tudo que você precisa",
-    price: "R$ 24,90",
-    buttonText: "Assinar Premium",
+    description: t('pricing.premiumDescription'),
+    price: t('pricing.premiumPrice'),
+    buttonText: t('pricing.subscribePremium'),
     benefits: [
-      { text: "Sonhos ilimitados" },
-      { text: "Interpretações ilimitadas com IA" },
-      { text: "Análises emocionais ilimitadas" },
-      { text: "Imagem do sonho gerada por IA" },
-      { text: "Mapa Astral da Família" },
-      { text: "Numerologia do Sonho" },
-      { text: "Correlações sonho-emoção" },
-      { text: "Notificações push" },
-      { text: "Relatórios semanais" },
-      { text: "Resumo semanal de padrões" },
-      { text: "Excluir sonhos e emoções" },
-      { text: "Músicas para relaxar" },
-      { text: "Suporte prioritário" },
-      { text: "Atualizações futuras inclusas" },
+      { text: t('pricing.premium.benefit1') },
+      { text: t('pricing.premium.benefit2') },
+      { text: t('pricing.premium.benefit3') },
+      { text: t('pricing.premium.benefit4') },
+      { text: t('pricing.premium.benefit5') },
+      { text: t('pricing.premium.benefit6') },
+      { text: t('pricing.premium.benefit7') },
+      { text: t('pricing.premium.benefit8') },
+      { text: t('pricing.premium.benefit9') },
+      { text: t('pricing.premium.benefit10') },
+      { text: t('pricing.premium.benefit11') },
+      { text: t('pricing.premium.benefit12') },
+      { text: t('pricing.premium.benefit13') },
+      { text: t('pricing.premium.benefit14') },
     ],
   },
 ];
 
 function Pricing() {
+  const { t } = useTranslation();
+  const PLANS = getPlans(t);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -67,18 +70,18 @@ function Pricing() {
       if (response?.data?.initPoint) {
         window.location.href = response.data.initPoint;
       } else {
-        setError("Erro ao criar checkout. Tente novamente.");
+        setError(t('pricing.checkoutError'));
         setLoading(false);
       }
     } catch (err) {
-      setError(err.message || "Erro ao processar assinatura.");
+      setError(err.message || t('pricing.subscriptionError'));
       setLoading(false);
     }
   };
 
   return (
     <AppContainer className="md:items-center md:justify-center">
-      <AppHeader title="Planos" onBack={() => navigate("/dashboard")} />
+      <AppHeader title={t('nav.plans')} onBack={() => navigate("/dashboard")} />
       <div className="w-full max-w-4xl flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
         <div className="text-center mb-10 mt-4 md:mt-0">
           <img
@@ -87,10 +90,10 @@ function Pricing() {
             className="w-20 h-20 object-contain mx-auto"
           />
           <h1 className="text-3xl sm:text-4xl font-bold text-white mt-2">
-            Escolha seu plano
+            {t('pricing.choosePlan')}
           </h1>
           <p className="text-sm text-slate-400 mt-2 max-w-md mx-auto">
-            Desbloqueie todo o potencial dos seus sonhos com o plano Premium
+            {t('pricing.premiumSubtitle')}
           </p>
         </div>
 
@@ -113,22 +116,22 @@ function Pricing() {
 
         <div className="text-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-lg mx-auto mt-8">
           <h2 className="text-xl font-bold text-white mb-2">
-            Transforme seus sonhos em clareza
+            {t('pricing.transformTitle')}
           </h2>
           <p className="text-sm text-slate-400">
-            Mais de 1.000 usuários já estão entendendo seus sonhos e melhorando seu sono com o Dream Line.
+            {t('pricing.socialProof')}
           </p>
         </div>
 
         <p className="text-center text-xs text-slate-600 mt-8 pb-4">
-          Pagamento processado com segurança pelo Mercado Pago
+          {t('pricing.paymentSecurity')}
         </p>
       </div>
 
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl text-center">
-            <p className="text-white text-lg">Redirecionando para o Mercado Pago...</p>
+            <p className="text-white text-lg">{t('pricing.redirecting')}</p>
           </div>
         </div>
       )}

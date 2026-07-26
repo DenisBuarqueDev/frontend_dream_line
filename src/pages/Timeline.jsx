@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import DreamInsights from "../components/DreamInsights";
 import { getDreams, deleteDream, generateDreamImageWithAI, getCurrentPlan } from "../services/api";
 import { useAuth } from "../context/AuthContext";
@@ -37,6 +38,7 @@ function TimelineItem({
   showUpgradePlanModal,
   userPlan,
 }) {
+  const { t } = useTranslation();
   const dreamImageUrl = dream.imageUrl || dream.dreamNumerology?.imageUrl;
   const [expanded, setExpanded] = useState(false);
   const [showNumerology, setShowNumerology] = useState(false);
@@ -47,20 +49,7 @@ function TimelineItem({
     if (!dateString) return "";
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return "";
-    const months = [
-      "Jan",
-      "Fev",
-      "Mar",
-      "Abr",
-      "Mai",
-      "Jun",
-      "Jul",
-      "Ago",
-      "Set",
-      "Out",
-      "Nov",
-      "Dez",
-    ];
+    const months = t('timeline.monthsShort', { returnObjects: true });
     const day = date.getDate();
     const month = months[date.getMonth()];
     const year = date.getFullYear();
@@ -150,7 +139,7 @@ function TimelineItem({
       };
 
       utterance.onerror = () => {
-        console.error("Erro ao reproduzir áudio");
+        console.error(t('shared.errorAudioPlayback'));
         setIsSpeakingText(false);
       };
 
@@ -181,7 +170,7 @@ function TimelineItem({
             <div className="mb-3 relative group">
               <img
                 src={dreamImageUrl}
-                alt="Imagem do sonho"
+                alt={t('timeline.dreamImageAlt')}
                 className="w-full aspect-video object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => onImageClick(dreamImageUrl)}
                 loading="lazy"
@@ -191,11 +180,11 @@ function TimelineItem({
                   onClick={() => {
                     const link = document.createElement('a');
                     link.href = dreamImageUrl;
-                    link.download = `sonho-${dream._id || dream.id}.webp`;
+                    link.download = `${t('timeline.dreamFilePrefix')}-${dream._id || dream.id}.webp`;
                     link.click();
                   }}
                   className="w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
-                  title="Baixar imagem"
+                  title={t('timeline.downloadImage')}
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
@@ -204,7 +193,7 @@ function TimelineItem({
                 <button
                 onClick={() => onImageClick(dreamImageUrl)}
                   className="w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors"
-                  title="Ampliar imagem"
+                   title={t('timeline.zoomImage')}
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
@@ -215,7 +204,7 @@ function TimelineItem({
                 onClick={() => onGenerateImage(dream)}
                 disabled={generatingIds?.[dream._id || dream.id]}
                 className="absolute bottom-2 right-2 flex items-center gap-1 px-2.5 py-1 bg-black/50 hover:bg-black/70 text-white text-xs rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Regenerar imagem"
+                 title={t('timeline.regenerateImage')}
               >
                 {generatingIds?.[dream._id || dream.id] ? (
                   <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -227,7 +216,7 @@ function TimelineItem({
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                 )}
-                {generatingIds?.[dream._id || dream.id] ? "Regenerando..." : "Regenerar"}
+                 {generatingIds?.[dream._id || dream.id] ? t('timeline.regenerating') : t('timeline.regenerate')}
               </button>
             </div>
           )}
@@ -237,7 +226,7 @@ function TimelineItem({
               <button
                 onClick={() =>
                   showUpgradePlanModal(
-                    "Disponível apenas para plano Premium. Faça upgrade para gerar imagens dos seus sonhos.",
+                    t('timeline.premiumOnlyImages'),
                   )
                 }
                 className="flex items-center gap-1 px-3 py-1.5 bg-transparent border border-white/20 text-slate-500 text-xs font-medium rounded-full cursor-not-allowed"
@@ -249,7 +238,7 @@ function TimelineItem({
                 >
                   <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
                 </svg>
-                Gerar Imagem
+                {t('timeline.generateImage')}
               </button>
             </div>
           )}
@@ -271,7 +260,7 @@ function TimelineItem({
                     <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
                   </svg>
                 )}
-                {generatingIds?.[dream._id || dream.id] ? "Gerando..." : "Gerar Imagem"}
+                 {generatingIds?.[dream._id || dream.id] ? t('timeline.generating') : t('timeline.generateImage')}
               </button>
             </div>
           )}
@@ -280,7 +269,7 @@ function TimelineItem({
               <button
                 onClick={() =>
                   showUpgradePlanModal(
-                    "Disponível apenas para plano Premium. Faça upgrade para gerar imagens dos seus sonhos.",
+                    t('timeline.premiumOnlyImages'),
                   )
                 }
                 className="flex items-center gap-1 px-3 py-1.5 bg-transparent border border-white/20 text-slate-500 text-xs font-medium rounded-full cursor-not-allowed"
@@ -292,7 +281,7 @@ function TimelineItem({
                 >
                   <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
                 </svg>
-                Gerar Imagem
+                {t('timeline.generateImage')}
               </button>
             </div>
           )}
@@ -392,7 +381,7 @@ function TimelineItem({
             onClick={() => setExpanded(!expanded)}
             className="text-purple-400 text-sm font-medium hover:text-purple-300 mt-2 transition-colors"
           >
-            {expanded ? "Ver menos" : "Ver mais"}
+             {expanded ? t('shared.showLess') : t('shared.showMore')}
           </button>
 
           {dream.dreamNumerology && showNumerology && (
@@ -410,7 +399,7 @@ function TimelineItem({
               <button
                 onClick={speakInterpretation}
                 className="w-9 h-9 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 flex items-center justify-center transition-all"
-                title="Ouvir interpretação"
+                 title={t('timeline.listenInterpretation')}
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
@@ -421,7 +410,7 @@ function TimelineItem({
                   onClick={() =>
                     userPlan === "free"
                       ? showUpgradePlanModal(
-                          "Disponível apenas para planos Premium. Faça upgrade para desbloquear.",
+                          t('timeline.premiumOnlyUnlock'),
                         )
                       : setShowNumerology(!showNumerology)
                   }
@@ -432,15 +421,15 @@ function TimelineItem({
                         ? "bg-purple-500/40 text-purple-200 border border-purple-500/50"
                         : "bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-transparent"
                   }`}
-                  title={
+                   title={
                     userPlan === "free"
-                      ? "Disponível apenas para planos pagos"
+                      ? t('timeline.premiumOnlyPaid')
                       : showNumerology
-                        ? "Fechar numerologia"
-                        : "Ver numerologia do sonho"
+                        ? t('timeline.closeNumerology')
+                        : t('timeline.viewDreamNumerology')
                   }
                 >
-                  Numerologia
+                  {t('nav.numerology')}
                 </button>
               )}
             </div>
@@ -448,7 +437,7 @@ function TimelineItem({
               onClick={() => {
                 if (userPlan === "free") {
                   showUpgradePlanModal(
-                    "Disponível apenas para planos Premium. Faça upgrade para excluir seus sonhos.",
+                    t('timeline.premiumOnlyDelete'),
                   );
                 } else {
                   onDeleteClick(dream);
@@ -488,6 +477,7 @@ function TimelineItem({
 }
 
 export default function Timeline() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [dreams, setDreams] = useState([]);
@@ -532,7 +522,7 @@ export default function Timeline() {
         }
         setDreams(dreamList);
       } catch (error) {
-        console.error("Erro ao carregar sonhos:", error);
+        console.error(t('timeline.errorLoadingDreams'));
         setDreams([]);
       } finally {
         setIsLoading(false);
@@ -586,44 +576,47 @@ export default function Timeline() {
     const avgSleepFormatted =
       avgSleepHours > 0 ? avgSleepHours.toFixed(1) : null;
 
-    let summary = `Você registrou ${totalDreams} sonho${totalDreams > 1 ? "s" : ""} esta semana.`;
+    let summary = t('timeline.weeklySummaryIntro', { count: totalDreams });
 
     if (topTematico) {
       const temasMap = {
-        voar: "liberdade e expansão",
-        queda: "insegurança ou vulnerabilidade",
-        agua: "emoções e fluidez",
-        casa: "identidade e conforto",
-        cidade: "vida social e ambiente",
-        familia: "laços afetivos",
-        liberdade: "autonomia",
-        transicao: "mudanças e crescimento",
-        oceano: "profundidade emocional",
-        emocoes: "processamento emocional",
+        voar: t('timeline.themes.voar'),
+        queda: t('timeline.themes.queda'),
+        agua: t('timeline.themes.agua'),
+        casa: t('timeline.themes.casa'),
+        cidade: t('timeline.themes.cidade'),
+        familia: t('timeline.themes.familia'),
+        liberdade: t('timeline.themes.liberdade'),
+        transicao: t('timeline.themes.transicao'),
+        oceano: t('timeline.themes.oceano'),
+        emocoes: t('timeline.themes.emocoes'),
       };
-      summary += ` O tema predominante foi "${topTematico}"${temasMap[topTematico.toLowerCase()] ? `, relacionado a ${temasMap[topTematico.toLowerCase()]}` : ""}.`;
+      const temaRelation = temasMap[topTematico.toLowerCase()];
+      summary += temaRelation
+        ? ` ${t('timeline.weeklySummaryThemeWithRelation', { theme: topTematico, relation: temaRelation })}`
+        : ` ${t('timeline.weeklySummaryTheme', { theme: topTematico })}`;
     }
 
     if (topEspiritual) {
-      summary += ` No âmbito espiritual, "${topEspiritual}" parece ter influência.`;
+      summary += ` ${t('timeline.weeklySummarySpiritual', { theme: topEspiritual })}`;
     }
 
     if (topBiologico) {
       const bioMap = {
-        stress: "estresse acumulado",
-        ansiedade: "ansiedade",
-        sono: "qualidade do sono",
-        cansaco: "fadiga física",
-        fome: "necessidades básicas",
-        descanso: "necessidade de descanso",
-        alergia: "ipersensibilidade",
-        febre: "desconforto físico",
+        stress: t('timeline.bioStates.stress'),
+        ansiedade: t('timeline.bioStates.ansiedade'),
+        sono: t('timeline.bioStates.sono'),
+        cansaco: t('timeline.bioStates.cansaco'),
+        fome: t('timeline.bioStates.fome'),
+        descanso: t('timeline.bioStates.descanso'),
+        alergia: t('timeline.bioStates.alergia'),
+        febre: t('timeline.bioStates.febre'),
       };
-      summary += ` Seu estado biológico aponta para ${bioMap[topBiologico.toLowerCase()] || topBiologico}.`;
+      summary += ` ${t('timeline.weeklySummaryBiological', { condition: bioMap[topBiologico.toLowerCase()] || topBiologico })}`;
     }
 
     if (avgSleepFormatted) {
-      summary += ` Média de sono: ${avgSleepFormatted}h por noite.`;
+      summary += ` ${t('timeline.weeklySummarySleep', { hours: avgSleepFormatted })}`;
     }
 
     return summary;
@@ -636,7 +629,7 @@ export default function Timeline() {
       await deleteDream(id);
       setDreams(dreams.filter((d) => (d._id || d.id) !== id));
     } catch (error) {
-      console.error("Erro ao deletar:", error);
+        console.error(t('shared.errorDeleting'));
     }
   };
 
@@ -683,7 +676,7 @@ export default function Timeline() {
         );
       }
     } catch (error) {
-      console.error("Erro ao gerar imagem:", error);
+      console.error(t('shared.errorGeneratingImage'));
     } finally {
       setGeneratingIds((prev) => ({ ...prev, [dreamId]: false }));
     }
@@ -705,7 +698,7 @@ export default function Timeline() {
     return filteredDreams.slice(start, start + itemsPerPage);
   }, [filteredDreams, currentPage]);
 
-  const monthNames = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const monthNames = t('timeline.months', { returnObjects: true });
 
   const calendarMonth = calendarDate.getMonth();
   const calendarYear = calendarDate.getFullYear();
@@ -748,7 +741,7 @@ export default function Timeline() {
   return (
     <AppContainer className="md:items-start md:justify-center md:p-3">
       <AppHeader
-        title="Timeline"
+        title={t('nav.timeline')}
         onBack={() => navigate("/dashboard")}
         onRightClick={logout}
         leftExtra={
@@ -757,7 +750,7 @@ export default function Timeline() {
               onClick={() =>
                 userPlan === "free"
                   ? showUpgradePlanModal(
-                      "Disponível apenas para planos Premium. Faça upgrade para desbloquear.",
+                      t('timeline.premiumOnlyUnlock'),
                     )
                   : navigate("/astrology")
               }
@@ -768,8 +761,8 @@ export default function Timeline() {
               }`}
               title={
                 userPlan === "free"
-                  ? "Disponível apenas para planos pagos"
-                  : "Mapa Astral"
+                  ? t('timeline.premiumOnlyPaid')
+                  : t('astrology.chartTitle')
               }
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -779,7 +772,7 @@ export default function Timeline() {
             <button
               onClick={() => navigate("/sleep")}
               className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/10 flex items-center justify-center transition-all "
-              title="Soneca"
+              title={t('timeline.nap')}
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
@@ -812,8 +805,8 @@ export default function Timeline() {
             <h1 className="text-3xl font-bold text-white">
               Dream Line
             </h1>
-            <p className="text-purple-200 text-sm mt-2">
-              Histórico dos seus sonhos
+             <p className="text-purple-200 text-sm mt-2">
+              {t('timeline.dreamHistory')}
             </p>
             {userPlan !== "premium" && (
               <button
@@ -827,7 +820,7 @@ export default function Timeline() {
                 >
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
                 </svg>
-                Seja Premium
+                {t('shared.becomePremium')}
               </button>
             )}
           </div>
@@ -855,10 +848,10 @@ export default function Timeline() {
                   </svg>
                 </div>
                 <p className="text-white font-medium mb-2">
-                  Nenhum sonho registrado ainda
+                 {t('timeline.noDreamsYet')}
                 </p>
                 <p className="text-slate-400 text-sm">
-                  Grave e interprete seu primeiro sonho na tela principal
+                 {t('timeline.recordFirstDream')}
                 </p>
               </div>
             ) : (
@@ -935,7 +928,7 @@ export default function Timeline() {
           {dreams.length > 0 && weeklySummary && canSeeWeeklySummary && (
             <div className="mb-8 p-5 rounded-xl bg-purple-500/10 border border-purple-500/20">
               <h3 className="text-base font-semibold text-white mb-2">
-                Resumo da Semana
+                {t('timeline.weeklySummary')}
               </h3>
               <p className="text-sm text-purple-100 leading-relaxed">
                 {weeklySummary}
@@ -945,17 +938,16 @@ export default function Timeline() {
           {dreams.length > 0 && weeklySummary && !canSeeWeeklySummary && (
             <div className="mb-8 p-5 rounded-xl bg-white/5 border border-white/10">
               <h3 className="text-base font-semibold text-white mb-2">
-                Resumo da Semana
+                {t('timeline.weeklySummary')}
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Disponível apenas para planos Premium. Faça upgrade para
-                desbloquear.
+                {t('timeline.premiumOnlyUnlock')}
               </p>
               <button
                 onClick={() => navigate("/pricing")}
                 className="mt-3 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-medium rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                Ver Planos
+                {t('shared.viewPlans')}
               </button>
             </div>
           )}
@@ -984,7 +976,7 @@ export default function Timeline() {
             </div>
 
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map((d) => (
+              {t('timeline.weekdaysShort', { returnObjects: true }).map((d) => (
                 <div key={d} className="text-center text-xs text-slate-400 py-1">{d}</div>
               ))}
             </div>
@@ -1016,13 +1008,13 @@ export default function Timeline() {
             {calendarFilter && (
               <div className="mt-3 flex items-center justify-between">
                 <span className="text-xs text-purple-300">
-                  Exibindo sonhos de {calendarFilter.day}/{calendarFilter.month + 1}/{calendarFilter.year}
+                  {t('timeline.showingDreamsFrom')} {calendarFilter.day}/{calendarFilter.month + 1}/{calendarFilter.year}
                 </span>
                 <button
                   onClick={clearCalendarFilter}
                   className="px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/10 text-white rounded-lg text-xs font-medium transition-all"
                 >
-                  Limpar filtro
+                  {t('timeline.clearFilter')}
                 </button>
               </div>
             )}
@@ -1037,25 +1029,24 @@ export default function Timeline() {
       {showConfirm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
           <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-8 max-w-md w-full mx-4 shadow-xl">
-            <h3 className="text-2xl font-bold text-white mb-4 text-center">
-              Confirmar exclusão
+             <h3 className="text-2xl font-bold text-white mb-4 text-center">
+              {t('timeline.confirmDeletion')}
             </h3>
             <p className="text-slate-300 text-lg mb-8 text-center">
-              Você tem certeza que deseja excluir este sonho? Esta ação não pode
-              ser desfeita.
+              {t('timeline.deleteConfirmation')}
             </p>
             <div className="flex gap-4">
               <button
                 onClick={() => setShowConfirm(false)}
                 className="flex-1 py-4 px-6 bg-white/10 hover:bg-white/20 border border-white/10 text-white font-semibold rounded-xl transition-all text-lg"
               >
-                Cancelar
+                {t('shared.cancel')}
               </button>
               <button
                 onClick={handleConfirmDelete}
                 className="flex-1 py-4 px-6 bg-red-500/80 hover:bg-red-500 text-white font-semibold rounded-xl transition-all text-lg"
               >
-                Excluir
+                {t('shared.delete')}
               </button>
             </div>
           </div>
@@ -1087,7 +1078,7 @@ export default function Timeline() {
           </button>
           <img
             src={currentImage}
-            alt="Imagem do sonho"
+            alt={t('timeline.dreamImageAlt')}
             className="max-w-full max-h-full object-contain"
             onClick={(e) => e.stopPropagation()}
           />
@@ -1114,7 +1105,7 @@ export default function Timeline() {
                 </svg>
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">
-                Desbloqueie essa função
+                {t('dashboard.unlockFeature')}
               </h3>
               <p className="text-slate-300">{upgradeMessage}</p>
             </div>
@@ -1123,7 +1114,7 @@ export default function Timeline() {
                 onClick={() => setShowUpgradeModal(false)}
                 className="flex-1 py-4 px-6 bg-white/10 hover:bg-white/20 border border-white/10 text-white font-semibold rounded-xl transition-all text-lg"
               >
-                Agora não
+                 {t('shared.notNow')}
               </button>
               <button
                 onClick={() => {
@@ -1132,7 +1123,7 @@ export default function Timeline() {
                 }}
                 className="flex-1 py-4 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl transition-all text-lg"
               >
-                Ver Planos
+                 {t('shared.viewPlans')}
               </button>
             </div>
           </div>

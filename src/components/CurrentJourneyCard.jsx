@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import IonIcon from "../components/ui/IonIcon";
 import { compassOutline } from "ionicons/icons";
 
 export default function CurrentJourneyCard({ journey }) {
+  const { t: translate } = useTranslation();
   const [animClass, setAnimClass] = useState("opacity-0 translate-y-4");
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function CurrentJourneyCard({ journey }) {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[10px] uppercase tracking-wider text-purple-200/60">
-            Sua jornada atual
+            {translate("journey.current")}
           </p>
           <p className="text-base font-bold text-white truncate">
             {journey.title}
@@ -36,7 +38,7 @@ export default function CurrentJourneyCard({ journey }) {
         <div className="flex-1 text-center">
           <p className="text-sm font-bold text-white">{journey.progress}%</p>
           <p className="text-[10px] uppercase tracking-wider text-purple-200/60 mt-0.5">
-            Progresso
+            {translate("journey.progress")}
           </p>
         </div>
         <div className="w-px h-6 bg-white/10" />
@@ -45,7 +47,7 @@ export default function CurrentJourneyCard({ journey }) {
             {journey.stage || "-"}
           </p>
           <p className="text-[10px] uppercase tracking-wider text-purple-200/60 mt-0.5">
-            Estágio
+            {translate("journey.stage")}
           </p>
         </div>
         <div className="w-px h-6 bg-white/10" />
@@ -54,7 +56,7 @@ export default function CurrentJourneyCard({ journey }) {
             {"⭐".repeat(stars)}
           </p>
           <p className="text-[10px] uppercase tracking-wider text-purple-200/60 mt-0.5">
-            Importância
+            {translate("journey.importance")}
           </p>
         </div>
       </div>

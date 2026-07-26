@@ -1,36 +1,37 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
 import IonIcon from "../components/ui/IonIcon";
 import { gridOutline, footballOutline } from "ionicons/icons";
 
-const INTERPRETATIONS = {
-  1: { essence: "Início, ação, liderança", traits: ["independência", "originalidade", "coragem"] },
-  2: { essence: "Sensibilidade, relações, equilíbrio", traits: ["diplomacia", "cooperação", "intuição"] },
-  3: { essence: "Comunicação, criatividade, alegria", traits: ["expressão", "otimismo", "arte"] },
-  4: { essence: "Estabilidade, trabalho, estrutura", traits: ["praticidade", "disciplina", "confiabilidade"] },
-  5: { essence: "Mudanças, movimento, liberdade", traits: ["adaptabilidade", "versatilidade", "curiosidade"] },
-  6: { essence: "Harmonia, família, responsabilidade", traits: ["cuidado", "justiça", "devotamento"] },
-  7: { essence: "Análise, introspecção, sabedoria", traits: ["profundidade", "espiritualidade", "inteligência"] },
-  8: { essence: "Poder, abundância, autoridade", traits: ["ambição", "liderança", "materialismo"] },
-  9: { essence: "Humanitarismo, completude, transformação", traits: ["generosidade", "sabedoria", "compaixão"] },
-  11: { essence: "Intuição elevada, inspiração, espiritualidade", traits: ["visão", "iluminação", "sensibilidade"] },
-  22: { essence: "Realização prática, construção, maestria", traits: ["ambição", "pragmatismo", "grandeza"] },
-  33: { essence: "Mestria espiritual, cura, amor altruísta", traits: ["sacrifício", "ensinamento", "iluminação"] }
-};
+const getInterpretations = (t) => ({
+  1: { essence: t('numerology.numbers.1.essence'), traits: t('numerology.numbers.1.traits') },
+  2: { essence: t('numerology.numbers.2.essence'), traits: t('numerology.numbers.2.traits') },
+  3: { essence: t('numerology.numbers.3.essence'), traits: t('numerology.numbers.3.traits') },
+  4: { essence: t('numerology.numbers.4.essence'), traits: t('numerology.numbers.4.traits') },
+  5: { essence: t('numerology.numbers.5.essence'), traits: t('numerology.numbers.5.traits') },
+  6: { essence: t('numerology.numbers.6.essence'), traits: t('numerology.numbers.6.traits') },
+  7: { essence: t('numerology.numbers.7.essence'), traits: t('numerology.numbers.7.traits') },
+  8: { essence: t('numerology.numbers.8.essence'), traits: t('numerology.numbers.8.traits') },
+  9: { essence: t('numerology.numbers.9.essence'), traits: t('numerology.numbers.9.traits') },
+  11: { essence: t('numerology.numbers.11.essence'), traits: t('numerology.numbers.11.traits') },
+  22: { essence: t('numerology.numbers.22.essence'), traits: t('numerology.numbers.22.traits') },
+  33: { essence: t('numerology.numbers.33.essence'), traits: t('numerology.numbers.33.traits') }
+});
 
-const DAY_MESSAGES = {
-  1: "Dia de novoscomeços. Tome a iniciativa em algo que postponha.",
-  2: "Dia de cooperação. Busque parcerias e equilíbrio nas relações.",
-  3: "Dia de alegria. Expresse-se criativamente e conecte-se com alegria.",
-  4: "Dia de trabalho. Foque em estruturas e responsabilidades.",
-  5: "Dia de mudanças. Esteja aberto a novas experiências e adaptações.",
-  6: "Dia de família. Dedique tempo ao lar e aos que ama.",
-  7: "Dia de introspecção. Reserve tempo para reflexão e silêncio.",
-  8: "Dia de poder. Foque em realizações materiais e metas importantes.",
-  9: "Dia de encerramento. Libere o que não serve e complete ciclos."
-};
+const getDayMessages = (t) => ({
+  1: t('numerology.day.1'),
+  2: t('numerology.day.2'),
+  3: t('numerology.day.3'),
+  4: t('numerology.day.4'),
+  5: t('numerology.day.5'),
+  6: t('numerology.day.6'),
+  7: t('numerology.day.7'),
+  8: t('numerology.day.8'),
+  9: t('numerology.day.9')
+});
 
 const GAMES = {
   megaSena: { name: "Mega-Sena", numbers: 6 },
@@ -82,6 +83,9 @@ function generateLuckyNumbers() {
 }
 
 export default function Numerology() {
+  const { t, i18n } = useTranslation();
+  const INTERPRETATIONS = getInterpretations(t);
+  const DAY_MESSAGES = getDayMessages(t);
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [luckyNumbers, setLuckyNumbers] = useState(null);
@@ -136,14 +140,14 @@ export default function Numerology() {
   if (loading) {
     return (
       <AppContainer className="md:items-center md:justify-center">
-        <div className="text-white text-xl">Carregando...</div>
+        <div className="text-white text-xl">{t('shared.loading')}</div>
       </AppContainer>
     );
   }
 
   return (
     <AppContainer className="md:items-center md:justify-center">
-      <AppHeader title="Numerologia" onBack={() => navigate(-1)} />
+      <AppHeader title={t('nav.numerology')} onBack={() => navigate(-1)} />
       <div className="w-full max-w-2xl flex flex-col md:block flex-1 md:flex-none px-4 md:px-0">
         <div className="flex items-center justify-between mb-6 md:flex">
           <button onClick={() => navigate(-1)} className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white hidden md:flex items-center justify-center transition-all">
@@ -151,28 +155,28 @@ export default function Numerology() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="text-2xl font-bold text-white md:block hidden">Numerologia</h1>
+          <h1 className="text-2xl font-bold text-white md:block hidden">{t('nav.numerology')}</h1>
           <div className="w-10 hidden md:block" />
         </div>
 
         {error && (
           <div className="bg-amber-500/20 border border-amber-500/30 text-amber-300 px-4 py-3 rounded-xl text-sm mb-4">
-            Configure seu mapa astral para ver todos os dados.
+            {t('numerology.configureChart')}
           </div>
         )}
 
         <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl">
           <div className="text-center mb-6">
-            <div className="text-purple-200 text-sm mb-2">Hoje</div>
+            <div className="text-purple-200 text-sm mb-2">{t('numerology.today')}</div>
             <div className="text-white text-lg font-medium">
-              {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}
+              {new Date().toLocaleDateString(i18n.language, { weekday: "long", day: "numeric", month: "long" })}
             </div>
           </div>
 
           <div className="space-y-6">
             <div className="bg-purple-500/10 rounded-2xl p-5 border border-purple-500/20">
               <div className="text-center">
-                <div className="text-purple-200 text-sm mb-2">Número do Caminho de Vida</div>
+                <div className="text-purple-200 text-sm mb-2">{t('numerology.lifePathNumberShort')}</div>
                 <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br ${getNumberColor(data?.lifePath || 1)} shadow-lg`}>
                   <span className="text-white text-3xl font-bold">{data?.lifePath || "?"}</span>
                 </div>
@@ -187,32 +191,32 @@ export default function Numerology() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white/5 rounded-2xl p-5 border border-white/10 text-center">
-                <div className="text-slate-400 text-sm mb-2">Número Pessoal</div>
+                <div className="text-slate-400 text-sm mb-2">{t('numerology.personalNumber')}</div>
                 <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br ${getNumberColor(data?.personalNumber || 1)} shadow-md`}>
                   <span className="text-white text-2xl font-bold">{data?.personalNumber || "?"}</span>
                 </div>
-                <div className="mt-2 text-slate-300 text-sm">Energia do dia</div>
+                <div className="mt-2 text-slate-300 text-sm">{t('numerology.dayEnergy')}</div>
               </div>
 
               <div className="bg-white/5 rounded-2xl p-5 border border-white/10 text-center">
-                <div className="text-slate-400 text-sm mb-2">Número Universal</div>
+                <div className="text-slate-400 text-sm mb-2">{t('numerology.universalNumber')}</div>
                 <div className={`inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br ${getNumberColor(data?.universalNumber || 1)} shadow-md`}>
                   <span className="text-white text-2xl font-bold">{data?.universalNumber || "?"}</span>
                 </div>
-                <div className="mt-2 text-slate-300 text-sm">Energia coletiva</div>
+                <div className="mt-2 text-slate-300 text-sm">{t('numerology.collectiveEnergy')}</div>
               </div>
             </div>
 
             {data?.message && (
               <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-5 text-white">
-                <div className="text-purple-200 text-sm mb-2">Mensagem do Dia</div>
+                <div className="text-purple-200 text-sm mb-2">{t('numerology.dayMessage')}</div>
                 <p className="text-white font-medium">{data.message}</p>
               </div>
             )}
 
             {data?.yearNumber && (
               <div className="bg-amber-500/10 rounded-2xl p-5 border border-amber-500/20">
-                <div className="text-amber-300 text-sm mb-2">Ano Pessoal {new Date().getFullYear()}</div>
+                <div className="text-amber-300 text-sm mb-2">{t('numerology.personalYear', { year: new Date().getFullYear() })}</div>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
                     <span className="text-white text-xl font-bold">{data.yearNumber}</span>
@@ -228,7 +232,7 @@ export default function Numerology() {
           <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-5 mt-6 shadow-xl">
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl"><IonIcon icon={gridOutline} /></span>
-              <h2 className="text-white font-bold text-lg">Seus Números da Sorte</h2>
+              <h2 className="text-white font-bold text-lg">{t('numerology.luckyNumbers')}</h2>
             </div>
             <div className="space-y-3">
               {Object.entries(GAMES).map(([key, game]) => {
@@ -247,7 +251,7 @@ export default function Numerology() {
                 );
               })}
             </div>
-            <p className="text-slate-500 text-xs mt-3 text-center">Apenas para entretenimento</p>
+            <p className="text-slate-500 text-xs mt-3 text-center">{t('numerology.entertainmentOnly')}</p>
           </div>
         )}
       </div>

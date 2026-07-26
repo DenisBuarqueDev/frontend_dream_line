@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { transcribeAudio, interpretDreamWithAI, saveDream } from "../services/api";
@@ -44,6 +45,7 @@ const getSupportedMimeType = () => {
 const cleanTranscription = (text) => text.replace(/\s+/g, " ").trim();
 
 export default function DreamEntryPage() {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isRecording, setIsRecording] = useState(false);
@@ -91,8 +93,9 @@ export default function DreamEntryPage() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) return;
 
+    const langMap = { pt: 'pt-BR', en: 'en-US', es: 'es-ES', fr: 'fr-FR', it: 'it-IT' };
     const recognition = new SpeechRecognition();
-    recognition.lang = "pt-BR";
+    recognition.lang = langMap[i18n.language?.split('-')[0]] || 'en-US';
     recognition.continuous = true;
     recognition.interimResults = true;
 
@@ -105,13 +108,13 @@ export default function DreamEntryPage() {
 
     recognition.onerror = (event) => {
       if (event.error === "not-allowed") {
-        setError("Permissão do microfone negada para transcrição.");
+        setError(t('dream.microphoneDeniedTranscription'));
       }
     };
 
     recognitionRef.current = recognition;
     recognition.start();
-  }, []);
+  }, [i18n]);
 
   const startRecording = useCallback(async () => {
     try {
@@ -146,7 +149,7 @@ export default function DreamEntryPage() {
                 setText((prev) => (prev ? prev + " " : "") + result.text);
               }
             })
-            .catch(() => setError("Erro ao transcrever áudio. Digite manualmente."))
+            .catch(() => setError(t('dream.transcriptionError')))
             .finally(() => setIsTranscribing(false));
         }
       };
@@ -166,9 +169,9 @@ export default function DreamEntryPage() {
       }
     } catch (err) {
       if (err.name === "NotAllowedError") {
-        setError("Permita o acesso ao microfone para gravar áudio.");
+        setError(t('dream.microphoneAccessRequired'));
       } else {
-        setError("Erro ao acessar microfone.");
+        setError(t('dream.microphoneAccessError'));
       }
     }
   }, [startSpeechRecognition]);
@@ -210,7 +213,7 @@ export default function DreamEntryPage() {
   const handleInterpret = async () => {
     const cleanedText = cleanTranscription(text);
     if (!cleanedText) {
-      setError("Descreva seu sonho primeiro.");
+      setError(t('dream.describeFirst'));
       return;
     }
     setIsLoading(true);
@@ -220,7 +223,7 @@ export default function DreamEntryPage() {
       setInterpretation(result.interpretation || result.data?.interpretacao || "");
       setShowInterpretation(true);
     } catch (err) {
-      setError(err.message || "Erro ao interpretar sonho.");
+      setError(err.message || t('dream.interpretationError'));
     } finally {
       setIsLoading(false);
     }
@@ -258,7 +261,7 @@ export default function DreamEntryPage() {
       setSaved(true);
       navigate("/timeline");
     } catch (err) {
-      setError(err.message || "Erro ao salvar sonho.");
+      setError(err.message || t('dream.saveError'));
     } finally {
       setIsLoading(false);
     }
@@ -273,7 +276,7 @@ export default function DreamEntryPage() {
             <button
               onClick={() => setSidebarOpen(true)}
               className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-              title="Menu"
+              title={t('shared.menu')}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -283,34 +286,34 @@ export default function DreamEntryPage() {
 
           <div>
             <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${userPlan === "premium" ? "bg-purple-500/20 text-purple-300" : "bg-white/10 text-slate-400"}`}>
-              {userPlan === "premium" ? "Premium" : "Free"}
+              {userPlan === "premium" ? t('shared.premium') : t('shared.free')}
             </span>
           </div>
 
           <div className="text-center mb-8">
             <img
               src={logotipo}
-              alt="Dream Line Logo"
+              alt={t('shared.appLogoAlt')}
               className="w-28 h-28 md:w-24 md:h-24 object-contain mx-auto mb-4"
             />
-            <h1 className="text-3xl font-bold text-white">Dream Line</h1>
+            <h1 className="text-3xl font-bold text-white">{t('shared.appName')}</h1>
             <p className="text-purple-200 text-sm mt-2">
-              Fale sobre seus sonhos
+              {t('chat.dreamWelcome')}
             </p>
           </div>
 
           <div className="flex items-center justify-center gap-3 mb-6">
             <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-sm font-semibold shadow-lg shadow-purple-500/20 transition-all flex items-center gap-2">
               <IonIcon icon={moonOutline} className="w-5 h-5" />
-              Sonho
+              {t('dream.entry.dream')}
             </button>
-            <span className="text-white/30 text-sm">ou</span>
+            <span className="text-white/30 text-sm">{t('shared.or')}</span>
             <button
               onClick={() => navigate("/emotions/new")}
               className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2"
             >
               <IonIcon icon={heartOutline} className="w-5 h-5" />
-              Emoção
+              {t('dream.entry.emotion')}
             </button>
           </div>
 
@@ -346,7 +349,7 @@ export default function DreamEntryPage() {
                       : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/20 hover:scale-[1.02] active:scale-[0.98]"
                   }`}
                 >
-                  {isRecording ? "Parar gravação" : "Começar gravação"}
+                  {isRecording ? t('dream.recording.stop') : t('dream.recording.start')}
                 </button>
               )}
 
@@ -385,7 +388,7 @@ export default function DreamEntryPage() {
                           onEnded={() => setIsPlaying(false)}
                           className="hidden"
                         />
-                        <span className="text-slate-300 text-sm font-medium">Áudio gravado</span>
+                        <span className="text-slate-300 text-sm font-medium">{t('dream.audioRecorded')}</span>
                       </div>
                       <button
                         onClick={deleteAudio}
@@ -402,7 +405,7 @@ export default function DreamEntryPage() {
                     <textarea
                       value={text}
                       onChange={(e) => setText(e.target.value)}
-                      placeholder="Descreva seu sonho com detalhes..."
+                      placeholder={t('dream.placeholder')}
                       rows={3}
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all resize-none"
                     />
@@ -414,7 +417,7 @@ export default function DreamEntryPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      Convertendo voz em texto...
+                      {t('dream.convertingVoice')}
                     </div>
                   )}
 
@@ -435,11 +438,9 @@ export default function DreamEntryPage() {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                         </svg>
-                        Interpretando...
+                        {t('dream.interpreting')}
                       </span>
-                    ) : (
-                      "Interpretar Sonho"
-                    )}
+                    ) : t('dream.interpretButton')}
                   </button>
                 </div>
               )}
@@ -450,7 +451,7 @@ export default function DreamEntryPage() {
             <div className="w-full space-y-4 animate-fade-in">
               <div className="bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl p-5 sm:p-6 border border-purple-500/20">
                 <h2 className="text-lg sm:text-xl font-semibold text-white mb-3">
-                  Interpretação do sonho
+                  {t('dream.interpretationTitle')}
                 </h2>
                 <p className="text-purple-100 text-sm sm:text-base leading-relaxed">
                   {interpretation}
@@ -461,7 +462,7 @@ export default function DreamEntryPage() {
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <label className="block text-slate-300 text-xs sm:text-sm mb-2">
-                      Que horas você dormiu?
+                      {t('dream.sleepTime')}
                     </label>
                     <input
                       type="time"
@@ -472,7 +473,7 @@ export default function DreamEntryPage() {
                   </div>
                   <div className="flex-1">
                     <label className="block text-slate-300 text-xs sm:text-sm mb-2">
-                      Que horas acordou?
+                      {t('dream.wakeTime')}
                     </label>
                     <input
                       type="time"
@@ -483,7 +484,7 @@ export default function DreamEntryPage() {
                   </div>
                 </div>
                 <p className="text-slate-400 text-xs sm:text-sm mt-2">
-                  Quer melhorar a análise? Informe seu horário de sono
+                  {t('dream.improveAnalysis')}
                 </p>
               </div>
 
@@ -504,11 +505,9 @@ export default function DreamEntryPage() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Salvando...
+                    {t('dream.saving')}
                   </span>
-                ) : (
-                  "Salvar na Timeline"
-                )}
+                  ) : t('dream.saveToTimeline')}
               </button>
             </div>
           )}
@@ -521,7 +520,7 @@ export default function DreamEntryPage() {
           <div className="absolute left-0 top-0 bottom-0 w-72 bg-slate-950/95 backdrop-blur-xl border-r border-white/10 shadow-2xl flex flex-col">
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white">Dream Line</h2>
+                <h2 className="text-xl font-bold text-white">{t('shared.appName')}</h2>
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all"
@@ -539,42 +538,42 @@ export default function DreamEntryPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={clipboardOutline} className="w-5 h-5" />
-                <span className="font-medium">Dashboard</span>
+                <span className="font-medium">{t('nav.dashboard')}</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={happyOutline} className="w-5 h-5" />
-                <span className="font-medium">Emoções</span>
+                <span className="font-medium">{t('nav.emotions')}</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={analyticsOutline} className="w-5 h-5" />
-                <span className="font-medium">Insights</span>
+                <span className="font-medium">{t('nav.insights')}</span>
               </button>
               <button
                 onClick={() => { navigate("/insights/correlations"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={gitNetworkOutline} className="w-5 h-5" />
-                <span className="font-medium">Correlações</span>
+                <span className="font-medium">{t('nav.correlations')}</span>
               </button>
               <button
                 onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={calculatorOutline} className="w-5 h-5" />
-                <span className="font-medium">Numerologia</span>
+                <span className="font-medium">{t('nav.numerology')}</span>
               </button>
               <button
                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={diamondOutline} className="w-5 h-5" />
-                <span className="font-medium">Planos</span>
+                <span className="font-medium">{t('nav.plans')}</span>
               </button>
 
               <div className="border-t border-white/10 my-3" />
@@ -585,7 +584,7 @@ export default function DreamEntryPage() {
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
                 >
                   <IonIcon icon={downloadOutline} className="w-5 h-5" />
-                  <span className="font-medium">Instalar App</span>
+                  <span className="font-medium">{t('nav.installApp')}</span>
                 </button>
               )}
               <button
@@ -593,14 +592,14 @@ export default function DreamEntryPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={notificationsOutline} className="w-5 h-5" />
-                <span className="font-medium">Notificações</span>
+                <span className="font-medium">{t('nav.notifications')}</span>
               </button>
               <button
                 onClick={() => { navigate("/support"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
-                <span className="font-medium">Suporte</span>
+                <span className="font-medium">{t('nav.support')}</span>
               </button>
             </nav>
 
@@ -610,7 +609,7 @@ export default function DreamEntryPage() {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all text-left"
               >
                 <IonIcon icon={logOutOutline} className="w-5 h-5" />
-                <span className="font-medium">Sair</span>
+                <span className="font-medium">{t('nav.logout')}</span>
               </button>
             </div>
           </div>

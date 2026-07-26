@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { getSubscriptionStatus } from "../services/api";
 import AppContainer from "../components/ui/AppContainer";
 
 export default function PaymentSuccess() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { updatePlanInfo } = useAuth();
   const [status, setStatus] = useState(null);
@@ -51,22 +53,22 @@ export default function PaymentSuccess() {
         </div>
 
         <h1 className="text-3xl font-bold text-white mb-3">
-          Pagamento aprovado!
+          {t('payment.success.title')}
         </h1>
 
         <p className="text-lg text-slate-300 mb-2">
-          Seu plano Premium foi ativado com sucesso.
+          {t('payment.success.subtitle')}
         </p>
 
         {loading ? (
-          <p className="text-slate-400 mb-8">Verificando status...</p>
+          <p className="text-slate-400 mb-8">{t('payment.success.checkingStatus')}</p>
         ) : status?.isPremium ? (
           <p className="text-purple-400 font-semibold mb-8">
-            Premium válido por {status.daysRemaining} dias
+            {t('payment.success.premiumValid', { days: status.daysRemaining })}
           </p>
         ) : (
           <p className="text-yellow-400 mb-8">
-            O Premium pode levar alguns instantes para ser ativado.
+            {t('payment.success.activating')}
           </p>
         )}
 
@@ -74,7 +76,7 @@ export default function PaymentSuccess() {
           onClick={() => navigate("/dashboard")}
           className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:scale-[1.02] active:scale-[0.98]"
         >
-          Ir para Dashboard
+          {t('payment.success.goToDashboard')}
         </button>
       </div>
     </AppContainer>

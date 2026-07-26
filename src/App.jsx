@@ -33,6 +33,8 @@ import EmotionTimelinePage from "./pages/EmotionTimelinePage";
 import EmotionInsightsPage from "./pages/EmotionInsightsPage";
 import DreamEmotionInsightsPage from "./pages/DreamEmotionInsightsPage";
 import HelpSupport from "./pages/HelpSupport";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
 import InstallPWA from "./components/InstallPWA";
 import NotificationPrompt from "./components/NotificationPrompt";
 
@@ -251,6 +253,8 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsOfUse />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
     </>

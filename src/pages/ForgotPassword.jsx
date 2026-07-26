@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { forgotPassword } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
@@ -8,6 +9,7 @@ import Label from "../components/ui/Label";
 import logotipo from "../assets/logotipo-white.png";
 
 export default function ForgotPassword() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
@@ -19,7 +21,7 @@ export default function ForgotPassword() {
     setError("");
 
     if (!email) {
-      setError("Informe seu e-mail.");
+      setError(t('forgot.enterEmail'));
       return;
     }
 
@@ -28,7 +30,7 @@ export default function ForgotPassword() {
       await forgotPassword(email);
       setSent(true);
     } catch (err) {
-      setError(err.message || "Erro ao solicitar recuperação.");
+      setError(err.message || t('forgot.errorRequesting'));
     } finally {
       setLoading(false);
     }
@@ -40,7 +42,7 @@ export default function ForgotPassword() {
         <GlassCard className="p-8">
           <div className="text-center mb-6">
             <img src={logotipo} alt="Dream Line Logo" className="w-20 h-20 object-contain mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-white">Recuperar senha</h1>
+            <h1 className="text-2xl font-bold text-white">{t('forgot.pageTitle')}</h1>
           </div>
 
           {sent ? (
@@ -51,21 +53,21 @@ export default function ForgotPassword() {
                 </svg>
               </div>
               <p className="text-slate-300 text-sm leading-relaxed mb-6">
-                Se existir uma conta vinculada a este e-mail, enviaremos instruções para recuperação.
+                {t('forgot.successMessage')}
               </p>
               <PrimaryButton onClick={() => navigate("/login")} fullWidth>
-                Voltar ao Login
+                {t('shared.backToLogin')}
               </PrimaryButton>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <Label className="block mb-2">E-mail</Label>
+                <Label className="block mb-2">{t('shared.email')}</Label>
                 <Input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
+                  placeholder="email@example.com"
                   disabled={loading}
                 />
               </div>
@@ -77,7 +79,7 @@ export default function ForgotPassword() {
               )}
 
               <PrimaryButton type="submit" disabled={loading} fullWidth>
-                {loading ? "Enviando..." : "Enviar link"}
+                {loading ? t('shared.sending') : t('forgot.sendLink')}
               </PrimaryButton>
 
               <div className="text-center">
@@ -86,7 +88,7 @@ export default function ForgotPassword() {
                   onClick={() => navigate("/login")}
                   className="text-purple-300 hover:text-purple-200 text-sm underline underline-offset-2 transition-colors"
                 >
-                  Voltar ao Login
+                  {t('shared.backToLogin')}
                 </button>
               </div>
             </form>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import IonIcon from "../components/ui/IonIcon";
 import { gridOutline, ribbonOutline, diamondOutline, footballOutline } from "ionicons/icons";
@@ -11,9 +12,8 @@ const GAMES = {
   timemania: { name: "Timemania", icon: <IonIcon icon={footballOutline} />, color: "from-red-500 to-rose-600" }
 };
 
-const DISCLAIMER = "Números gerados para entretenimento apenas. Não garantem ganhos.";
-
 export default function LuckyNumbers() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -88,7 +88,7 @@ export default function LuckyNumbers() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-violet-950 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-white text-xl animate-pulse">Gerando números da sorte...</div>
+        <div className="text-white text-xl animate-pulse">{t('luckyNumbers.loading')}</div>
       </div>
     );
   }
@@ -105,7 +105,7 @@ export default function LuckyNumbers() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <h1 className="text-2xl font-bold text-white">Números da Sorte</h1>
+          <h1 className="text-2xl font-bold text-white">{t('luckyNumbers.title')}</h1>
           <div className="w-10" />
         </div>
 
@@ -113,10 +113,10 @@ export default function LuckyNumbers() {
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl"><IonIcon icon={gridOutline} /></span>
             <div>
-              <h2 className="text-slate-800 font-bold text-lg">Seus números da sorte</h2>
+              <h2 className="text-slate-800 font-bold text-lg">{t('luckyNumbers.yourNumbers')}</h2>
               {data?.personalNumber && (
                 <p className="text-slate-500 text-sm">
-                  Baseados no seu número pessoal: <span className="font-bold text-violet-600">{data.personalNumber}</span>
+                  {t('luckyNumbers.basedOnPersonalNumber')} <span className="font-bold text-violet-600">{data.personalNumber}</span>
                 </p>
               )}
             </div>
@@ -126,7 +126,7 @@ export default function LuckyNumbers() {
             onClick={fetchNumbers}
             className="w-full py-3 rounded-full bg-gradient-to-r from-violet-500 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
           >
-            Gerar novos números
+            {t('luckyNumbers.generateNew')}
           </button>
         </div>
 
@@ -160,7 +160,7 @@ export default function LuckyNumbers() {
                 {gameKey === "timemania" && data?.games?.timeDoCoracao && (
                   <div className="flex justify-center">
                     <span className="px-4 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
-                      Time: {data.games.timeDoCoracao}
+                      {t('luckyNumbers.team', { team: data.games.timeDoCoracao })}
                     </span>
                   </div>
                 )}
@@ -176,7 +176,7 @@ export default function LuckyNumbers() {
         </div>
 
         <div className="mt-6 text-center">
-          <p className="text-white/60 text-sm">{DISCLAIMER}</p>
+          <p className="text-white/60 text-sm">{t('luckyNumbers.disclaimer')}</p>
         </div>
       </div>
     </div>

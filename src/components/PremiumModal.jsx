@@ -1,9 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import IonIcon from "../components/ui/IonIcon";
 import { shieldCheckmarkOutline } from "ionicons/icons";
 
-export default function PremiumModal({ isOpen, onClose, featureName = 'Este recurso' }) {
+export default function PremiumModal({ isOpen, onClose, featureName }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const feature = featureName || t('premium.featureDefault');
 
   if (!isOpen) return null;
 
@@ -25,20 +28,20 @@ export default function PremiumModal({ isOpen, onClose, featureName = 'Este recu
             <IonIcon icon={shieldCheckmarkOutline} className="w-8 h-8 text-purple-400" />
           </div>
 
-          <p className="text-white font-semibold text-lg mb-1">Plano Premium</p>
+          <p className="text-white font-semibold text-lg mb-1">{t('premium.title')}</p>
           <p className="text-slate-400 text-sm mb-6">
-            {featureName} faz parte do plano Premium
+            {t('premium.description', { feature })}
           </p>
 
           <button
             onClick={() => { onClose(); navigate('/pricing'); }}
             className="w-full px-5 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98]"
           >
-            Assinar Premium
+            {t('premium.subscribe')}
           </button>
 
           <p className="text-xs text-slate-500 mt-3">
-            A partir de R$ 24,90/mês · Cancele quando quiser
+            {t('premium.priceInfo')}
           </p>
         </div>
       </div>

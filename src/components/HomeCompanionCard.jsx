@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import GlassCard from "./ui/GlassCard";
 import IonIcon from "../components/ui/IonIcon";
 import { starOutline, moonOutline, eyeOutline, heartOutline, checkmarkCircleOutline, flagOutline, trophyOutline, peopleOutline, bulbOutline, chatbubbleOutline } from "ionicons/icons";
+import { useTranslation } from 'react-i18next';
 
 const CATEGORY_ICONS = {
   encouragement: <IonIcon icon={starOutline} />,
@@ -17,6 +18,7 @@ const CATEGORY_ICONS = {
 };
 
 export default function HomeCompanionCard({ message, onViewed }) {
+  const { t } = useTranslation();
   const [animClass, setAnimClass] = useState("opacity-0 translate-y-4");
   const [loading, setLoading] = useState(false);
 
@@ -29,16 +31,16 @@ export default function HomeCompanionCard({ message, onViewed }) {
 
   const icon = CATEGORY_ICONS[message.category] || <IonIcon icon={chatbubbleOutline} />;
   const catLabel = {
-    encouragement: "Incentivo",
-    sleep: "Sono",
-    dreams: "Sonhos",
-    emotions: "Emoções",
-    habits: "Hábitos",
-    goals: "Objetivos",
-    achievements: "Conquistas",
-    relationships: "Relacionamentos",
-    reflection: "Reflexão",
-    motivation: "Motivação",
+    encouragement: t('companion.category.encouragement'),
+    sleep: t('companion.category.sleep'),
+    dreams: t('companion.category.dreams'),
+    emotions: t('companion.category.emotions'),
+    habits: t('companion.category.habits'),
+    goals: t('companion.category.goals'),
+    achievements: t('companion.category.achievements'),
+    relationships: t('companion.category.relationships'),
+    reflection: t('companion.category.reflection'),
+    motivation: t('companion.category.motivation'),
   }[message.category] || message.category;
 
   const handleDismiss = async () => {
@@ -54,7 +56,7 @@ export default function HomeCompanionCard({ message, onViewed }) {
       });
       onViewed?.();
     } catch {
-      console.error("Erro ao marcar como visualizado");
+      console.error(t('companion.errorMarkingViewed'));
     } finally {
       setLoading(false);
     }
@@ -84,7 +86,7 @@ export default function HomeCompanionCard({ message, onViewed }) {
           disabled={loading}
           className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold transition-all duration-200 disabled:opacity-50"
         >
-          {loading ? "Aguarde..." : "Entendi"}
+          {loading ? t('shared.pleaseWait') : t('companion.gotIt')}
         </button>
       </GlassCard>
     </div>

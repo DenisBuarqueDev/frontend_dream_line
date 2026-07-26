@@ -1,27 +1,29 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { useHzPlayer } from "../hooks/useHzPlayer";
 import AppContainer from "../components/ui/AppContainer";
 import { AppHeader } from "../components/ui";
 
-const FREQUENCY_MAP = {
-  calmo: { hz: "963Hz", file: "963hz.mp3", label: "Calmo" },
-  ansioso: { hz: "432Hz", file: "432hz.mp3", label: "Ansioso" },
-  estressado: { hz: "396Hz", file: "396hz.mp3", label: "Estressado" },
-  cansado: { hz: "111Hz", file: "111hz.mp3", label: "Cansado" },
-  desmotivado: { hz: "528Hz", file: "528hz.mp3", label: "Desmotivado" },
-  voltar_dormir: { hz: "528Hz", file: "528hz.mp3", label: "Voltar a dormir" },
-  preocupado: { hz: "852Hz", file: "852hz.mp3", label: "Preocupado" },
-  sobrecarregado: { hz: "639Hz", file: "639hz.mp3", label: "Sobrecarregado" },
-  triste: { hz: "111Hz", file: "111hz.mp3", label: "Triste" },
-  irritado: { hz: "888Hz", file: "888hz.mp3", label: "Irritado" },
-  inquieto: { hz: "888Hz", file: "8888hz.mp3", label: "Inquieto" },
-  com_medo: { hz: "174Hz", file: "174hz.mp3", label: "Com medo" },
-};
-
 export default function SleepPlayer() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const emotionalState = location.state?.emotionalState || "calmo";
+
+  const FREQUENCY_MAP = {
+    calmo: { hz: "963Hz", file: "963hz.mp3", label: t('sleep.emotion.calm') },
+    ansioso: { hz: "432Hz", file: "432hz.mp3", label: t('sleep.emotion.anxious') },
+    estressado: { hz: "396Hz", file: "396hz.mp3", label: t('sleep.emotion.stressed') },
+    cansado: { hz: "111Hz", file: "111hz.mp3", label: t('sleep.emotion.tired') },
+    desmotivado: { hz: "528Hz", file: "528hz.mp3", label: t('sleep.emotion.demotivated') },
+    voltar_dormir: { hz: "528Hz", file: "528hz.mp3", label: t('sleep.emotion.goBackToSleep') },
+    preocupado: { hz: "852Hz", file: "852hz.mp3", label: t('sleep.emotion.worried') },
+    sobrecarregado: { hz: "639Hz", file: "639hz.mp3", label: t('sleep.emotion.overwhelmed') },
+    triste: { hz: "111Hz", file: "111hz.mp3", label: t('sleep.emotion.sad') },
+    irritado: { hz: "888Hz", file: "888hz.mp3", label: t('sleep.emotion.irritated') },
+    inquieto: { hz: "888Hz", file: "8888hz.mp3", label: t('sleep.emotion.restless') },
+    com_medo: { hz: "174Hz", file: "174hz.mp3", label: t('sleep.emotion.scared') },
+  };
 
   const frequencyData = FREQUENCY_MAP[emotionalState] || FREQUENCY_MAP.calmo;
   const audioFile = frequencyData.file;
@@ -74,10 +76,10 @@ export default function SleepPlayer() {
 
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-              Modo relaxamento
+              {t('sleep.relaxationMode')}
             </h1>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 rounded-xl">
-              <span className="text-purple-300 font-medium">Estado: {stateLabel}</span>
+              <span className="text-purple-300 font-medium">{t('sleep.stateLabel', { state: stateLabel })}</span>
               <span className="text-purple-400">|</span>
               <span className="text-purple-300 font-bold">{frequency}</span>
             </div>
@@ -140,7 +142,7 @@ export default function SleepPlayer() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 18v-6a9 9 0 0118 0v6M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/>
             </svg>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Coloque fones de ouvido, feche os olhos e respire lentamente
+              {t('sleep.instructions')}
             </p>
           </div>
 
@@ -148,7 +150,7 @@ export default function SleepPlayer() {
             onClick={handleEndSession}
             className="w-full py-4 bg-white/10 hover:bg-white/20 border border-white/10 text-white font-semibold rounded-xl transition-all"
           >
-            Encerrar sessão
+            {t('sleep.endSession')}
           </button>
         </div>
       </div>

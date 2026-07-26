@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { usePermissions } from "../hooks/usePermissions";
 import AppContainer from "../components/ui/AppContainer";
@@ -50,6 +51,7 @@ function SectionCard({ icon, title, items, color = "text-indigo-300" }) {
 }
 
 export default function DreamCoach() {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { isPremium } = usePermissions();
   const [report, setReport] = useState(null);
@@ -87,7 +89,7 @@ export default function DreamCoach() {
 
   return (
     <AppContainer>
-      <AppHeader title="Dream Coach" onBack={() => navigate("/dashboard")} />
+      <AppHeader title={t('nav.dreamCoach')} onBack={() => navigate("/dashboard")} />
 
       {loading && (
         <div className="flex justify-center pt-20">
@@ -98,14 +100,14 @@ export default function DreamCoach() {
       {!loading && showPremium && (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
           <span className="text-6xl mb-4"><IonIcon icon={starOutline} /></span>
-          <h2 className="text-2xl font-bold text-white mb-2">Dream Coach</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('nav.dreamCoach')}</h2>
           <p className="text-slate-400 max-w-md mb-6">
-            Seu treinador pessoal dos sonhos. Descubra padrões, receba recomendações e acompanhe sua evolução onírica.
+            {t('coach.premiumDesc')}
           </p>
           <PremiumModal
             isOpen={showPremium}
             onClose={() => navigate("/dashboard")}
-            featureName="Dream Coach"
+            featureName={t('nav.dreamCoach')}
           />
         </div>
       )}
@@ -114,17 +116,27 @@ export default function DreamCoach() {
         <div className="px-4 pb-20 max-w-2xl mx-auto">
           <div className={`mt-6 mb-6 p-6 rounded-2xl bg-gradient-to-br ${sc.bg} border ${sc.border} text-center`}>
             <span className="text-5xl block mb-3"><IonIcon icon={sc.icon} /></span>
-            <p className="text-sm text-slate-400 uppercase tracking-wider mb-1">Status Geral</p>
-            <p className={`text-3xl font-bold ${sc.text}`}>{statusKey}</p>
+            <p className="text-sm text-slate-400 uppercase tracking-wider mb-1">{t('coach.status')}</p>
+            <p className={`text-3xl font-bold ${sc.text}`}>
+              {
+                {
+                  Excelente: t('coach.statusExcellent'),
+                  "Muito Bom": t('coach.statusVeryGood'),
+                  Bom: t('coach.statusGood'),
+                  Atenção: t('coach.statusAttention'),
+                  Crítico: t('coach.statusCritical'),
+                }[statusKey] || statusKey
+              }
+            </p>
           </div>
 
-          <SectionCard icon={trendingUpOutline} title="Evolução" items={report.evolution} color="text-emerald-300" />
+          <SectionCard icon={trendingUpOutline} title={t('coach.evolution')} items={report.evolution} color="text-emerald-300" />
 
-          <SectionCard icon={checkmarkCircleOutline} title="Pontos Positivos" items={report.positives} color="text-green-300" />
+          <SectionCard icon={checkmarkCircleOutline} title={t('coach.positives')} items={report.positives} color="text-green-300" />
 
-          <SectionCard icon={warningOutline} title="Pontos de Atenção" items={report.concerns} color="text-orange-300" />
+          <SectionCard icon={warningOutline} title={t('coach.concerns')} items={report.concerns} color="text-orange-300" />
 
-          <SectionCard icon={bulbOutline} title="Recomendações" items={report.recommendations} color="text-yellow-300" />
+          <SectionCard icon={bulbOutline} title={t('coach.recommendations')} items={report.recommendations} color="text-yellow-300" />
 
           {report.motivation && (
             <GlassCard className="p-5 mb-6 text-center">
@@ -134,7 +146,7 @@ export default function DreamCoach() {
           )}
 
           <p className="text-xs text-slate-600 text-center">
-            Gerado em {report.generatedAt ? new Date(report.generatedAt).toLocaleString("pt-BR") : ""}
+            {t('coach.generatedOn')} {report.generatedAt ? new Date(report.generatedAt).toLocaleString(i18n.language) : ""}
           </p>
         </div>
       )}

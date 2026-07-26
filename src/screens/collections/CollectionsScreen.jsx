@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { CollectionFormModal } from '../../components/collections/CollectionFormModal';
@@ -10,6 +11,7 @@ import EmptyState from '../../components/EmptyState';
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 function CollectionsScreen() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const [collections, setCollections] = useState([]);
@@ -89,7 +91,7 @@ function CollectionsScreen() {
   return (
     <AppContainer>
       <AppHeader
-        title="Coleções"
+        title={t('collections.title')}
         onRightClick={() => {
           setEditingCollection(null);
           setShowFormModal(true);
@@ -100,8 +102,8 @@ function CollectionsScreen() {
         {collections.length === 0 ? (
           <EmptyState
             icon="📁"
-            title="Nenhuma coleção"
-            subtitle="crie coleções para organizar seus sonhos"
+            title={t('collections.emptyTitle')}
+            subtitle={t('collections.emptySubtitle')}
           />
         ) : (
           collections.map((collection) => (
@@ -117,7 +119,7 @@ function CollectionsScreen() {
                     <p className="text-slate-300 text-sm">{collection.description}</p>
                   )}
                   <p className="text-slate-400 text-xs mt-1">
-                    {collection.dreamCount || 0} sonhos
+                    {collection.dreamCount || 0} {t('collections.dreamCount')}
                   </p>
                 </div>
                 <button
@@ -138,7 +140,7 @@ function CollectionsScreen() {
 
       <div className="px-4 pb-6">
         <PrimaryButton onClick={() => setShowPickerModal(true)}>
-          Adicionar sonhos à coleção
+          {t('collections.addToCollection')}
         </PrimaryButton>
       </div>
 

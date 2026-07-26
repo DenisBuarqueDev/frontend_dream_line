@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { generateNameNumerology, getNameNumerologyRemaining } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import AppContainer from "../components/ui/AppContainer";
@@ -26,6 +27,7 @@ function letterValue(char) {
 
 export default function NameNumerologyPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, isLoading } = useAuth();
   const [fullName, setFullName] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -46,11 +48,11 @@ export default function NameNumerologyPage() {
 
   const handleGenerate = useCallback(async () => {
     if (!fullName.trim()) {
-      setError("Informe seu nome completo.");
+      setError(t('numerology.name.required'));
       return;
     }
     if (!birthDate) {
-      setError("Informe sua data de nascimento.");
+      setError(t('numerology.birthDate.required'));
       return;
     }
 
@@ -64,7 +66,7 @@ export default function NameNumerologyPage() {
         setResult(response.data.record);
         setRemaining(r => r !== null ? r - 1 : null);
       } else {
-        setError(response.message || "Erro ao gerar numerologia.");
+        setError(response.message || t('numerology.errorGenerating'));
       }
     } catch (err) {
       const msg = err.message || "";
@@ -73,7 +75,7 @@ export default function NameNumerologyPage() {
       } else if (msg.includes("Limite")) {
         setError("limite_atingido");
       } else {
-        setError(msg || "Erro ao gerar numerologia.");
+        setError(msg || t('numerology.errorGenerating'));
       }
     } finally {
       setLoading(false);
@@ -83,7 +85,7 @@ export default function NameNumerologyPage() {
   if (isLoading) {
     return (
       <AppContainer>
-        <AppHeader title="Numerologia do Nome" onBack={() => navigate("/dashboard")} />
+        <AppHeader title={t('numerology.name.pageTitle')} onBack={() => navigate("/dashboard")} />
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner />
         </div>
@@ -93,30 +95,30 @@ export default function NameNumerologyPage() {
 
   return (
     <AppContainer>
-      <AppHeader title="Numerologia do Nome" onBack={() => navigate("/dashboard")} />
+      <AppHeader title={t('numerology.name.pageTitle')} onBack={() => navigate("/dashboard")} />
       <div className="flex-1 overflow-y-auto px-4 pb-8">
         <div className="max-w-4xl mx-auto space-y-4 pt-4">
 
           {!result && (
             <GlassCard>
-              <h2 className="text-xl font-semibold text-white mb-4">Descubra a Numerologia do seu Nome</h2>
+              <h2 className="text-xl font-semibold text-white mb-4">{t('numerology.name.discoverTitle')}</h2>
               <p className="text-purple-200 text-sm mb-6">
-                Baseado no seu nome completo e data de nascimento, revelamos os números que regem sua personalidade, alma e destino.
+                {t('numerology.name.discoverDescription')}
               </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-slate-300 mb-1 block">Nome completo</label>
+                  <label className="text-sm font-medium text-slate-300 mb-1 block">{t('numerology.name.fullName')}</label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Seu nome completo"
+                    placeholder={t('numerology.name.fullNamePlaceholder')}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-400 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-slate-300 mb-1 block">Data de nascimento</label>
+                  <label className="text-sm font-medium text-slate-300 mb-1 block">{t('numerology.name.birthDate')}</label>
                   <input
                     type="date"
                     value={birthDate}
@@ -128,7 +130,7 @@ export default function NameNumerologyPage() {
 
                 {remaining !== null && (
                   <p className="text-slate-400 text-xs">
-                    Gerações disponíveis hoje: {remaining}
+                    {t('numerology.generationsAvailable', { remaining })}
                   </p>
                 )}
 
@@ -137,7 +139,7 @@ export default function NameNumerologyPage() {
                   disabled={loading}
                   className="w-full px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? "Calculando..." : "Gerar Numerologia"}
+                  {loading ? t('numerology.calculating') : t('numerology.generate')}
                 </button>
 
                 {error && error !== "premium_block" && error !== "limite_atingido" && (
@@ -146,18 +148,18 @@ export default function NameNumerologyPage() {
 
                 {error === "premium_block" && (
                   <div className="text-center mt-4">
-                    <p className="text-yellow-400 text-sm mb-2">Esta funcionalidade requer plano Premium.</p>
+                    <p className="text-yellow-400 text-sm mb-2">{t('numerology.premiumRequired')}</p>
                     <button onClick={() => navigate("/pricing")} className="text-purple-400 underline text-sm">
-                      Ver planos
+                      {t('shared.viewPlans')}
                     </button>
                   </div>
                 )}
 
                 {error === "limite_atingido" && (
                   <div className="text-center mt-4">
-                    <p className="text-yellow-400 text-sm mb-2">Você atingiu o limite diário de gerações.</p>
+                    <p className="text-yellow-400 text-sm mb-2">{t('numerology.dailyLimit')}</p>
                     <button onClick={() => navigate("/pricing")} className="text-purple-400 underline text-sm">
-                      Faça upgrade para Premium e tenha mais gerações
+                      {t('numerology.upgradeForMore')}
                     </button>
                   </div>
                 )}
@@ -205,7 +207,7 @@ export default function NameNumerologyPage() {
                   onClick={() => { setResult(null); setError(null); }}
                   className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white font-medium transition-all"
                 >
-                  Nova Numerologia
+                  {t('numerology.newCalculation')}
                 </button>
               </div>
             </>
@@ -221,14 +223,15 @@ function SectionTitle({ children }) {
 }
 
 function LetterTable({ data }) {
+  const { t } = useTranslation();
   return (
     <GlassCard>
-      <SectionTitle>Tabela de Equivalência das Letras</SectionTitle>
+      <SectionTitle>{t('numerology.letterTable')}</SectionTitle>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-slate-400 border-b border-white/10">
-              <th className="text-left py-2 px-2">Letra</th>
+              <th className="text-left py-2 px-2">{t('numerology.letter')}</th>
               {Object.keys(LETTER_MAP).slice(0, 9).map(l => (
                 <th key={l} className="py-2 px-1 text-center">{l}</th>
               ))}
@@ -236,7 +239,7 @@ function LetterTable({ data }) {
           </thead>
           <tbody>
             <tr className="border-b border-white/5">
-              <td className="py-2 px-2 text-slate-400">Valor</td>
+              <td className="py-2 px-2 text-slate-400">{t('numerology.value')}</td>
               {Object.keys(LETTER_MAP).slice(0, 9).map(l => (
                 <td key={l} className="py-2 px-1 text-center text-white">{LETTER_MAP[l]}</td>
               ))}
@@ -249,7 +252,7 @@ function LetterTable({ data }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-slate-400 border-b border-white/10">
-              <th className="text-left py-2 px-2">Letra</th>
+              <th className="text-left py-2 px-2">{t('numerology.letter')}</th>
               {Object.keys(LETTER_MAP).slice(9, 18).map(l => (
                 <th key={l} className="py-2 px-1 text-center">{l}</th>
               ))}
@@ -257,7 +260,7 @@ function LetterTable({ data }) {
           </thead>
           <tbody>
             <tr>
-              <td className="py-2 px-2 text-slate-400">Valor</td>
+              <td className="py-2 px-2 text-slate-400">{t('numerology.value')}</td>
               {Object.keys(LETTER_MAP).slice(9, 18).map(l => (
                 <td key={l} className="py-2 px-1 text-center text-white">{LETTER_MAP[l]}</td>
               ))}
@@ -270,7 +273,7 @@ function LetterTable({ data }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-slate-400 border-b border-white/10">
-              <th className="text-left py-2 px-2">Letra</th>
+              <th className="text-left py-2 px-2">{t('numerology.letter')}</th>
               {Object.keys(LETTER_MAP).slice(18).map(l => (
                 <th key={l} className="py-2 px-1 text-center">{l}</th>
               ))}
@@ -278,7 +281,7 @@ function LetterTable({ data }) {
           </thead>
           <tbody>
             <tr>
-              <td className="py-2 px-2 text-slate-400">Valor</td>
+              <td className="py-2 px-2 text-slate-400">{t('numerology.value')}</td>
               {Object.keys(LETTER_MAP).slice(18).map(l => (
                 <td key={l} className="py-2 px-1 text-center text-white">{LETTER_MAP[l]}</td>
               ))}
@@ -288,7 +291,7 @@ function LetterTable({ data }) {
       </div>
 
       <div className="mt-4">
-        <h3 className="text-sm font-medium text-purple-300 mb-2">Letras do seu nome:</h3>
+        <h3 className="text-sm font-medium text-purple-300 mb-2">{t('numerology.nameLetters')}</h3>
         <div className="flex flex-wrap gap-2">
           {(data || []).map((item, i) => (
             <span key={i} className="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 text-sm font-mono">
@@ -302,10 +305,11 @@ function LetterTable({ data }) {
 }
 
 function VowelCard({ data }) {
+  const { t } = useTranslation();
   if (!data) return null;
   return (
     <GlassCard>
-      <SectionTitle>Número da Alma (Vogais)</SectionTitle>
+      <SectionTitle>{t('numerology.soulNumberTitle')}</SectionTitle>
       <div className="space-y-3">
         <div className="flex flex-wrap gap-2">
           {data.letters.map((l, i) => (
@@ -316,15 +320,15 @@ function VowelCard({ data }) {
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-slate-400 text-xs">Soma</p>
+            <p className="text-slate-400 text-xs">{t('numerology.sum')}</p>
             <p className="text-white text-2xl font-bold">{data.sum}</p>
           </div>
           <div>
-            <p className="text-slate-400 text-xs">Redução</p>
+            <p className="text-slate-400 text-xs">{t('numerology.reduction')}</p>
             <p className="text-white text-2xl font-bold">{data.reduced}</p>
           </div>
           <div>
-            <p className="text-slate-400 text-xs">Número da Alma</p>
+            <p className="text-slate-400 text-xs">{t('numerology.soulNumber')}</p>
             <p className="text-pink-400 text-3xl font-bold">{data.soulNumber}</p>
           </div>
         </div>
@@ -334,10 +338,11 @@ function VowelCard({ data }) {
 }
 
 function ConsonantCard({ data }) {
+  const { t } = useTranslation();
   if (!data) return null;
   return (
     <GlassCard>
-      <SectionTitle>Número da Personalidade (Consoantes)</SectionTitle>
+      <SectionTitle>{t('numerology.personalityNumberTitle')}</SectionTitle>
       <div className="space-y-3">
         <div className="flex flex-wrap gap-2">
           {data.letters.map((l, i) => (
@@ -348,15 +353,15 @@ function ConsonantCard({ data }) {
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-slate-400 text-xs">Soma</p>
+            <p className="text-slate-400 text-xs">{t('numerology.sum')}</p>
             <p className="text-white text-2xl font-bold">{data.sum}</p>
           </div>
           <div>
-            <p className="text-slate-400 text-xs">Redução</p>
+            <p className="text-slate-400 text-xs">{t('numerology.reduction')}</p>
             <p className="text-white text-2xl font-bold">{data.reduced}</p>
           </div>
           <div>
-            <p className="text-slate-400 text-xs">Número da Personalidade</p>
+            <p className="text-slate-400 text-xs">{t('numerology.personalityNumber')}</p>
             <p className="text-blue-400 text-3xl font-bold">{data.personalityNumber}</p>
           </div>
         </div>
@@ -366,10 +371,11 @@ function ConsonantCard({ data }) {
 }
 
 function ExpressionCard({ data }) {
+  const { t } = useTranslation();
   if (!data) return null;
   return (
     <GlassCard>
-      <SectionTitle>Número da Expressão</SectionTitle>
+      <SectionTitle>{t('numerology.expressionNumberTitle')}</SectionTitle>
       <div className="space-y-3">
         <div className="space-y-1">
           {(data.steps || []).map((step, i) => (
@@ -378,15 +384,15 @@ function ExpressionCard({ data }) {
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-slate-400 text-xs">Soma</p>
+            <p className="text-slate-400 text-xs">{t('numerology.sum')}</p>
             <p className="text-white text-2xl font-bold">{data.sum}</p>
           </div>
           <div>
-            <p className="text-slate-400 text-xs">Redução</p>
+            <p className="text-slate-400 text-xs">{t('numerology.reduction')}</p>
             <p className="text-white text-2xl font-bold">{data.reduced}</p>
           </div>
           <div>
-            <p className="text-slate-400 text-xs">Expressão</p>
+            <p className="text-slate-400 text-xs">{t('numerology.expression')}</p>
             <p className="text-purple-400 text-3xl font-bold">{data.number}</p>
           </div>
         </div>
@@ -396,11 +402,12 @@ function ExpressionCard({ data }) {
 }
 
 function LifePathCard({ data, birthDate }) {
+  const { t } = useTranslation();
   if (!data) return null;
   return (
     <GlassCard>
-      <SectionTitle>Caminho da Vida</SectionTitle>
-      <p className="text-slate-400 text-sm mb-3">Data: {birthDate}</p>
+      <SectionTitle>{t('numerology.lifePathTitle')}</SectionTitle>
+      <p className="text-slate-400 text-sm mb-3">{t('numerology.date', { date: birthDate })}</p>
       <div className="space-y-2 mb-4">
         {(data.steps || []).map((step, i) => (
           <div key={i} className="flex items-center gap-3 bg-white/5 rounded-lg px-4 py-2">
@@ -412,19 +419,21 @@ function LifePathCard({ data, birthDate }) {
         ))}
       </div>
       <div className="text-center">
-        <p className="text-slate-400 text-xs">Número do Caminho da Vida</p>
+        <p className="text-slate-400 text-xs">{t('numerology.lifePathNumber')}</p>
         <p className="text-purple-400 text-4xl font-bold">{data.number}</p>
       </div>
     </GlassCard>
   );
 }
 
-const INTERPRETATION_LABELS = {
-  soul: "Interpretação da Alma",
-  personality: "Interpretação da Personalidade",
-  expression: "Interpretação da Expressão",
-  lifePath: "Interpretação do Caminho da Vida"
-};
+function getInterpretationLabels(t) {
+  return {
+    soul: t('numerology.interpretation.soul'),
+    personality: t('numerology.interpretation.personality'),
+    expression: t('numerology.interpretation.expression'),
+    lifePath: t('numerology.interpretation.lifePath')
+  };
+}
 
 const INTERPRETATION_COLORS = {
   soul: "text-pink-400",
@@ -434,11 +443,13 @@ const INTERPRETATION_COLORS = {
 };
 
 function InterpretationsCard({ data }) {
+  const { t } = useTranslation();
   if (!data) return null;
   const keys = Object.keys(data);
+  const interpretationLabels = getInterpretationLabels(t);
   return (
     <GlassCard>
-      <SectionTitle>Interpretações</SectionTitle>
+      <SectionTitle>{t('numerology.interpretations')}</SectionTitle>
       <div className="space-y-4">
         {keys.map(key => {
           const item = data[key];
@@ -447,7 +458,7 @@ function InterpretationsCard({ data }) {
             <div key={key} className="bg-white/5 rounded-xl p-4">
               <div className="flex items-center justify-between mb-2">
                 <h3 className={`text-sm font-semibold ${INTERPRETATION_COLORS[key] || 'text-white'}`}>
-                  {INTERPRETATION_LABELS[key] || key}
+                  {interpretationLabels[key] || key}
                 </h3>
                 <span className="text-2xl font-bold text-white">{item.number}</span>
               </div>
@@ -469,11 +480,12 @@ function InterpretationsCard({ data }) {
 }
 
 function PyramidCard({ data }) {
+  const { t } = useTranslation();
   if (!data) return null;
   const maxAge = data.length > 0 ? Math.max(...data.map(s => s.age)) : 84;
   return (
     <GlassCard>
-      <SectionTitle>Pirâmide da Vida</SectionTitle>
+      <SectionTitle>{t('numerology.pyramidOfLife')}</SectionTitle>
       <div className="flex flex-col items-center">
         {[...data].reverse().map((stage, i) => {
           const width = 100 - i * 15;
@@ -490,7 +502,7 @@ function PyramidCard({ data }) {
               className={`bg-gradient-to-r ${colors[i % colors.length]} rounded-lg p-3 mb-2 text-center transition-all hover:scale-105`}
             >
               <p className="text-white text-xs font-medium">
-                {stage.age > 0 ? `${stage.age} anos` : 'Nascimento'} — Número {stage.number}
+                {stage.age > 0 ? t('numerology.ageYears', { age: stage.age }) : t('numerology.birth')} — {t('numerology.number', { number: stage.number })}
               </p>
               <p className="text-white/70 text-xs mt-1">{stage.meaning}</p>
             </div>
@@ -502,20 +514,21 @@ function PyramidCard({ data }) {
 }
 
 function CabalisticCard({ data }) {
+  const { t } = useTranslation();
   if (!data) return null;
   return (
     <GlassCard>
-      <SectionTitle>Numerologia Cabalística</SectionTitle>
+      <SectionTitle>{t('numerology.cabalisticTitle')}</SectionTitle>
       <div className="space-y-3">
         <p className="text-slate-300 text-sm">
-          {data.table?.method || 'Método de cálculo baseado na tabela pitagórica'}
+          {data.table?.method || t('numerology.cabalisticMethod')}
         </p>
         <div className="bg-white/5 rounded-lg p-3">
-          <p className="text-slate-400 text-xs mb-1">Cálculo:</p>
+          <p className="text-slate-400 text-xs mb-1">{t('numerology.calculation')}</p>
           <p className="text-white text-sm font-mono break-all">{data.calculation}</p>
         </div>
         <div className="text-center">
-          <p className="text-slate-400 text-xs">Resultado Cabalístico</p>
+          <p className="text-slate-400 text-xs">{t('numerology.cabalisticResult')}</p>
           <p className="text-purple-400 text-4xl font-bold">{data.result}</p>
         </div>
       </div>
@@ -524,13 +537,14 @@ function CabalisticCard({ data }) {
 }
 
 function CorrelationCard({ data }) {
+  const { t } = useTranslation();
   if (!data) return null;
   return (
     <GlassCard>
-      <SectionTitle>Correlação Numérica</SectionTitle>
+      <SectionTitle>{t('numerology.correlationTitle')}</SectionTitle>
       <div className="space-y-3">
         <div>
-          <p className="text-slate-400 text-xs mb-2">Números encontrados:</p>
+          <p className="text-slate-400 text-xs mb-2">{t('numerology.numbersFound')}</p>
           <div className="flex flex-wrap gap-2">
             {(data.numbers || []).map((n, i) => (
               <span key={i} className="w-10 h-10 rounded-full bg-purple-500/20 text-purple-300 font-bold flex items-center justify-center">
@@ -540,7 +554,7 @@ function CorrelationCard({ data }) {
           </div>
         </div>
         <div>
-          <p className="text-slate-400 text-xs mb-2">Características:</p>
+          <p className="text-slate-400 text-xs mb-2">{t('numerology.characteristics')}</p>
           <div className="flex flex-wrap gap-1">
             {(data.characteristics || []).map((c, i) => (
               <span key={i} className="px-3 py-1 rounded-full bg-white/10 text-slate-200 text-sm">
@@ -567,10 +581,11 @@ const ANGEL_COLORS = [
 ];
 
 function AngelNumbersCard({ data }) {
+  const { t } = useTranslation();
   if (!data) return null;
   return (
     <GlassCard>
-      <SectionTitle>Angel Numbers</SectionTitle>
+      <SectionTitle>{t('numerology.angelNumbers')}</SectionTitle>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {(data || []).map((item, i) => (
           <div key={i} className={`bg-gradient-to-br ${ANGEL_COLORS[i % ANGEL_COLORS.length]} rounded-xl p-4 border border-white/5`}>
@@ -584,9 +599,10 @@ function AngelNumbersCard({ data }) {
 }
 
 function SummaryCard({ text, numbers }) {
+  const { t } = useTranslation();
   return (
     <GlassCard className="bg-gradient-to-br from-purple-600/10 to-indigo-600/10 border-purple-500/20">
-      <SectionTitle>Resumo Geral</SectionTitle>
+      <SectionTitle>{t('numerology.generalSummary')}</SectionTitle>
       <div className="flex flex-wrap gap-2 mb-4 justify-center">
         {(numbers || []).map((n, i) => (
           <span key={i} className="w-10 h-10 rounded-full bg-purple-500/30 text-white font-bold flex items-center justify-center text-lg">

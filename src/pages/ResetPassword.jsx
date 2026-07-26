@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { validateResetToken, resetPassword } from "../services/api";
 import GlassCard from "../components/ui/GlassCard";
@@ -8,6 +9,7 @@ import Label from "../components/ui/Label";
 import logotipo from "../assets/logotipo-white.png";
 
 export default function ResetPassword() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get("token");
@@ -34,11 +36,11 @@ export default function ResetPassword() {
     setError("");
 
     if (password.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres.");
+      setError(t('reset.minPassword'));
       return;
     }
     if (password !== confirm) {
-      setError("As senhas não conferem.");
+      setError(t('reset.passwordsMismatch'));
       return;
     }
 
@@ -47,7 +49,7 @@ export default function ResetPassword() {
       await resetPassword(token, password);
       setDone(true);
     } catch (err) {
-      setError(err.message || "Erro ao redefinir senha.");
+      setError(err.message || t('reset.errorResetting'));
     } finally {
       setLoading(false);
     }
@@ -63,7 +65,7 @@ export default function ResetPassword() {
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
           </div>
-          <p className="text-slate-400 text-sm mt-4">Validando token...</p>
+          <p className="text-slate-400 text-sm mt-4">{t('reset.validatingToken')}</p>
         </GlassCard>
       </div>
     );
@@ -78,10 +80,10 @@ export default function ResetPassword() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Link inválido ou expirado</h1>
-          <p className="text-slate-400 text-sm mb-6">Solicite uma nova recuperação de senha.</p>
+          <h1 className="text-2xl font-bold text-white mb-2">{t('reset.invalidLink')}</h1>
+          <p className="text-slate-400 text-sm mb-6">{t('reset.requestNewRecovery')}</p>
           <PrimaryButton onClick={() => navigate("/forgot-password")} fullWidth>
-            Solicitar novo link
+            {t('reset.requestNewLink')}
           </PrimaryButton>
         </GlassCard>
       </div>
@@ -97,10 +99,10 @@ export default function ResetPassword() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Senha redefinida!</h1>
-          <p className="text-slate-400 text-sm mb-6">Faça login com sua nova senha.</p>
+          <h1 className="text-2xl font-bold text-white mb-2">{t('reset.success')}</h1>
+          <p className="text-slate-400 text-sm mb-6">{t('reset.loginWithNewPassword')}</p>
           <PrimaryButton onClick={() => navigate("/login")} fullWidth>
-            Ir para o Login
+            {t('shared.goToLogin')}
           </PrimaryButton>
         </GlassCard>
       </div>
@@ -113,12 +115,12 @@ export default function ResetPassword() {
         <GlassCard className="p-8">
           <div className="text-center mb-6">
             <img src={logotipo} alt="Dream Line Logo" className="w-20 h-20 object-contain mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-white">Redefinir senha</h1>
+            <h1 className="text-2xl font-bold text-white">{t('reset.pageTitle')}</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <Label className="block mb-2">Nova senha</Label>
+              <Label className="block mb-2">{t('reset.newPassword')}</Label>
               <Input
                 type="password"
                 value={password}
@@ -129,7 +131,7 @@ export default function ResetPassword() {
             </div>
 
             <div>
-              <Label className="block mb-2">Confirmar senha</Label>
+              <Label className="block mb-2">{t('reset.confirmPassword')}</Label>
               <Input
                 type="password"
                 value={confirm}
@@ -146,7 +148,7 @@ export default function ResetPassword() {
             )}
 
             <PrimaryButton type="submit" disabled={loading} fullWidth>
-              {loading ? "Salvando..." : "Salvar nova senha"}
+              {loading ? t('reset.saving') : t('reset.saveNewPassword')}
             </PrimaryButton>
           </form>
         </GlassCard>

@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AppContainer from "../components/ui/AppContainer";
 
 export default function PaymentCancelled() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -14,18 +16,18 @@ export default function PaymentCancelled() {
         </div>
 
         <h1 className="text-3xl font-bold text-white mb-3">
-          Pagamento cancelado
+          {t('payment.cancelled.title')}
         </h1>
 
         <p className="text-lg text-slate-300 mb-8">
-          Nenhuma cobrança foi realizada.
+          {t('payment.cancelled.subtitle')}
         </p>
 
         <button
           onClick={() => navigate("/pricing")}
           className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:scale-[1.02] active:scale-[0.98]"
         >
-          Voltar aos planos
+          {t('payment.cancelled.backToPlans')}
         </button>
       </div>
     </AppContainer>

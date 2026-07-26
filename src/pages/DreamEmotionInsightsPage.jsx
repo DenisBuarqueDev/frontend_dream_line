@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { getDreamEmotionCorrelations } from "../services/api";
@@ -66,6 +67,7 @@ function ChartTooltip({ active, payload, label }) {
 }
 
 export default function DreamEmotionInsightsPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { isPremium } = usePermissions();
   const [days, setDays] = useState(30);

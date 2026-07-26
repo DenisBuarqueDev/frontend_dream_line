@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 import { sendEmotionChatMessage, getEmotionConversation } from "../services/api";
 import AppContainer from "../components/ui/AppContainer";
@@ -9,6 +10,7 @@ import IonIcon from "../components/ui/IonIcon";
 import { chatbubbleOutline } from "ionicons/icons";
 
 export default function EmotionChatPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
@@ -51,7 +53,7 @@ export default function EmotionChatPage() {
       console.error("Erro ao enviar mensagem:", err);
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Desculpe, não consegui responder agora. Tente novamente." },
+        { role: "assistant", content: t('chat.errorProcessing') },
       ]);
     } finally {
       setIsLoading(false);
@@ -68,7 +70,7 @@ export default function EmotionChatPage() {
   if (loadingHistory) {
     return (
       <AppContainer>
-        <AppHeader title="Conversa" onBack={() => navigate(`/emotions/${id}/analysis`)} />
+        <AppHeader title={t('chat.title')} onBack={() => navigate(`/emotions/${id}/analysis`)} />
         <div className="flex-1 flex items-center justify-center">
           <LoadingSpinner />
         </div>
@@ -78,17 +80,17 @@ export default function EmotionChatPage() {
 
   return (
     <AppContainer>
-      <AppHeader title="Conversa" onBack={() => navigate(`/emotions/${id}/analysis`)} />
+      <AppHeader title={t('chat.title')} onBack={() => navigate(`/emotions/${id}/analysis`)} />
       <div className="flex-1 flex flex-col px-4 pb-4">
         <div className="flex-1 overflow-y-auto space-y-3 mb-4 max-w-xl w-full mx-auto">
           {messages.length === 0 && (
             <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
               <div className="text-5xl mb-4"><IonIcon icon={chatbubbleOutline} /></div>
               <h3 className="text-white font-semibold text-lg mb-2">
-                Vamos conversar
+                {t('chat.emptyTitle')}
               </h3>
               <p className="text-purple-200 text-sm max-w-xs">
-                Conte mais sobre como você está se sentindo. Estou aqui para ouvir.
+                {t('chat.emotionWelcome')}
               </p>
             </div>
           )}
@@ -104,7 +106,7 @@ export default function EmotionChatPage() {
               >
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                 <p className="text-[10px] mt-1 opacity-40">
-                  {msg.role === "user" ? "Você" : "IA"}
+                  {msg.role === "user" ? t('shared.you') : t('shared.ai')}
                 </p>
               </div>
             </div>
@@ -132,7 +134,7 @@ export default function EmotionChatPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Digite sua mensagem..."
+                placeholder={t('chat.typeMessage')}
                 rows={1}
                 className="flex-1 bg-transparent border-none outline-none text-white placeholder:text-slate-400 resize-none px-2 py-1 text-sm"
               />

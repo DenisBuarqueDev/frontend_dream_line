@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { requestFCMPermission } from "../services/firebaseClient";
 import { registerFCMToken, getNotificationSettings, updateNotificationSettings } from "../services/notificationService";
@@ -16,6 +17,7 @@ function shouldShowFromLocal() {
 }
 
 export default function NotificationPrompt() {
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -77,8 +79,8 @@ export default function NotificationPrompt() {
             <IonIcon icon={notificationsOutline} className="w-8 h-8 text-purple-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-white">Receber lembretes para registrar sonhos?</p>
-            <p className="text-xs text-slate-400 mt-0.5">Notificações diárias para não esquecer seus sonhos</p>
+            <p className="text-sm font-semibold text-white">{t("notificationPrompt.title")}</p>
+            <p className="text-xs text-slate-400 mt-0.5">{t("notificationPrompt.description")}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 mt-3">
@@ -87,14 +89,14 @@ export default function NotificationPrompt() {
             disabled={loading}
             className="flex-1 px-3 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-xl transition-all disabled:opacity-50"
           >
-            Agora não
+            {t("notificationPrompt.notNow")}
           </button>
           <button
             onClick={handleActivate}
             disabled={loading}
             className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-sm font-semibold rounded-xl transition-all shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
           >
-            {loading ? "Ativando..." : "Ativar"}
+            {loading ? t("notificationPrompt.activating") : t("notificationPrompt.activate")}
           </button>
         </div>
         <button
@@ -102,7 +104,7 @@ export default function NotificationPrompt() {
           disabled={loading}
           className="mt-2 w-full text-xs text-slate-500 hover:text-slate-400 transition-colors text-center"
         >
-          Não mostrar novamente
+          {t("notificationPrompt.neverShow")}
         </button>
       </div>
     </div>

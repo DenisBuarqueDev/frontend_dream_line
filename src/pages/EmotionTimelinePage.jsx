@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { getEmotions, deleteEmotion } from "../services/api";
 import { usePermissions } from "../hooks/usePermissions";
@@ -77,15 +78,15 @@ function getEmotionBorder(emotion) {
   return colors[emotion] || "border-l-white/20";
 }
 
-function formatDate(dateStr) {
+function formatDate(dateStr, t) {
   const date = new Date(dateStr);
   const now = new Date();
   const diff = now - date;
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-  if (days === 0) return "Hoje";
-  if (days === 1) return "Ontem";
-  if (days < 7) return `Há ${days} dias`;
+  if (days === 0) return t('chat.card.today');
+  if (days === 1) return t('chat.card.yesterday');
+  if (days < 7) return t('chat.card.daysAgo', { count: days });
 
   return date.toLocaleDateString("pt-BR", {
     day: "numeric",
@@ -95,6 +96,7 @@ function formatDate(dateStr) {
 }
 
 export default function EmotionTimelinePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { isPremium } = usePermissions();
   const [emotions, setEmotions] = useState([]);
@@ -232,7 +234,7 @@ export default function EmotionTimelinePage() {
                       )}
                       <div className="flex items-center gap-2">
                         <span className="text-purple-200/40 text-[11px]">
-                          {formatDate(emotion.createdAt)}
+                          {formatDate(emotion.createdAt, t)}
                         </span>
                         <div className="flex-1 max-w-[80px] h-1.5 rounded-full bg-white/10 overflow-hidden">
                           <div

@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 export default function AppHeader({ title, onBack, onRightClick, rightIcon, leftExtra, className = "" }) {
+  const { t } = useTranslation();
   return (
     <div className={`flex md:hidden items-center justify-between px-4 pt-4 pb-2 ${className}`}>
       <div className="flex items-center gap-2">
@@ -6,7 +9,7 @@ export default function AppHeader({ title, onBack, onRightClick, rightIcon, left
           <button
             onClick={onBack}
             className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-            title="Voltar"
+            title={t('shared.back')}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -20,7 +23,7 @@ export default function AppHeader({ title, onBack, onRightClick, rightIcon, left
         <button
           onClick={onRightClick}
           className="w-10 h-10 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-white flex items-center justify-center transition-all"
-          title="Sair"
+          title={t('shared.exit')}
         >
           {rightIcon || (
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

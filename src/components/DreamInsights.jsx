@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const COLORS = {
@@ -8,6 +9,7 @@ const COLORS = {
 };
 
 function DreamInsights({ dreams = [] }) {
+  const { t } = useTranslation();
   const data = useMemo(() => {
     if (!dreams || dreams.length === 0) return null;
 

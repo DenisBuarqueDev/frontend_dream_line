@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import {
   getNotificationSettings,
@@ -33,7 +34,7 @@ const TIME_OPTIONS = [
   { label: "22:00", value: "22:00" },
 ];
 
-function calcNextNotification(times, enabled) {
+function calcNextNotification(times, enabled, t) {
   if (!enabled || !times || times.length === 0) return null;
   const now = new Date();
   const currentMin = now.getHours() * 60 + now.getMinutes();
@@ -41,16 +42,16 @@ function calcNextNotification(times, enabled) {
   for (const time of sorted) {
     const [h, m] = time.split(":").map(Number);
     if (h * 60 + m > currentMin) {
-      return { time, label: `hoje às ${time}` };
+      return { time, label: t('notifications.todayAt', { time }) };
     }
   }
-  return { time: sorted[0], label: `amanhã às ${sorted[0]}` };
+  return { time: sorted[0], label: t('notifications.tomorrowAt', { time: sorted[0] }) };
 }
 
-function formatDate(dateStr) {
+function formatDate(dateStr, locale) {
   if (!dateStr) return null;
   const d = new Date(dateStr);
-  return d.toLocaleDateString("pt-BR", {
+  return d.toLocaleDateString(locale, {
     day: "numeric",
     month: "short",
     hour: "2-digit",
@@ -59,6 +60,7 @@ function formatDate(dateStr) {
 }
 
 export default function NotificationSettings() {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { isPremium } = usePermissions();
   const [enabled, setEnabled] = useState(false);
@@ -73,7 +75,7 @@ export default function NotificationSettings() {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const timerRef = useRef(null);
 
-  const nextNotif = useMemo(() => calcNextNotification(times, enabled), [times, enabled]);
+  const nextNotif = useMemo(() => calcNextNotification(times, enabled, t), [times, enabled, t]);
 
   const showFeedback = useCallback((text, type = "success") => {
     setFeedback({ text, type });
@@ -89,7 +91,7 @@ export default function NotificationSettings() {
         setHasToken(s.hasToken);
         setLastSent(s.lastNotificationSent);
       })
-      .catch(() => showFeedback("Erro ao carregar configurações", "error"))
+      .catch(() => showFeedback(t('notifications.errorLoading'), "error"))
       .finally(() => setLoading(false));
   }, [showFeedback]);
 
@@ -111,7 +113,7 @@ export default function NotificationSettings() {
           await registerFCMToken(token);
           setHasToken(true);
         } else {
-          showFeedback("Permissão de notificação negada", "error");
+          showFeedback(t('notifications.permissionDenied'), "error");
           setSaving(false);
           return;
         }
@@ -121,10 +123,10 @@ export default function NotificationSettings() {
       }
       await updateNotificationSettings({ notificationsEnabled: newEnabled });
       setEnabled(newEnabled);
-      showFeedback(newEnabled ? "Notificações ativadas" : "Notificações desativadas");
+      showFeedback(newEnabled ? t('notifications.enabled') : t('notifications.disabled'));
     } catch (e) {
       console.error("[Notificações] Erro ao alternar:", e);
-      showFeedback("Erro ao atualizar", "error");
+      showFeedback(t('notifications.errorUpdating'), "error");
     }
     setSaving(false);
   };
@@ -138,17 +140,17 @@ export default function NotificationSettings() {
         ? [...times, time].sort()
         : times.filter((t) => t !== time);
       if (newTimes.length === 0) {
-        showFeedback("Selecione pelo menos um horário", "error");
+        showFeedback(t('notifications.selectAtLeastOne'), "error");
         setAnimTime(null);
         setSaving(false);
         return;
       }
       await updateNotificationSettings({ notificationTimes: newTimes });
       setTimes(newTimes);
-      showFeedback(`${time} ${isAdding ? "selecionado" : "removido"}`);
+      showFeedback(`${time} ${isAdding ? t('notifications.selected') : t('notifications.removed')}`);
     } catch (e) {
       console.error("[Notificações] Erro ao alterar horário:", e);
-      showFeedback("Erro ao atualizar horários", "error");
+      showFeedback(t('notifications.errorUpdatingTimes'), "error");
     }
     setTimeout(() => setAnimTime(null), 350);
     setSaving(false);
@@ -159,14 +161,14 @@ export default function NotificationSettings() {
     try {
       const result = await sendTestNotification();
       if (result.success) {
-        showFeedback(<><IonIcon icon={checkmarkCircleOutline} className="w-4 h-4 text-green-400" /> Notificação enviada com sucesso</>);
+        showFeedback(<><IonIcon icon={checkmarkCircleOutline} className="w-4 h-4 text-green-400" /> {t('notifications.sentSuccess')}</>);
       } else {
         console.error("[Notificações] Falha no teste:", result.reason, result.error);
-        showFeedback(<><IonIcon icon={closeCircleOutline} className="w-4 h-4 text-red-400" /> Não foi possível enviar a notificação</>, "error");
+        showFeedback(<><IonIcon icon={closeCircleOutline} className="w-4 h-4 text-red-400" /> {t('notifications.cannotSend')}</>, "error");
       }
     } catch (e) {
       console.error("[Notificações] Erro no teste:", e);
-      showFeedback(<><IonIcon icon={closeCircleOutline} className="w-4 h-4 text-red-400" /> Não foi possível enviar a notificação</>, "error");
+      showFeedback(<><IonIcon icon={closeCircleOutline} className="w-4 h-4 text-red-400" /> {t('notifications.cannotSend')}</>, "error");
     } finally {
       setTesting(false);
     }
@@ -184,16 +186,16 @@ export default function NotificationSettings() {
 
   return (
     <AppContainer>
-      <AppHeader title="Notificações" onBack={() => navigate("/dashboard")} />
+      <AppHeader title={t('nav.notifications')} onBack={() => navigate("/dashboard")} />
 
       <div className="p-4 space-y-6">
 
         <GlassCard>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-white font-semibold">Lembretes de sonhos</p>
+              <p className="text-white font-semibold">{t('notifications.dreamReminders')}</p>
               <p className="text-sm text-slate-400 mt-0.5">
-                {enabled ? "Ativo" : "Inativo"}
+                {enabled ? t('notifications.active') : t('notifications.inactive')}
               </p>
             </div>
             <button
@@ -213,7 +215,7 @@ export default function NotificationSettings() {
         </GlassCard>
 
         <div>
-          <p className="text-white font-semibold mb-3">Horários</p>
+          <p className="text-white font-semibold mb-3">{t('notifications.times')}</p>
           <div className="flex flex-wrap gap-2">
             {TIME_OPTIONS.map((opt) => {
               const selected = times.includes(opt.value);
@@ -235,35 +237,35 @@ export default function NotificationSettings() {
             })}
           </div>
           <p className="text-xs text-slate-500 mt-2">
-            Toque para selecionar os horários de lembrete
+            {t('notifications.tapToSelect')}
           </p>
         </div>
 
         <GlassCard>
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-            Status das notificações
+            {t('notifications.status')}
           </p>
           <div className="flex items-center gap-2">
             <span className={`w-2.5 h-2.5 rounded-full ${hasToken ? "bg-green-500" : "bg-red-500"}`} />
             <span className="text-sm text-white">
-              {hasToken ? "Dispositivo registrado" : "Notificações não autorizadas"}
+              {hasToken ? t('notifications.deviceRegistered') : t('notifications.unauthorized')}
             </span>
           </div>
           {hasToken ? (
-            <p className="text-xs text-slate-400 mt-1 ml-[18px]">FCM Token válido</p>
+            <p className="text-xs text-slate-400 mt-1 ml-[18px]">{t('notifications.fcmTokenValid')}</p>
           ) : (
             <button
               onClick={toggleEnabled}
               className="mt-2 text-xs text-purple-400 hover:text-purple-300 ml-[18px] transition-colors"
             >
-              Solicitar permissão novamente
+              {t('notifications.requestPermissionAgain')}
             </button>
           )}
         </GlassCard>
 
         {enabled && (
           <PrimaryButton onClick={handleTest} disabled={testing || saving}>
-            {testing ? "Enviando…" : "Enviar notificação de teste"}
+            {testing ? t('notifications.sending') : t('notifications.sendTest')}
           </PrimaryButton>
         )}
 
@@ -281,39 +283,39 @@ export default function NotificationSettings() {
 
         <GlassCard>
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-            Sobre as notificações
+            {t('notifications.about')}
           </p>
           <div className="space-y-2.5">
             <div className="flex justify-between items-center text-sm">
-              <span className="text-slate-400">Lembretes</span>
+              <span className="text-slate-400">{t('notifications.reminders')}</span>
               <span className={enabled ? "text-green-400" : "text-slate-500"}>
-                {enabled ? "Ativados" : "Desativados"}
+                {enabled ? t('notifications.enabledStatus') : t('notifications.disabledStatus')}
               </span>
             </div>
 
             {times.length > 0 && (
               <div className="flex justify-between items-center text-sm">
-                <span className="text-slate-400">Horários selecionados</span>
+                <span className="text-slate-400">{t('notifications.selectedTimes')}</span>
                 <span className="text-white">{times.join(", ")}</span>
               </div>
             )}
 
             <div className="flex justify-between items-center text-sm">
-              <span className="text-slate-400">Quantidade de horários</span>
-              <span className="text-white">{times.length} ativo(s)</span>
+              <span className="text-slate-400">{t('notifications.timesCount')}</span>
+              <span className="text-white">{t('notifications.activeCount', { count: times.length })}</span>
             </div>
 
             {nextNotif && (
               <div className="flex justify-between items-center text-sm">
-                <span className="text-slate-400">Próximo lembrete</span>
+                <span className="text-slate-400">{t('notifications.nextReminder')}</span>
                 <span className="text-purple-400"><IonIcon icon={alarmOutline} className="w-5 h-5" /> {nextNotif.label}</span>
               </div>
             )}
 
-            {formatDate(lastSent) && (
+            {formatDate(lastSent, i18n.language) && (
               <div className="flex justify-between items-center text-sm">
-                <span className="text-slate-400">Último envio</span>
-                <span className="text-slate-300">{formatDate(lastSent)}</span>
+                <span className="text-slate-400">{t('notifications.lastSent')}</span>
+                <span className="text-slate-300">{formatDate(lastSent, i18n.language)}</span>
               </div>
             )}
           </div>
@@ -324,7 +326,7 @@ export default function NotificationSettings() {
       <PremiumModal
         isOpen={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
-        featureName="Notificações Push"
+        featureName={t('pricing.featureNotifications')}
       />
     </AppContainer>
   );

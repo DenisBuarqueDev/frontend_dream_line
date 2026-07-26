@@ -132,14 +132,16 @@ export default function Login() {
       data = await apiLogin(email, password, recaptchaToken);
 
       const token = data.data?.token;
+      const user = data.data?.user || {};
       const userData = {
-        plan: "free",
+        plan: user.plano || user.plan || "free",
         remainingDreams: 5,
         maxDreams: 5,
         canGenerateImage: false,
         canUseSleepMode: false,
         canSeeWeeklySummary: false,
-        ...data.data?.user,
+        ...user,
+        plan: user.plano || user.plan || "free",
       };
 
       if (!token) {

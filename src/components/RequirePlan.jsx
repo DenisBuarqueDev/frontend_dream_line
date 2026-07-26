@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import PremiumModal from './PremiumModal';
 
 export function RequirePlan({ children, plans }) {
+  const { t } = useTranslation();
   const { user, isLoading } = useAuth();
   const [showModal, setShowModal] = useState(true);
 
@@ -21,7 +23,7 @@ export function RequirePlan({ children, plans }) {
       <PremiumModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        featureName="Este recurso"
+        featureName={t('requirePlan.featureDefault')}
       />
     );
   }

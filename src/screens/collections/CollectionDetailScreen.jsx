@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { DreamListCard } from '../../components/dreams/DreamListCard';
@@ -9,6 +10,7 @@ import EmptyState from '../../components/EmptyState';
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 function CollectionDetailScreen() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { getToken } = useAuth();
@@ -42,11 +44,11 @@ function CollectionDetailScreen() {
   if (!collection) {
     return (
       <AppContainer>
-        <AppHeader title="Coleção" onBack={() => navigate('/collections')} />
+        <AppHeader title={t('collectionDetail.header')} onBack={() => navigate('/collections')} />
         <EmptyState
           icon="📁"
-          title="Coleção não encontrada"
-          subtitle="esta coleção pode ter sido removida"
+          title={t('collectionDetail.notFound')}
+          subtitle={t('collectionDetail.notFoundSubtitle')}
         />
       </AppContainer>
     );
@@ -63,8 +65,8 @@ function CollectionDetailScreen() {
         {dreams.length === 0 ? (
           <EmptyState
             icon="🌙"
-            title="Nenhum sonho nesta coleção"
-            subtitle="adicione sonhos para começar"
+            title={t('collectionDetail.emptyTitle')}
+            subtitle={t('collectionDetail.emptySubtitle')}
           />
         ) : (
           dreams.map((dream) => (

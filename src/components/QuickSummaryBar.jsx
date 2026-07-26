@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import IonIcon from "../components/ui/IonIcon";
 import { trophyOutline, heartOutline, checkmarkCircleOutline, bookOutline, flagOutline } from "ionicons/icons";
 
@@ -17,6 +18,7 @@ function Indicator({ icon, label, value }) {
 }
 
 export default function QuickSummaryBar({ summary }) {
+  const { t } = useTranslation();
   const [animClass, setAnimClass] = useState("opacity-0 translate-y-4");
 
   useEffect(() => {
@@ -36,17 +38,17 @@ export default function QuickSummaryBar({ summary }) {
         />
         <Indicator
           icon={<IonIcon icon={heartOutline} />}
-          label="Humor"
+          label={t("quickSummary.mood")}
           value={summary?.predominantMood ?? null}
         />
         <Indicator
           icon={<IonIcon icon={checkmarkCircleOutline} />}
-          label="Consistência"
+          label={t("quickSummary.consistency")}
           value={summary?.consistency != null ? `${summary.consistency}%` : null}
         />
         <Indicator
           icon={<IonIcon icon={bookOutline} />}
-          label="Sonhos"
+          label={t("quickSummary.dreams")}
           value={`${summary?.totalDreams ?? 0}`}
         />
       </div>
@@ -55,7 +57,7 @@ export default function QuickSummaryBar({ summary }) {
         <div className="mt-3 pt-3 border-t border-white/10 flex items-center gap-2">
           <span className="text-purple-400 text-sm"><IonIcon icon={flagOutline} /></span>
           <span className="text-sm text-purple-300 font-medium">
-            Jornada: {summary.currentJourney.label} ({summary.currentJourney.progress}%)
+            {t("quickSummary.journey")} {summary.currentJourney.label} ({summary.currentJourney.progress}%)
           </span>
         </div>
       )}

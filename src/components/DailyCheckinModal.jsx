@@ -1,23 +1,24 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import IonIcon from "../components/ui/IonIcon";
 import { heartOutline, moonOutline, sunnyOutline } from "ionicons/icons";
 
-const MOOD_OPTIONS = [
-  { key: "muito_bem", emoji: "😊", label: "Muito bem" },
-  { key: "bem", emoji: "🙂", label: "Bem" },
-  { key: "normal", emoji: "😐", label: "Normal" },
-  { key: "triste", emoji: "😔", label: "Triste" },
-  { key: "muito_mal", emoji: "😣", label: "Muito mal" },
-];
-
-const SLEEP_OPTIONS = [
-  { key: "excelente", label: "Excelente" },
-  { key: "bom", label: "Bom" },
-  { key: "regular", label: "Regular" },
-  { key: "ruim", label: "Ruim" },
-];
-
 export default function DailyCheckinModal({ visible, onComplete, onClose }) {
+  const { t } = useTranslation();
+  const MOOD_OPTIONS = [
+    { key: "muito_bem", emoji: "😊", label: t('checkin.mood.great') },
+    { key: "bem", emoji: "🙂", label: t('checkin.mood.good') },
+    { key: "normal", emoji: "😐", label: t('checkin.mood.normal') },
+    { key: "triste", emoji: "😔", label: t('checkin.mood.sad') },
+    { key: "muito_mal", emoji: "😣", label: t('checkin.mood.terrible') },
+  ];
+
+  const SLEEP_OPTIONS = [
+    { key: "excelente", label: t('checkin.sleep.excellent') },
+    { key: "bom", label: t('checkin.sleep.good') },
+    { key: "regular", label: t('checkin.sleep.fair') },
+    { key: "ruim", label: t('checkin.sleep.poor') },
+  ];
   const [step, setStep] = useState(0);
   const [mood, setMood] = useState(null);
   const [sleepQuality, setSleepQuality] = useState(null);
@@ -65,10 +66,10 @@ export default function DailyCheckinModal({ visible, onComplete, onClose }) {
       const json = await res.json();
       const msg =
         json?.data?.message ||
-        "Obrigado por compartilhar como você está hoje.";
+        t('checkin.thankYou');
       onComplete(msg);
     } catch {
-      onComplete("Obrigado por compartilhar como você está hoje.");
+      onComplete(t('checkin.thankYou'));
     } finally {
       setSubmitting(false);
     }
@@ -82,9 +83,9 @@ export default function DailyCheckinModal({ visible, onComplete, onClose }) {
     <IonIcon icon={sunnyOutline} />,
   ];
   const stepQuestions = [
-    "Como você está hoje?",
-    "Como foi seu sono?",
-    "Deseja registrar um sonho agora?",
+    t('checkin.howAreYou'),
+    t('checkin.howWasSleep'),
+    t('checkin.wantDream'),
   ];
 
   return (
@@ -142,14 +143,14 @@ export default function DailyCheckinModal({ visible, onComplete, onClose }) {
                 disabled={submitting}
                 className="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 font-semibold hover:bg-white/10 transition-all"
               >
-                Depois
+                {t('checkin.later')}
               </button>
               <button
                 onClick={() => handleWantDream("sim")}
                 disabled={submitting}
                 className="flex-1 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold hover:from-purple-500 hover:to-indigo-500 transition-all disabled:opacity-50"
               >
-                {submitting ? "Enviando..." : "Sim"}
+                {submitting ? t('shared.sending') : t('checkin.yes')}
               </button>
             </div>
           )}
