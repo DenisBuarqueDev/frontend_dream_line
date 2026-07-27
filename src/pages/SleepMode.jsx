@@ -17,7 +17,7 @@ export default function SleepMode() {
     { id: "estressado", label: t('sleep.emotion.stressed'), icon: "😤", color: "from-red-500 to-rose-600" },
     { id: "cansado", label: t('sleep.emotion.tired'), icon: "😴", color: "from-indigo-500 to-purple-600" },
     { id: "desmotivado", label: t('sleep.emotion.demotivated'), icon: "😐", color: "from-slate-500 to-slate-600" },
-    { id: "voltar_dormir", label: t('sleep.emotion.goBackToSleep'), icon: "🌙", color: "from-violet-500 to-indigo-600" },
+    { id: "voltar_dormir", label: t('sleep.emotion.backToSleep'), icon: "🌙", color: "from-violet-500 to-indigo-600" },
     { id: "preocupado", label: t('sleep.emotion.worried'), icon: "☹️", color: "from-blue-500 to-slate-600" },
     { id: "sobrecarregado", label: t('sleep.emotion.overwhelmed'), icon: "🫩", color: "from-yellow-400 to-yellow-700" },
     { id: "triste", label: t('sleep.emotion.sad'), icon: "😔", color: "from-slate-500 to-slate-600" },

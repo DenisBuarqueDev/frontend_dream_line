@@ -576,29 +576,14 @@ export default function Timeline() {
     const avgSleepFormatted =
       avgSleepHours > 0 ? avgSleepHours.toFixed(1) : null;
 
-    let summary = t('timeline.weeklySummaryIntro', { count: totalDreams });
+    let summary = t('timeline.weeklyDreamsSummary', { count: totalDreams });
 
     if (topTematico) {
-      const temasMap = {
-        voar: t('timeline.themes.voar'),
-        queda: t('timeline.themes.queda'),
-        agua: t('timeline.themes.agua'),
-        casa: t('timeline.themes.casa'),
-        cidade: t('timeline.themes.cidade'),
-        familia: t('timeline.themes.familia'),
-        liberdade: t('timeline.themes.liberdade'),
-        transicao: t('timeline.themes.transicao'),
-        oceano: t('timeline.themes.oceano'),
-        emocoes: t('timeline.themes.emocoes'),
-      };
-      const temaRelation = temasMap[topTematico.toLowerCase()];
-      summary += temaRelation
-        ? ` ${t('timeline.weeklySummaryThemeWithRelation', { theme: topTematico, relation: temaRelation })}`
-        : ` ${t('timeline.weeklySummaryTheme', { theme: topTematico })}`;
+      summary += ` ${t('timeline.dominantTheme', { theme: topTematico })}`;
     }
 
     if (topEspiritual) {
-      summary += ` ${t('timeline.weeklySummarySpiritual', { theme: topEspiritual })}`;
+      summary += ` ${t('timeline.spiritualInfluence', { theme: topEspiritual })}`;
     }
 
     if (topBiologico) {
@@ -612,11 +597,11 @@ export default function Timeline() {
         alergia: t('timeline.bioStates.alergia'),
         febre: t('timeline.bioStates.febre'),
       };
-      summary += ` ${t('timeline.weeklySummaryBiological', { condition: bioMap[topBiologico.toLowerCase()] || topBiologico })}`;
+      summary += ` ${t('timeline.biologicalState', { condition: bioMap[topBiologico.toLowerCase()] || topBiologico })}`;
     }
 
     if (avgSleepFormatted) {
-      summary += ` ${t('timeline.weeklySummarySleep', { hours: avgSleepFormatted })}`;
+      summary += ` ${t('timeline.avgSleep', { hours: avgSleepFormatted })}`;
     }
 
     return summary;
@@ -739,7 +724,7 @@ export default function Timeline() {
   };
 
   return (
-    <AppContainer className="md:items-start md:justify-center md:p-3">
+    <AppContainer className="md:items-center md:justify-center md:p-3">
       <AppHeader
         title={t('nav.timeline')}
         onBack={() => navigate("/dashboard")}

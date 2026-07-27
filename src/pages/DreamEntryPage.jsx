@@ -24,6 +24,9 @@ import {
   logOutOutline,
   moonOutline,
   heartOutline,
+  bookOutline,
+  planetOutline,
+  bedOutline,
 } from "ionicons/icons";
 
 const getSupportedMimeType = () => {
@@ -541,11 +544,32 @@ export default function DreamEntryPage() {
                 <span className="font-medium">{t('nav.dashboard')}</span>
               </button>
               <button
+                onClick={() => { navigate("/dreams/new"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={bookOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.dreams')}</span>
+              </button>
+              <button
                 onClick={() => { navigate("/emotions/timeline"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={happyOutline} className="w-5 h-5" />
                 <span className="font-medium">{t('nav.emotions')}</span>
+              </button>
+              <button
+                onClick={() => { navigate("/emotions/new"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={bookOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.journal')}</span>
+              </button>
+              <button
+                onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={timeOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.timeline')}</span>
               </button>
               <button
                 onClick={() => { navigate("/emotions/insights"); setSidebarOpen(false); }}
@@ -562,11 +586,53 @@ export default function DreamEntryPage() {
                 <span className="font-medium">{t('nav.correlations')}</span>
               </button>
               <button
+                onClick={() => { navigate("/life-insights"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={bulbOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.lifeInsights')}</span>
+              </button>
+              <button
+                onClick={() => { navigate("/dream-coach"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={starOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.dreamCoach')}</span>
+              </button>
+              <button
+                onClick={() => { navigate("/astrology"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={planetOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.astrology')}</span>
+              </button>
+              <button
                 onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
               >
                 <IonIcon icon={calculatorOutline} className="w-5 h-5" />
                 <span className="font-medium">{t('nav.numerology')}</span>
+              </button>
+              <button
+                onClick={() => { navigate("/sleep"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={bedOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.sleep')}</span>
+              </button>
+              <button
+                onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={notificationsOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.notifications')}</span>
+              </button>
+              <button
+                onClick={() => { navigate("/support"); setSidebarOpen(false); }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+              >
+                <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
+                <span className="font-medium">{t('nav.support')}</span>
               </button>
               <button
                 onClick={() => { navigate("/pricing"); setSidebarOpen(false); }}
@@ -587,20 +653,6 @@ export default function DreamEntryPage() {
                   <span className="font-medium">{t('nav.installApp')}</span>
                 </button>
               )}
-              <button
-                onClick={() => { navigate("/notifications"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={notificationsOutline} className="w-5 h-5" />
-                <span className="font-medium">{t('nav.notifications')}</span>
-              </button>
-              <button
-                onClick={() => { navigate("/support"); setSidebarOpen(false); }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
-              >
-                <IonIcon icon={helpCircleOutline} className="w-5 h-5" />
-                <span className="font-medium">{t('nav.support')}</span>
-              </button>
             </nav>
 
             <div className="p-4 border-t border-white/10">

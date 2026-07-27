@@ -214,7 +214,7 @@ export default function Dashboard() {
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
                 <IonIcon icon={bookOutline} className="w-5 h-5" />
-                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.diary')}</span>
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.journal')}</span>
               </button>
               <button
                 onClick={() => navigate("/timeline")}
@@ -400,7 +400,7 @@ export default function Dashboard() {
                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
                >
                  <IonIcon icon={bookOutline} className="w-5 h-5" />
-                 <span className="font-medium">{t('nav.diary')}</span>
+                 <span className="font-medium">{t('nav.journal')}</span>
               </button>
               <button
                 onClick={() => { navigate("/timeline"); setSidebarOpen(false); }}

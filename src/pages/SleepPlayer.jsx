@@ -16,7 +16,7 @@ export default function SleepPlayer() {
     estressado: { hz: "396Hz", file: "396hz.mp3", label: t('sleep.emotion.stressed') },
     cansado: { hz: "111Hz", file: "111hz.mp3", label: t('sleep.emotion.tired') },
     desmotivado: { hz: "528Hz", file: "528hz.mp3", label: t('sleep.emotion.demotivated') },
-    voltar_dormir: { hz: "528Hz", file: "528hz.mp3", label: t('sleep.emotion.goBackToSleep') },
+    voltar_dormir: { hz: "528Hz", file: "528hz.mp3", label: t('sleep.emotion.backToSleep') },
     preocupado: { hz: "852Hz", file: "852hz.mp3", label: t('sleep.emotion.worried') },
     sobrecarregado: { hz: "639Hz", file: "639hz.mp3", label: t('sleep.emotion.overwhelmed') },
     triste: { hz: "111Hz", file: "111hz.mp3", label: t('sleep.emotion.sad') },
