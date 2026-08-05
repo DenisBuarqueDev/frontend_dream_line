@@ -17,6 +17,7 @@ import Pricing from "./pages/Pricing";
 import AstrologyChart from "./pages/AstrologyChart";
 import Numerology from "./pages/Numerology";
 import NameNumerologyPage from "./pages/NameNumerologyPage";
+import PalmReadingPage from "./pages/PalmReadingPage";
 import LuckyNumbers from "./pages/LuckyNumbers";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancelled from "./pages/PaymentCancelled";
@@ -163,6 +164,16 @@ function App() {
         element={
           <ProtectedRoute>
             <NameNumerologyPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/palm-reading"
+        element={
+          <ProtectedRoute>
+            <RequirePlan plans={["premium"]}>
+              <PalmReadingPage />
+            </RequirePlan>
           </ProtectedRoute>
         }
       />

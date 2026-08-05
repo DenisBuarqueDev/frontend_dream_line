@@ -22,6 +22,7 @@ import {
   logOutOutline,
   lockClosedOutline,
   heartOutline,
+  handLeftOutline,
 } from "ionicons/icons";
 import IonIcon from "../components/ui/IonIcon";
 import HomeCompanionCard from "../components/HomeCompanionCard";
@@ -266,6 +267,13 @@ export default function Dashboard() {
                 <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('nav.numerology')}</span>
               </button>
               <button
+                onClick={() => navigate("/palm-reading")}
+                className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
+              >
+                <IonIcon icon={handLeftOutline} className="w-5 h-5" />
+                <span className="text-[11px] font-medium text-purple-200/65 leading-tight text-center">{t('palmReading.nav')}</span>
+              </button>
+              <button
                 onClick={() => navigate("/sleep")}
                 className="flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-purple-500/30 text-white transition-all duration-200 min-h-[82px]"
               >
@@ -448,8 +456,15 @@ export default function Dashboard() {
                  onClick={() => { navigate("/numerology/nome"); setSidebarOpen(false); }}
                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
                >
-                 <IonIcon icon={calculatorOutline} className="w-5 h-5" />
-                 <span className="font-medium">{t('nav.numerology')}</span>
+<IonIcon icon={calculatorOutline} className="w-5 h-5" />
+                  <span className="font-medium">{t('nav.numerology')}</span>
+               </button>
+               <button
+                 onClick={() => { navigate("/palm-reading"); setSidebarOpen(false); }}
+                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/80 hover:text-white bg-gradient-to-r from-indigo-900/30 to-transparent hover:from-indigo-800/50 transition-all text-left"
+               >
+                 <IonIcon icon={handLeftOutline} className="w-5 h-5" />
+                 <span className="font-medium">{t('palmReading.nav')}</span>
               </button>
               <button
                 onClick={() => { navigate("/sleep"); setSidebarOpen(false); }}

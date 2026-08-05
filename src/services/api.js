@@ -455,3 +455,55 @@ export async function getNameNumerologyRemaining() {
 
   return await handleResponse(response);
 }
+
+export async function createPalmReading({ leftHandFile, rightHandFile }, signal) {
+  const token = localStorage.getItem('token');
+  const formData = new FormData();
+
+  if (leftHandFile) formData.append('leftHand', leftHandFile, leftHandFile.name || 'left.jpg');
+  if (rightHandFile) formData.append('rightHand', rightHandFile, rightHandFile.name || 'right.jpg');
+
+  const response = await fetch(`${API_BASE_URL}/api/palm-reading`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+    signal,
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getPalmReadings(page = 1, limit = 10) {
+  const url = `${API_BASE_URL}/api/palm-reading?page=${page}&limit=${limit}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function getPalmReadingById(readingId) {
+  const url = `${API_BASE_URL}/api/palm-reading/${readingId}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
+
+export async function deletePalmReading(readingId) {
+  const url = `${API_BASE_URL}/api/palm-reading/${readingId}`;
+
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+
+  return await handleResponse(response);
+}
